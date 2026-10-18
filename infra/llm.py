@@ -12,9 +12,11 @@ import json
 import time
 
 ROLES = ("detective", "suspect", "interpreter", "extractor", "annotator")
-PURPOSES = ("question", "accusation", "contradiction_report", "interrogation_response",
-            "invitation", "acceptance", "conversation_message", "conversation_reply",
-            "intent_interpretation", "ledger_extraction", "annotation")
+PURPOSES = ("question", "accusation", "interrogation_response", "invitation", "acceptance",
+            "conversation_message", "conversation_reply", "intent_interpretation",
+            "ledger_extraction", "annotation")
+# The contradiction report (proposal 5.3) rides on the first accusation call; it is not a purpose.
+SINGLETON_AGENTS = ("detective", "interpreter", "extractor", "annotator")
 # Proposal 5.2: cost through the first accusation, retry cost and post-game cost are reported separately.
 PHASES = ("through_first_accusation", "accusation_retries", "post_game_analysis")
 ATTEMPT_KINDS = ("initial", "transport_retry", "format_repair")
@@ -244,10 +246,13 @@ class LLMClient:
         self._counter += 1
         return f"c{self._counter:06d}"
 
-    def call(self, *, role, purpose, phase, messages, game_id=None, response_schema=None,
+    def call(self, *, role, purpose, phase, messages, game_id=None, agent_id=None, response_schema=None,
              max_output_tokens=None, tags=None):
         """Run one logical call with bounded transport retries and one bounded format repair.
 
+        agent_id names the persona across games: the suspect's case name for role
+        "suspect" (required), and the role itself for the singleton agents (detective,
+        interpreter, extractor, annotator) when omitted.
         Returns the call record (also logged). Raises LLMCallError after logging when
         the bounds are exhausted; the record then has status transport_failure or
         format_failure and the caller must treat the game as a failed run.
@@ -258,6 +263,12 @@ class LLMClient:
             raise ValueError(f"purpose must be one of {PURPOSES}")
         if phase not in PHASES:
             raise ValueError(f"phase must be one of {PHASES}")
+        if agent_id is None:
+            if role == "suspect":
+                raise ValueError("suspect calls must name the suspect in agent_id, e.g. agent_id='Blair'")
+            agent_id = role
+        if not isinstance(agent_id, str) or not agent_id:
+            raise ValueError("agent_id must be a non-empty string")
         messages = [dict(message) for message in messages]
         for message in messages:
             if message.get("role") not in MESSAGE_ROLES or not isinstance(message.get("content"), str):
@@ -265,7 +276,8 @@ class LLMClient:
         if max_output_tokens is None:
             max_output_tokens = self.decoding.get("max_output_tokens")
 
-        record = {"call_id": self.next_call_id(), "game_id": game_id, "role": role, "purpose": purpose,
+        record = {"call_id": self.next_call_id(), "game_id": game_id, "role": role, "agent_id": agent_id,
+                  "purpose": purpose,
                   "phase": phase, "model_id": self.model_id, "decoding": dict(self.decoding),
                   "response_schema": response_schema, "max_output_tokens": max_output_tokens,
                   "messages": messages, "text": "", "parsed": None, "usage": empty_usage(),

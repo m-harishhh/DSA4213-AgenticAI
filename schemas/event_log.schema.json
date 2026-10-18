@@ -142,11 +142,15 @@
               "annotator"
             ]
           },
+          "agent_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Persona across games: the suspect's case name for role suspect; detective, interpreter, extractor or annotator otherwise"
+          },
           "purpose": {
             "enum": [
               "question",
               "accusation",
-              "contradiction_report",
               "interrogation_response",
               "invitation",
               "acceptance",
@@ -210,6 +214,7 @@
         "required": [
           "call_id",
           "role",
+          "agent_id",
           "purpose",
           "phase",
           "model_id",
@@ -249,8 +254,7 @@
               "question",
               "accusation",
               "acceptance",
-              "conversation_reply",
-              "contradiction_report"
+              "conversation_reply"
             ]
           },
           "window_exchange_ids": {
@@ -568,6 +572,10 @@
       },
       "then": {
         "properties": {
+          "call_id": {
+            "type": "string",
+            "description": "The first accusation call that carried the report (proposal 5.3)"
+          },
           "reported_pairs_raw": {
             "type": "array",
             "items": {
@@ -591,7 +599,7 @@
                 "right"
               ]
             },
-            "description": "Natural-language citations as produced in play; claim IDs are resolved only after play in the annotation overlay"
+            "description": "Aravindh's contradiction_report field from the first accusation output, as produced in play; claim IDs are resolved only after play in the annotation overlay"
           }
         },
         "required": [
