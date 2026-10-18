@@ -1,0 +1,66 @@
+{
+  "game_id": "example_game",
+  "note": "Manually checked mock annotation of the example log, mirroring examples/annotation_example.json. Spans are Python character offsets into delivered_response. Elena's checked labels replace this.",
+  "exchanges": {
+    "e1": {
+      "claim_ids": [
+        "claim_cover_Blair"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_cover_Blair",
+          "source_span": {
+            "start": 0,
+            "end": 30,
+            "text": "I was in the Library at 20:30."
+          },
+          "confidence": "manually_checked_mock"
+        }
+      ]
+    },
+    "e2": {
+      "claim_ids": [
+        "claim_witness_Blair"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_witness_Blair",
+          "source_span": {
+            "start": 0,
+            "end": 62,
+            "text": "The timestamped recording shows Blair in the Gallery at 20:30."
+          },
+          "confidence": "manually_checked_mock"
+        }
+      ]
+    },
+    "e3": {
+      "claim_ids": [
+        "claim_badge_trace"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_badge_trace",
+          "source_span": {
+            "start": 0,
+            "end": 69,
+            "text": "My cropped attack recording shows the attacker's badge: it was round."
+          },
+          "confidence": "manually_checked_mock"
+        }
+      ]
+    }
+  },
+  "reported_pairs": [
+    {
+      "left": {
+        "exchange_id": "e1",
+        "claim_id": "claim_cover_Blair"
+      },
+      "right": {
+        "exchange_id": "e2",
+        "claim_id": "claim_witness_Blair"
+      }
+    }
+  ]
+}
