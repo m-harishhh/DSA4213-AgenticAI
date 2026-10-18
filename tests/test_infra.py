@@ -52,7 +52,8 @@ def make_client(script, **kwargs):
 
 
 def call(client, **overrides):
-    arguments = {"role": "suspect", "purpose": "interrogation_response", "phase": "through_first_accusation",
+    arguments = {"role": "suspect", "agent_id": "Blair", "purpose": "interrogation_response",
+                 "phase": "through_first_accusation",
                  "messages": [{"role": "user", "content": "Where were you?"}], "game_id": "g1"}
     arguments.update(overrides)
     return client.call(**arguments)
@@ -74,13 +75,23 @@ class WrapperTests(unittest.TestCase):
         self.assertEqual(record["latency_ms"], 1000)
         self.assertEqual(call(client)["call_id"], "c000002")
 
+    def test_agent_id_defaults_for_singleton_roles_and_is_logged(self):
+        client, log, _ = make_client(["q", "a", "e"])
+        detective = call(client, role="detective", purpose="question", agent_id=None)
+        self.assertEqual(detective["agent_id"], "detective")
+        self.assertEqual(call(client, agent_id="Casey")["agent_id"], "Casey")
+        extractor = call(client, role="extractor", purpose="ledger_extraction", agent_id=None)
+        self.assertEqual(extractor["agent_id"], "extractor")
+        self.assertEqual([event["agent_id"] for event in log.events], ["detective", "Casey", "extractor"])
+
     def test_no_pricing_means_null_cost_not_zero(self):
         client, _, _ = make_client(["x"])
         self.assertIsNone(call(client)["cost_usd"])
 
     def test_vocabulary_and_message_shape_are_enforced(self):
         client, log, _ = make_client(["x"])
-        for overrides in ({"role": "judge"}, {"purpose": "chat"}, {"phase": "warmup"},
+        for overrides in ({"role": "judge"}, {"purpose": "chat"}, {"phase": "warmup"}, {"purpose": "contradiction_report"},
+                          {"agent_id": None}, {"agent_id": ""},
                           {"messages": [{"role": "tool", "content": "x"}]}, {"messages": [{"role": "user"}]}):
             with self.subTest(overrides=overrides), self.assertRaises(ValueError):
                 call(client, **overrides)
@@ -221,6 +232,16 @@ class EventLogTests(unittest.TestCase):
                 self.assertFalse(report["passed"], name)
                 self.assertTrue(report["errors"], name)
 
+    def test_contradiction_report_cites_the_first_accusation_call(self):
+        report = next(e for e in self.events if e["kind"] == "contradiction_report")
+        first = next(e for e in self.events if e["kind"] == "accusation")
+        self.assertEqual(report["call_id"], first["call_id"])
+        self.assertLess(report["seq"], first["seq"])
+        call_record = next(e for e in self.events if e["kind"] == "llm_call" and e["call_id"] == first["call_id"])
+        self.assertEqual(call_record["purpose"], "accusation")
+        self.assertEqual(report["reported_pairs_raw"], call_record["parsed"]["contradiction_report"])
+        self.assertNotIn("contradiction_report", {e["purpose"] for e in self.events if e["kind"] == "llm_call"})
+
     def test_prefix_stops_before_first_accusation(self):
         prefix = trace_prefix_before_first_accusation(self.events)
         self.assertNotIn("accusation", [event["kind"] for event in prefix])
@@ -314,6 +335,8 @@ class EventLogTests(unittest.TestCase):
         self.assertEqual(sum(b["total_tokens"] for b in summary["by_attempt_kind"].values()), summary["total_tokens"])
         self.assertAlmostEqual(summary["cost_usd"], sum(c["cost_usd"] for c in calls))
         self.assertEqual(set(summary["by_phase"]), {"through_first_accusation", "accusation_retries"})
+        self.assertEqual(set(summary["by_agent"]), {"detective", "extractor", "Blair", "Drew", "Casey", "Ellis"})
+        self.assertEqual(sum(b["calls"] for b in summary["by_agent"].values()), summary["calls"])
         self.assertEqual(summary["calls_without_pricing"], 0)
         self.assertEqual(self.events[-1]["cost"], summary)
 

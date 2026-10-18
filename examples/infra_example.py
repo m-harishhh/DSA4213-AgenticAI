@@ -8,7 +8,9 @@ examples/annotation_overlay_example.json byte-for-byte (fixed clocks).
 Shortcuts that the real controller must NOT copy: the checkpoint fires after
 interrogation 2 instead of 5/10/15, the suspect "chooses" a scripted branch, and
 controller bookkeeping matches claims by exact text. The overlay below is a
-manually checked mock annotation, not model output.
+manually checked mock annotation, not model output. The detective output shape
+follows Aravindh's action schema (action interrogate/accuse, contradiction_report
+on the first accusation).
 """
 
 import argparse
@@ -42,13 +44,13 @@ PROMPT_VERSIONS = {"detective": "mock-v0", "suspect": "mock-v0", "extractor": "m
 # Illustrative structured-output schemas. The real ones belong to their owners
 # (Aravindh: detective action and ledger entry; Harish: invitation and acceptance).
 DETECTIVE_ACTION = {"type": "object", "required": ["action"],
-                    "properties": {"action": {"enum": ["ask", "accuse"]}, "suspect": {"type": "string"},
+                    "properties": {"action": {"enum": ["interrogate", "accuse"]}, "suspect": {"type": "string"},
                                    "question": {"type": "string"}, "culprit": {"type": "string"},
-                                   "weapon": {"type": "string"}, "location": {"type": "string"}}}
+                                   "weapon": {"type": "string"}, "location": {"type": "string"},
+                                   "contradiction_report": {"type": "array"}}}
 INVITATION = {"type": "object", "required": ["invite"], "properties": {"invite": {"type": ["string", "null"]}}}
 ACCEPTANCE = {"type": "object", "required": ["accept"], "properties": {"accept": {"type": "boolean"}}}
 LEDGER = {"type": "object", "required": ["entries"], "properties": {"entries": {"type": "array"}}}
-CONTRADICTIONS = {"type": "object", "required": ["pairs"], "properties": {"pairs": {"type": "array"}}}
 
 BLAIR_COVER = "I was in the Library at 20:30."
 DREW_WITNESS = "The timestamped recording shows Blair in the Gallery at 20:30."
@@ -65,11 +67,11 @@ def entry(exchange_id, speaker, text, source_text, entities, time=None):
 
 
 SCRIPT = [
-    {"action": "ask", "suspect": "Blair", "question": "Where were you at 20:30?"},
+    {"action": "interrogate", "suspect": "Blair", "question": "Where were you at 20:30?"},
     BLAIR_COVER,
     {"entries": [entry("e1", "Blair", "Blair states they were in the Library at 20:30.", BLAIR_COVER,
                        ["Blair", "Library"], "20:30")]},
-    {"action": "ask", "suspect": "Drew", "question": "Did you see where Blair was at 20:30?"},
+    {"action": "interrogate", "suspect": "Drew", "question": "Did you see where Blair was at 20:30?"},
     DREW_WITNESS,
     {"entries": [entry("e2", "Drew", "Drew cites a timestamped recording placing Blair in the Gallery at 20:30.",
                        DREW_WITNESS, ["Drew", "Blair", "Gallery"], "20:30")]},
@@ -83,10 +85,11 @@ SCRIPT = [
     ELLIS_DECLINE,
     {"entries": [entry("e3", "Blair", "Blair's cropped recording shows the attacker's badge was round.",
                        BLAIR_BADGE, ["Blair", "badge"])]},
-    {"pairs": [{"left": {"exchange_id": "e1", "quote": BLAIR_COVER},
-                "right": {"exchange_id": "e2", "quote": DREW_WITNESS},
-                "note": "Blair's own account conflicts with Drew's recording."}]},
-    {"action": "accuse", "culprit": "Blair", "weapon": "Knife", "location": "Library"},
+    # First accusation: wrong triple, and the contradiction report rides on the same call (proposal 5.3).
+    {"action": "accuse", "culprit": "Blair", "weapon": "Knife", "location": "Library",
+     "contradiction_report": [{"left": {"exchange_id": "e1", "quote": BLAIR_COVER},
+                               "right": {"exchange_id": "e2", "quote": DREW_WITNESS},
+                               "note": "Blair's own account conflicts with Drew's recording."}]},
     {"action": "accuse", "culprit": "Alex", "weapon": "Knife", "location": "Library"},
 ]
 
@@ -114,7 +117,7 @@ OVERLAY = {
 
 
 class FixedClocks:
-    """Deterministic timestamps and 10 ms latencies so the example regenerates identically."""
+    """Deterministic timestamps and 5 ms latencies so the example regenerates identically."""
 
     def __init__(self):
         self.ticks = 0
@@ -172,6 +175,12 @@ def run_mock_game(log_path, case=None, clocks=None):
                             window_exchange_ids=window[-K:], memory_payload=payload, call_id=record["call_id"])
             return record
 
+        def suspect_call(name, purpose, user_text, schema=None, system_text=None):
+            messages = ([{"role": "system", "content": system_text}] if system_text else []) + \
+                       [{"role": "user", "content": user_text}]
+            return llm.call(role="suspect", agent_id=name, purpose=purpose, phase=phase, messages=messages,
+                            game_id="example_game", response_schema=schema)
+
         def extract(exchange_id, speaker, text):
             record = llm.call(role="extractor", purpose="ledger_extraction", phase=phase,
                               messages=[{"role": "system", "content": "Extract attributed ledger entries."},
@@ -184,14 +193,12 @@ def run_mock_game(log_path, case=None, clocks=None):
         # Two interrogations (the real loop continues to the turn budget or an accusation).
         intents = [{"kind": "whereabouts", "time": "20:30"}, {"kind": "corroborate", "subject": "Blair", "time": "20:30"}]
         for turn, intent in enumerate(intents, start=1):
-            question = detective("question", "question", DETECTIVE_ACTION, "Ask one suspect one question.")
+            question = detective("question", "question", DETECTIVE_ACTION, "Interrogate one suspect or accuse.")
             suspect, text = question["parsed"]["suspect"], question["parsed"]["question"]
             branches = allowed_content(case, suspect, intent, states[suspect])
             selected = branches[-1]  # MOCK: the live suspect model chooses among the allowed branches
             instructions = branch_prompt(case, selected)
-            answer = llm.call(role="suspect", purpose="interrogation_response", phase=phase,
-                              messages=[{"role": "system", "content": json.dumps(instructions)},
-                                        {"role": "user", "content": text}], game_id="example_game")
+            answer = suspect_call(suspect, "interrogation_response", text, system_text=json.dumps(instructions))
             matched = match_claims(case, suspect, answer["text"])
             states[suspect] = record_delivery(case, suspect, states[suspect], matched)
             exchange = log.interrogation(interrogation_index=turn, exchange_index=turn, suspect=suspect,
@@ -208,13 +215,11 @@ def run_mock_game(log_path, case=None, clocks=None):
         random.Random(SEED).shuffle(order)
         log.checkpoint_start(checkpoint_index=1, after_interrogation=2, proposal_order=order, seed_used=SEED)
 
-        invite = llm.call(role="suspect", purpose="invitation", phase=phase, game_id="example_game",
-                          messages=[{"role": "user", "content": "Invite one participant or null."}], response_schema=INVITATION)
+        invite = suspect_call("Blair", "invitation", "Invite one participant or null.", INVITATION)
         accept = detective("acceptance", "acceptance", ACCEPTANCE, "Blair invites you. Accept?")
         log.invitation(invitation_id="inv1", checkpoint_index=1, pass_no=1, sender="Blair", recipient="Detective",
                        decision="accepted", invitation_call_id=invite["call_id"], decision_call_id=accept["call_id"])
-        message = llm.call(role="suspect", purpose="conversation_message", phase=phase, game_id="example_game",
-                           messages=[{"role": "user", "content": "Send one bounded message to the detective."}])
+        message = suspect_call("Blair", "conversation_message", "Send one bounded message to the detective.")
         reply = detective("conversation_reply", "conversation_reply", None, f"Blair says: {message['text']}\nReply briefly.")
         matched = match_claims(case, "Blair", message["text"])
         states["Blair"] = record_delivery(case, "Blair", states["Blair"], matched)
@@ -225,16 +230,12 @@ def run_mock_game(log_path, case=None, clocks=None):
                                         controller_matched={"message_claim_ids": matched})
         window.append(conversation["exchange_id"])
 
-        invite = llm.call(role="suspect", purpose="invitation", phase=phase, game_id="example_game",
-                          messages=[{"role": "user", "content": "Invite one participant or null."}], response_schema=INVITATION)
-        accept = llm.call(role="suspect", purpose="acceptance", phase=phase, game_id="example_game",
-                          messages=[{"role": "user", "content": "Casey invites you. Accept?"}], response_schema=ACCEPTANCE)
+        invite = suspect_call("Casey", "invitation", "Invite one participant or null.", INVITATION)
+        accept = suspect_call("Ellis", "acceptance", "Casey invites you. Accept?", ACCEPTANCE)
         log.invitation(invitation_id="inv2", checkpoint_index=1, pass_no=1, sender="Casey", recipient="Ellis",
                        decision="accepted", invitation_call_id=invite["call_id"], decision_call_id=accept["call_id"])
-        message = llm.call(role="suspect", purpose="conversation_message", phase=phase, game_id="example_game",
-                           messages=[{"role": "user", "content": "Send one bounded message to Ellis."}])
-        reply = llm.call(role="suspect", purpose="conversation_reply", phase=phase, game_id="example_game",
-                         messages=[{"role": "user", "content": f"Casey says: {message['text']}\nReply briefly."}])
+        message = suspect_call("Casey", "conversation_message", "Send one bounded message to Ellis.")
+        reply = suspect_call("Ellis", "conversation_reply", f"Casey says: {message['text']}\nReply briefly.")
         log.conversation(conversation_id="p1", checkpoint_index=1, visibility="private", inviter="Casey",
                          recipient="Ellis", message=message["text"], reply=reply["text"],
                          message_call_id=message["call_id"], reply_call_id=reply["call_id"],
@@ -242,18 +243,18 @@ def run_mock_game(log_path, case=None, clocks=None):
         log.checkpoint_end(checkpoint_index=1, invitations_sent=2, accepted=2, rejected=0, conversations_completed=2)
         extract("e3", "Blair", BLAIR_BADGE)
 
-        # Diagnostic contradiction report immediately before the first accusation.
-        report = detective("contradiction_report", "contradiction_report", CONTRADICTIONS,
-                           "List conflicting claims in your memory, citing exchange IDs and quotes.")
-        log.contradiction_report(call_id=report["call_id"], window_exchange_ids=window[-K:],
-                                 reported_pairs_raw=report["parsed"]["pairs"])
-
-        # Accusations: the first is wrong, the retry is right.
+        # Accusations: the first is wrong and carries the contradiction report (proposal 5.3,
+        # Aravindh's action schema); the retry is right.
         solution = case["solution"]
         outcomes = []
         for attempt in (1, 2):
             phase_now = "through_first_accusation" if attempt == 1 else "accusation_retries"
-            action = detective("accusation", "accusation", DETECTIVE_ACTION, "Make your accusation.", phase_now)
+            prompt = ("Make your accusation. On your first accusation also list conflicting claims in your "
+                      "memory as contradiction_report, citing exchange IDs and quotes.")
+            action = detective("accusation", "accusation", DETECTIVE_ACTION, prompt, phase_now)
+            if attempt == 1:
+                log.contradiction_report(call_id=action["call_id"], window_exchange_ids=window[-K:],
+                                         reported_pairs_raw=action["parsed"]["contradiction_report"])
             triple = {key: action["parsed"][key] for key in ("culprit", "weapon", "location")}
             correct = triple == solution
             outcomes.append((triple, correct))
