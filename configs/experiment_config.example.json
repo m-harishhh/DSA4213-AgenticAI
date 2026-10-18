@@ -1,0 +1,11 @@
+{
+  "model_id": null,
+  "decoding_settings": null,
+  "k": null,
+  "turn_budget": 20,
+  "runs_per_condition": 100,
+  "budget_usd": null,
+  "annotation_sample_size": null,
+  "prompt_versions": null,
+  "notes": "Fill after pilot. The USD15 figure is not a hard cap; agree a modest revised ceiling using measured costs. This file does not launch experiments or spend money."
+}

@@ -1,0 +1,854 @@
+{
+  "schema_version": "1.0",
+  "case_id": "museum_pilot_v1",
+  "status": "pilot",
+  "public": {
+    "schema_version": "1.0",
+    "description": "A museum curator was murdered at 21:00. It is now 21:30. Staff have reviewed different cropped recordings or forensic notes. Interview them to identify the killer, weapon and room.",
+    "suspects": [
+      "Alex",
+      "Blair",
+      "Casey",
+      "Drew",
+      "Ellis"
+    ],
+    "weapons": [
+      "Knife",
+      "Hatchet",
+      "Candlestick",
+      "Rope",
+      "Hammer"
+    ],
+    "locations": [
+      "Library",
+      "Study",
+      "Gallery",
+      "Kitchen",
+      "Conservatory"
+    ],
+    "times": [
+      "20:30",
+      "21:00"
+    ],
+    "murder_time": "21:00",
+    "profiles": {
+      "suspects": {
+        "Alex": {
+          "badge": "round",
+          "sleeve": "blue"
+        },
+        "Blair": {
+          "badge": "round",
+          "sleeve": "green"
+        },
+        "Casey": {
+          "badge": "square",
+          "sleeve": "blue"
+        },
+        "Drew": {
+          "badge": "square",
+          "sleeve": "red"
+        },
+        "Ellis": {
+          "badge": "triangle",
+          "sleeve": "green"
+        }
+      },
+      "weapons": {
+        "Knife": {
+          "material": "steel",
+          "edge": "sharp"
+        },
+        "Hatchet": {
+          "material": "iron",
+          "edge": "sharp"
+        },
+        "Candlestick": {
+          "material": "brass",
+          "edge": "blunt"
+        },
+        "Rope": {
+          "material": "fibre",
+          "edge": "flexible"
+        },
+        "Hammer": {
+          "material": "steel",
+          "edge": "blunt"
+        }
+      },
+      "locations": {
+        "Library": {
+          "floor": "stone",
+          "wall": "green"
+        },
+        "Study": {
+          "floor": "wood",
+          "wall": "green"
+        },
+        "Gallery": {
+          "floor": "stone",
+          "wall": "white"
+        },
+        "Kitchen": {
+          "floor": "tile",
+          "wall": "white"
+        },
+        "Conservatory": {
+          "floor": "wood",
+          "wall": "blue"
+        }
+      }
+    },
+    "honesty_policy": {
+      "culprit_count": 1,
+      "self_protective_count": 2,
+      "truthful_count": 2,
+      "deceptive_topic": "own_position",
+      "deceptive_times": [
+        "20:30",
+        "21:00"
+      ]
+    },
+    "rules": [
+      "Exactly one culprit, two self-protective innocents and two truthful innocents; identities are hidden.",
+      "Each person occupies one room at each listed time; the killer is in the murder room at 21:00.",
+      "The attacker wore their own assigned badge and uniform; badges and uniforms were not exchanged.",
+      "Badge shape and sleeve colour observed during the attack refer to the attacker.",
+      "Recovered weapon material and injury edge class refer to the actual murder weapon.",
+      "Floor and wall observations at the crime scene refer to the actual murder room.",
+      "Profiles are public and accurate. Possession or presence alone never proves guilt.",
+      "Designed lies are restricted to one's own whereabouts at the listed times, for the culprit and self-protective innocents.",
+      "All other designed claims, including observations of other people and forensic descriptions, must be truthful.",
+      "Suspects may withhold under disclosure rules; relevant explicit leads can be followed without magic wording.",
+      "LLM responses can violate these instructions. A false statement is not proof of guilt or a role assignment.",
+      "Voluntary conversations occur after interrogations 5, 10 and 15 if gathering can continue. Private exchanges are not automatically visible to the detective."
+    ],
+    "intent_contract": [
+      "overview",
+      "ask_lead(topic)",
+      "whereabouts(time)",
+      "corroborate(subject,time)",
+      "challenge(claim,cited_counter_evidence)"
+    ]
+  },
+  "solution": {
+    "culprit": "Alex",
+    "weapon": "Knife",
+    "location": "Library"
+  },
+  "events": [
+    {
+      "id": "event_1",
+      "subject": "Alex",
+      "action": "present",
+      "time": "20:30",
+      "location": "Study",
+      "purpose": "unapproved private visit"
+    },
+    {
+      "id": "event_2",
+      "subject": "Alex",
+      "action": "present",
+      "time": "21:00",
+      "location": "Library",
+      "purpose": "evening duties"
+    },
+    {
+      "id": "event_3",
+      "subject": "Blair",
+      "action": "present",
+      "time": "20:30",
+      "location": "Gallery",
+      "purpose": "unapproved private visit"
+    },
+    {
+      "id": "event_4",
+      "subject": "Blair",
+      "action": "present",
+      "time": "21:00",
+      "location": "Kitchen",
+      "purpose": "evening duties"
+    },
+    {
+      "id": "event_5",
+      "subject": "Casey",
+      "action": "present",
+      "time": "20:30",
+      "location": "Kitchen",
+      "purpose": "unapproved private visit"
+    },
+    {
+      "id": "event_6",
+      "subject": "Casey",
+      "action": "present",
+      "time": "21:00",
+      "location": "Conservatory",
+      "purpose": "evening duties"
+    },
+    {
+      "id": "event_7",
+      "subject": "Drew",
+      "action": "present",
+      "time": "20:30",
+      "location": "Conservatory",
+      "purpose": "unapproved private visit"
+    },
+    {
+      "id": "event_8",
+      "subject": "Drew",
+      "action": "present",
+      "time": "21:00",
+      "location": "Library",
+      "purpose": "evening duties"
+    },
+    {
+      "id": "event_9",
+      "subject": "Ellis",
+      "action": "present",
+      "time": "20:30",
+      "location": "Library",
+      "purpose": "unapproved private visit"
+    },
+    {
+      "id": "event_10",
+      "subject": "Ellis",
+      "action": "present",
+      "time": "21:00",
+      "location": "Study",
+      "purpose": "evening duties"
+    },
+    {
+      "id": "murder",
+      "subject": "Alex",
+      "action": "murder",
+      "time": "21:00",
+      "location": "Library",
+      "weapon": "Knife"
+    },
+    {
+      "id": "observe_Blair_fact_badge_trace",
+      "subject": "Blair",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_badge_trace",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Casey_fact_sleeve_trace",
+      "subject": "Casey",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_sleeve_trace",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Drew_fact_weapon_material",
+      "subject": "Drew",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_weapon_material",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Ellis_fact_weapon_edge",
+      "subject": "Ellis",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_weapon_edge",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Alex_fact_scene_floor",
+      "subject": "Alex",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_scene_floor",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Blair_fact_scene_wall",
+      "subject": "Blair",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_scene_wall",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Alex_fact_position_Alex_20:30",
+      "subject": "Alex",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Alex_20:30",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Alex_fact_position_Alex_21:00",
+      "subject": "Alex",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Alex_21:00",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Blair_fact_position_Blair_20:30",
+      "subject": "Blair",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Blair_20:30",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Blair_fact_position_Blair_21:00",
+      "subject": "Blair",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Blair_21:00",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Casey_fact_position_Casey_20:30",
+      "subject": "Casey",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Casey_20:30",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Casey_fact_position_Casey_21:00",
+      "subject": "Casey",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Casey_21:00",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Drew_fact_position_Drew_20:30",
+      "subject": "Drew",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Drew_20:30",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Drew_fact_position_Drew_21:00",
+      "subject": "Drew",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Drew_21:00",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Ellis_fact_position_Ellis_20:30",
+      "subject": "Ellis",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Ellis_20:30",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Ellis_fact_position_Ellis_21:00",
+      "subject": "Ellis",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Ellis_21:00",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Drew_fact_position_Alex_21:00",
+      "subject": "Drew",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Alex_21:00",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Drew_fact_position_Blair_20:30",
+      "subject": "Drew",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Blair_20:30",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Ellis_fact_position_Casey_20:30",
+      "subject": "Ellis",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Casey_20:30",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    }
+  ],
+  "facts": {
+    "fact_badge_trace": {
+      "key": "attacker:badge",
+      "value": "round",
+      "text": "My cropped attack recording shows the attacker's badge: it was round."
+    },
+    "fact_sleeve_trace": {
+      "key": "attacker:sleeve",
+      "value": "blue",
+      "text": "My cropped attack recording shows the attacker's sleeve: it was blue."
+    },
+    "fact_weapon_material": {
+      "key": "weapon:material",
+      "value": "steel",
+      "text": "The recovered murder-weapon material was steel."
+    },
+    "fact_weapon_edge": {
+      "key": "weapon:edge",
+      "value": "sharp",
+      "text": "The injury identifies the weapon's edge class as sharp."
+    },
+    "fact_scene_floor": {
+      "key": "scene:floor",
+      "value": "stone",
+      "text": "The murder scene had a stone floor."
+    },
+    "fact_scene_wall": {
+      "key": "scene:wall",
+      "value": "green",
+      "text": "The murder scene had green walls."
+    },
+    "fact_position_Alex_20:30": {
+      "key": "position:Alex:20:30",
+      "value": "Study",
+      "text": "Alex was in the Study at 20:30."
+    },
+    "fact_position_Alex_21:00": {
+      "key": "position:Alex:21:00",
+      "value": "Library",
+      "text": "Alex was in the Library at 21:00."
+    },
+    "fact_position_Blair_20:30": {
+      "key": "position:Blair:20:30",
+      "value": "Gallery",
+      "text": "Blair was in the Gallery at 20:30."
+    },
+    "fact_position_Blair_21:00": {
+      "key": "position:Blair:21:00",
+      "value": "Kitchen",
+      "text": "Blair was in the Kitchen at 21:00."
+    },
+    "fact_position_Casey_20:30": {
+      "key": "position:Casey:20:30",
+      "value": "Kitchen",
+      "text": "Casey was in the Kitchen at 20:30."
+    },
+    "fact_position_Casey_21:00": {
+      "key": "position:Casey:21:00",
+      "value": "Conservatory",
+      "text": "Casey was in the Conservatory at 21:00."
+    },
+    "fact_position_Drew_20:30": {
+      "key": "position:Drew:20:30",
+      "value": "Conservatory",
+      "text": "Drew was in the Conservatory at 20:30."
+    },
+    "fact_position_Drew_21:00": {
+      "key": "position:Drew:21:00",
+      "value": "Library",
+      "text": "Drew was in the Library at 21:00."
+    },
+    "fact_position_Ellis_20:30": {
+      "key": "position:Ellis:20:30",
+      "value": "Library",
+      "text": "Ellis was in the Library at 20:30."
+    },
+    "fact_position_Ellis_21:00": {
+      "key": "position:Ellis:21:00",
+      "value": "Study",
+      "text": "Ellis was in the Study at 21:00."
+    }
+  },
+  "claims": {
+    "claim_badge_trace": {
+      "speaker": "Blair",
+      "key": "attacker:badge",
+      "value": "round",
+      "text": "My cropped attack recording shows the attacker's badge: it was round.",
+      "fact_id": "fact_badge_trace",
+      "kind": "truthful"
+    },
+    "claim_sleeve_trace": {
+      "speaker": "Casey",
+      "key": "attacker:sleeve",
+      "value": "blue",
+      "text": "My cropped attack recording shows the attacker's sleeve: it was blue.",
+      "fact_id": "fact_sleeve_trace",
+      "kind": "truthful"
+    },
+    "claim_weapon_material": {
+      "speaker": "Drew",
+      "key": "weapon:material",
+      "value": "steel",
+      "text": "The recovered murder-weapon material was steel.",
+      "fact_id": "fact_weapon_material",
+      "kind": "truthful"
+    },
+    "claim_weapon_edge": {
+      "speaker": "Ellis",
+      "key": "weapon:edge",
+      "value": "sharp",
+      "text": "The injury identifies the weapon's edge class as sharp.",
+      "fact_id": "fact_weapon_edge",
+      "kind": "truthful"
+    },
+    "claim_scene_floor": {
+      "speaker": "Alex",
+      "key": "scene:floor",
+      "value": "stone",
+      "text": "The murder scene had a stone floor.",
+      "fact_id": "fact_scene_floor",
+      "kind": "truthful"
+    },
+    "claim_scene_wall": {
+      "speaker": "Blair",
+      "key": "scene:wall",
+      "value": "green",
+      "text": "The murder scene had green walls.",
+      "fact_id": "fact_scene_wall",
+      "kind": "truthful"
+    },
+    "claim_self_Alex_20:30": {
+      "speaker": "Alex",
+      "key": "position:Alex:20:30",
+      "value": "Study",
+      "text": "Alex was in the Study at 20:30.",
+      "fact_id": "fact_position_Alex_20:30",
+      "kind": "truthful"
+    },
+    "claim_self_Alex_21:00": {
+      "speaker": "Alex",
+      "key": "position:Alex:21:00",
+      "value": "Library",
+      "text": "Alex was in the Library at 21:00.",
+      "fact_id": "fact_position_Alex_21:00",
+      "kind": "truthful"
+    },
+    "claim_self_Blair_20:30": {
+      "speaker": "Blair",
+      "key": "position:Blair:20:30",
+      "value": "Gallery",
+      "text": "Blair was in the Gallery at 20:30.",
+      "fact_id": "fact_position_Blair_20:30",
+      "kind": "truthful"
+    },
+    "claim_self_Blair_21:00": {
+      "speaker": "Blair",
+      "key": "position:Blair:21:00",
+      "value": "Kitchen",
+      "text": "Blair was in the Kitchen at 21:00.",
+      "fact_id": "fact_position_Blair_21:00",
+      "kind": "truthful"
+    },
+    "claim_self_Casey_20:30": {
+      "speaker": "Casey",
+      "key": "position:Casey:20:30",
+      "value": "Kitchen",
+      "text": "Casey was in the Kitchen at 20:30.",
+      "fact_id": "fact_position_Casey_20:30",
+      "kind": "truthful"
+    },
+    "claim_self_Casey_21:00": {
+      "speaker": "Casey",
+      "key": "position:Casey:21:00",
+      "value": "Conservatory",
+      "text": "Casey was in the Conservatory at 21:00.",
+      "fact_id": "fact_position_Casey_21:00",
+      "kind": "truthful"
+    },
+    "claim_self_Drew_20:30": {
+      "speaker": "Drew",
+      "key": "position:Drew:20:30",
+      "value": "Conservatory",
+      "text": "Drew was in the Conservatory at 20:30.",
+      "fact_id": "fact_position_Drew_20:30",
+      "kind": "truthful"
+    },
+    "claim_self_Drew_21:00": {
+      "speaker": "Drew",
+      "key": "position:Drew:21:00",
+      "value": "Library",
+      "text": "Drew was in the Library at 21:00.",
+      "fact_id": "fact_position_Drew_21:00",
+      "kind": "truthful"
+    },
+    "claim_self_Ellis_20:30": {
+      "speaker": "Ellis",
+      "key": "position:Ellis:20:30",
+      "value": "Library",
+      "text": "Ellis was in the Library at 20:30.",
+      "fact_id": "fact_position_Ellis_20:30",
+      "kind": "truthful"
+    },
+    "claim_self_Ellis_21:00": {
+      "speaker": "Ellis",
+      "key": "position:Ellis:21:00",
+      "value": "Study",
+      "text": "Ellis was in the Study at 21:00.",
+      "fact_id": "fact_position_Ellis_21:00",
+      "kind": "truthful"
+    },
+    "claim_cover_Alex": {
+      "speaker": "Alex",
+      "key": "position:Alex:21:00",
+      "value": "Study",
+      "text": "I was in the Study at 21:00.",
+      "kind": "approved_false"
+    },
+    "claim_witness_Alex": {
+      "speaker": "Drew",
+      "key": "position:Alex:21:00",
+      "value": "Library",
+      "text": "The timestamped recording shows Alex in the Library at 21:00.",
+      "fact_id": "fact_position_Alex_21:00",
+      "kind": "truthful"
+    },
+    "claim_cover_Blair": {
+      "speaker": "Blair",
+      "key": "position:Blair:20:30",
+      "value": "Library",
+      "text": "I was in the Library at 20:30.",
+      "kind": "approved_false"
+    },
+    "claim_witness_Blair": {
+      "speaker": "Drew",
+      "key": "position:Blair:20:30",
+      "value": "Gallery",
+      "text": "The timestamped recording shows Blair in the Gallery at 20:30.",
+      "fact_id": "fact_position_Blair_20:30",
+      "kind": "truthful"
+    },
+    "claim_cover_Casey": {
+      "speaker": "Casey",
+      "key": "position:Casey:20:30",
+      "value": "Library",
+      "text": "I was in the Library at 20:30.",
+      "kind": "approved_false"
+    },
+    "claim_witness_Casey": {
+      "speaker": "Ellis",
+      "key": "position:Casey:20:30",
+      "value": "Kitchen",
+      "text": "The timestamped recording shows Casey in the Kitchen at 20:30.",
+      "fact_id": "fact_position_Casey_20:30",
+      "kind": "truthful"
+    }
+  },
+  "suspects": {
+    "Alex": {
+      "role": "culprit",
+      "motive": "Conceal involvement in the murder",
+      "secret": "The murder",
+      "known_fact_ids": [
+        "fact_scene_floor",
+        "fact_position_Alex_20:30",
+        "fact_position_Alex_21:00"
+      ],
+      "approved_false_claim_ids": [
+        "claim_cover_Alex"
+      ],
+      "lead_ids": [
+        "scene_floor"
+      ]
+    },
+    "Blair": {
+      "role": "self_protective",
+      "motive": "Protect private business while responding to the investigation",
+      "secret": "An unapproved private visit at 20:30",
+      "known_fact_ids": [
+        "fact_badge_trace",
+        "fact_scene_wall",
+        "fact_position_Blair_20:30",
+        "fact_position_Blair_21:00"
+      ],
+      "approved_false_claim_ids": [
+        "claim_cover_Blair"
+      ],
+      "lead_ids": [
+        "badge_trace",
+        "scene_wall"
+      ]
+    },
+    "Casey": {
+      "role": "self_protective",
+      "motive": "Protect private business while responding to the investigation",
+      "secret": "An unapproved private visit at 20:30",
+      "known_fact_ids": [
+        "fact_sleeve_trace",
+        "fact_position_Casey_20:30",
+        "fact_position_Casey_21:00"
+      ],
+      "approved_false_claim_ids": [
+        "claim_cover_Casey"
+      ],
+      "lead_ids": [
+        "sleeve_trace"
+      ]
+    },
+    "Drew": {
+      "role": "truthful",
+      "motive": "Protect private business while responding to the investigation",
+      "secret": "An unapproved private visit at 20:30",
+      "known_fact_ids": [
+        "fact_weapon_material",
+        "fact_position_Drew_20:30",
+        "fact_position_Drew_21:00",
+        "fact_position_Alex_21:00",
+        "fact_position_Blair_20:30"
+      ],
+      "approved_false_claim_ids": [],
+      "lead_ids": [
+        "weapon_material",
+        "meeting_Alex",
+        "meeting_Blair"
+      ]
+    },
+    "Ellis": {
+      "role": "truthful",
+      "motive": "Protect private business while responding to the investigation",
+      "secret": "An unapproved private visit at 20:30",
+      "known_fact_ids": [
+        "fact_weapon_edge",
+        "fact_position_Ellis_20:30",
+        "fact_position_Ellis_21:00",
+        "fact_position_Casey_20:30"
+      ],
+      "approved_false_claim_ids": [],
+      "lead_ids": [
+        "weapon_edge",
+        "meeting_Casey"
+      ]
+    }
+  },
+  "leads": {
+    "badge_trace": {
+      "owner": "Blair",
+      "claim_id": "claim_badge_trace",
+      "cue": "I have information about the attacker's badge; ask me about it.",
+      "label": "the attacker's badge"
+    },
+    "sleeve_trace": {
+      "owner": "Casey",
+      "claim_id": "claim_sleeve_trace",
+      "cue": "I have information about the attacker's sleeve; ask me about it.",
+      "label": "the attacker's sleeve"
+    },
+    "weapon_material": {
+      "owner": "Drew",
+      "claim_id": "claim_weapon_material",
+      "cue": "I have information about the weapon material; ask me about it.",
+      "label": "the weapon material"
+    },
+    "weapon_edge": {
+      "owner": "Ellis",
+      "claim_id": "claim_weapon_edge",
+      "cue": "I have information about the injury pattern; ask me about it.",
+      "label": "the injury pattern"
+    },
+    "scene_floor": {
+      "owner": "Alex",
+      "claim_id": "claim_scene_floor",
+      "cue": "I have information about the scene floor; ask me about it.",
+      "label": "the scene floor"
+    },
+    "scene_wall": {
+      "owner": "Blair",
+      "claim_id": "claim_scene_wall",
+      "cue": "I have information about the scene walls; ask me about it.",
+      "label": "the scene walls"
+    },
+    "meeting_Alex": {
+      "owner": "Drew",
+      "claim_id": "claim_witness_Alex",
+      "cue": "I saw Alex at 21:00; ask where.",
+      "label": "Alex's whereabouts at 21:00"
+    },
+    "meeting_Blair": {
+      "owner": "Drew",
+      "claim_id": "claim_witness_Blair",
+      "cue": "I saw Blair at 20:30; ask where.",
+      "label": "Blair's whereabouts at 20:30"
+    },
+    "meeting_Casey": {
+      "owner": "Ellis",
+      "claim_id": "claim_witness_Casey",
+      "cue": "I saw Casey at 20:30; ask where.",
+      "label": "Casey's whereabouts at 20:30"
+    }
+  },
+  "gold": {
+    "evidence_ids": [
+      "fact_badge_trace",
+      "fact_sleeve_trace",
+      "fact_weapon_material",
+      "fact_weapon_edge",
+      "fact_scene_floor",
+      "fact_scene_wall",
+      "fact_position_Alex_21:00",
+      "fact_position_Blair_20:30",
+      "fact_position_Casey_20:30"
+    ],
+    "approved_false_claim_ids": [
+      "claim_cover_Alex",
+      "claim_cover_Blair",
+      "claim_cover_Casey"
+    ],
+    "counter_evidence": {
+      "claim_cover_Alex": [
+        "claim_witness_Alex"
+      ],
+      "claim_cover_Blair": [
+        "claim_witness_Blair"
+      ],
+      "claim_cover_Casey": [
+        "claim_witness_Casey"
+      ]
+    },
+    "contradiction_pairs": [
+      [
+        "claim_cover_Alex",
+        "claim_witness_Alex"
+      ],
+      [
+        "claim_cover_Alex",
+        "claim_self_Alex_21:00"
+      ],
+      [
+        "claim_cover_Blair",
+        "claim_witness_Blair"
+      ],
+      [
+        "claim_cover_Blair",
+        "claim_self_Blair_20:30"
+      ],
+      [
+        "claim_cover_Casey",
+        "claim_witness_Casey"
+      ],
+      [
+        "claim_cover_Casey",
+        "claim_self_Casey_20:30"
+      ]
+    ],
+    "essential_trace_fact_ids": [
+      "fact_badge_trace",
+      "fact_sleeve_trace",
+      "fact_weapon_material",
+      "fact_weapon_edge",
+      "fact_scene_floor",
+      "fact_scene_wall"
+    ]
+  },
+  "design": {
+    "template": "two_feature_museum_v1",
+    "recommended_initial_turn_budget": 20,
+    "memory_horizon_candidates": [
+      3,
+      5,
+      10
+    ],
+    "communication_note": "No essential clue requires private cooperation; sharing may change later testimony.",
+    "budget_note": "USD15 is a planning reference, not a hard cap. Agree a modest revised ceiling before paid runs."
+  }
+}

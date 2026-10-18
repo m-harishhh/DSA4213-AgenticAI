@@ -1,0 +1,38 @@
+{
+  "evidence": {
+    "coverage_numerator": 2,
+    "coverage_denominator": 9,
+    "coverage": 0.2222222222222222,
+    "disclosed_evidence_ids": [
+      "fact_badge_trace",
+      "fact_position_Blair_20:30"
+    ],
+    "approved_false_claims_disclosed": [
+      "claim_cover_Blair"
+    ],
+    "source_window_exchange_ids": [
+      "e1",
+      "e2",
+      "e3"
+    ],
+    "all_observed_candidate_count": 50,
+    "window_candidate_count": 50,
+    "conditional_on_intended_rules": true,
+    "note": "Candidate counts use only matched finite claims. Unknown claims and policy violations require separate interpretation; counts never prove an actual run was solvable."
+  },
+  "contradictions": {
+    "true_positive_count": 1,
+    "reported_pair_count": 1,
+    "observable_gold_pair_count": 1,
+    "precision": 1.0,
+    "recall": 1.0,
+    "unsupported_pair_count": 0,
+    "invalid_citations": [],
+    "observable_gold_pairs": [
+      [
+        "claim_cover_Blair",
+        "claim_witness_Blair"
+      ]
+    ]
+  }
+}

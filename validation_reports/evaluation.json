@@ -1,0 +1,224 @@
+{
+  "case_id": "museum_evaluation_v1",
+  "passed": true,
+  "errors": [],
+  "checks": [
+    "Structure, events, role counts, and knowledge provenance checked",
+    "Truthful claims, approved deception, leads, coverage and contradiction gold checked",
+    "Unique solution under hidden role assignments; no single innocent initially solves it",
+    "Every designed response branch along the certified strategy checked"
+  ],
+  "certificate": {
+    "passed": true,
+    "turn_budget": 20,
+    "strategy": "overview_each_public_suspect_then_follow_all_disclosed_leads",
+    "nodes_checked": 1174,
+    "successful_terminal_branches": 108,
+    "failed_terminal_branches": 0,
+    "turn_distribution": {
+      "14": 108
+    },
+    "worst_case_turns": 14,
+    "failures": [],
+    "example_path": [
+      {
+        "turn": 1,
+        "suspect": "Avery",
+        "intent": {
+          "kind": "overview"
+        },
+        "branch_id": "truthful_overview",
+        "claim_ids": [
+          "claim_self_Avery_20:30"
+        ],
+        "lead_ids": [
+          "scene_floor"
+        ]
+      },
+      {
+        "turn": 2,
+        "suspect": "Brook",
+        "intent": {
+          "kind": "overview"
+        },
+        "branch_id": "truthful_overview",
+        "claim_ids": [
+          "claim_self_Brook_20:30"
+        ],
+        "lead_ids": [
+          "badge_trace",
+          "scene_wall"
+        ]
+      },
+      {
+        "turn": 3,
+        "suspect": "Cameron",
+        "intent": {
+          "kind": "overview"
+        },
+        "branch_id": "truthful_overview",
+        "claim_ids": [
+          "claim_self_Cameron_20:30"
+        ],
+        "lead_ids": [
+          "sleeve_trace"
+        ]
+      },
+      {
+        "turn": 4,
+        "suspect": "Devon",
+        "intent": {
+          "kind": "overview"
+        },
+        "branch_id": "truthful_overview",
+        "claim_ids": [
+          "claim_self_Devon_20:30"
+        ],
+        "lead_ids": [
+          "weapon_material",
+          "meeting_Cameron",
+          "meeting_Avery"
+        ]
+      },
+      {
+        "turn": 5,
+        "suspect": "Emery",
+        "intent": {
+          "kind": "overview"
+        },
+        "branch_id": "truthful_overview",
+        "claim_ids": [
+          "claim_self_Emery_20:30"
+        ],
+        "lead_ids": [
+          "weapon_edge",
+          "meeting_Brook"
+        ]
+      },
+      {
+        "turn": 6,
+        "suspect": "Avery",
+        "intent": {
+          "kind": "ask_lead",
+          "topic": "scene_floor"
+        },
+        "branch_id": "required_disclosure",
+        "claim_ids": [
+          "claim_scene_floor"
+        ],
+        "lead_ids": []
+      },
+      {
+        "turn": 7,
+        "suspect": "Brook",
+        "intent": {
+          "kind": "ask_lead",
+          "topic": "badge_trace"
+        },
+        "branch_id": "required_disclosure",
+        "claim_ids": [
+          "claim_badge_trace"
+        ],
+        "lead_ids": []
+      },
+      {
+        "turn": 8,
+        "suspect": "Brook",
+        "intent": {
+          "kind": "ask_lead",
+          "topic": "scene_wall"
+        },
+        "branch_id": "required_disclosure",
+        "claim_ids": [
+          "claim_scene_wall"
+        ],
+        "lead_ids": []
+      },
+      {
+        "turn": 9,
+        "suspect": "Cameron",
+        "intent": {
+          "kind": "ask_lead",
+          "topic": "sleeve_trace"
+        },
+        "branch_id": "required_disclosure",
+        "claim_ids": [
+          "claim_sleeve_trace"
+        ],
+        "lead_ids": []
+      },
+      {
+        "turn": 10,
+        "suspect": "Devon",
+        "intent": {
+          "kind": "ask_lead",
+          "topic": "weapon_material"
+        },
+        "branch_id": "required_disclosure",
+        "claim_ids": [
+          "claim_weapon_material"
+        ],
+        "lead_ids": []
+      },
+      {
+        "turn": 11,
+        "suspect": "Devon",
+        "intent": {
+          "kind": "ask_lead",
+          "topic": "meeting_Cameron"
+        },
+        "branch_id": "required_disclosure",
+        "claim_ids": [
+          "claim_witness_Cameron"
+        ],
+        "lead_ids": []
+      },
+      {
+        "turn": 12,
+        "suspect": "Devon",
+        "intent": {
+          "kind": "ask_lead",
+          "topic": "meeting_Avery"
+        },
+        "branch_id": "required_disclosure",
+        "claim_ids": [
+          "claim_witness_Avery"
+        ],
+        "lead_ids": []
+      },
+      {
+        "turn": 13,
+        "suspect": "Emery",
+        "intent": {
+          "kind": "ask_lead",
+          "topic": "weapon_edge"
+        },
+        "branch_id": "required_disclosure",
+        "claim_ids": [
+          "claim_weapon_edge"
+        ],
+        "lead_ids": []
+      },
+      {
+        "turn": 14,
+        "suspect": "Emery",
+        "intent": {
+          "kind": "ask_lead",
+          "topic": "meeting_Brook"
+        },
+        "branch_id": "required_disclosure",
+        "claim_ids": [
+          "claim_witness_Brook"
+        ],
+        "lead_ids": []
+      }
+    ],
+    "scope": [
+      "All finite response branches along this strategy, with compliant content delivery.",
+      "Optional private conversations cannot remove the required original clue disclosures in this template; their policy is state-independent.",
+      "Voluntary conversations cost zero interrogation turns, so they do not affect this feasibility budget.",
+      "This does not certify LLM compliance, memory-window retention, free-form interpretation, or every possible detective policy.",
+      "Example path and private IDs are evaluator-only; never put this certificate in a detective prompt."
+    ]
+  }
+}

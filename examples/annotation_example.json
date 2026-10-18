@@ -1,0 +1,77 @@
+{
+  "note": "Synthetic annotation fixture, not actual model output. Spans use Python character offsets [start,end). Natural-language detective source citations are mapped to these internal IDs only after play. The full controller log must additionally retain both messages of each exchange.",
+  "exchanges": [
+    {
+      "exchange_id": "e1",
+      "kind": "interrogation",
+      "speaker": "Blair",
+      "delivered_response": "I was in the Library at 20:30.",
+      "claim_ids": [
+        "claim_cover_Blair"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_cover_Blair",
+          "source_span": {
+            "start": 0,
+            "end": 30,
+            "text": "I was in the Library at 20:30."
+          },
+          "confidence": "manually_checked_mock"
+        }
+      ]
+    },
+    {
+      "exchange_id": "e2",
+      "kind": "interrogation",
+      "speaker": "Drew",
+      "delivered_response": "The timestamped recording shows Blair in the Gallery at 20:30.",
+      "claim_ids": [
+        "claim_witness_Blair"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_witness_Blair",
+          "source_span": {
+            "start": 0,
+            "end": 62,
+            "text": "The timestamped recording shows Blair in the Gallery at 20:30."
+          },
+          "confidence": "manually_checked_mock"
+        }
+      ]
+    },
+    {
+      "exchange_id": "e3",
+      "kind": "detective_conversation",
+      "speaker": "Blair",
+      "delivered_response": "My cropped attack recording shows the attacker's badge: it was round.",
+      "claim_ids": [
+        "claim_badge_trace"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_badge_trace",
+          "source_span": {
+            "start": 0,
+            "end": 69,
+            "text": "My cropped attack recording shows the attacker's badge: it was round."
+          },
+          "confidence": "manually_checked_mock"
+        }
+      ]
+    }
+  ],
+  "reported_pairs": [
+    {
+      "left": {
+        "exchange_id": "e1",
+        "claim_id": "claim_cover_Blair"
+      },
+      "right": {
+        "exchange_id": "e2",
+        "claim_id": "claim_witness_Blair"
+      }
+    }
+  ]
+}

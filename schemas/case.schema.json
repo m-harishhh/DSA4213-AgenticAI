@@ -1,0 +1,556 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:dsa4213:case:1.0",
+  "title": "DSA4213 museum case v1",
+  "description": "Shape only. Run casework validate for facts, references, permissions, unique solvability and budget feasibility. No network resolution is required.",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "case_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "minLength": 1
+    },
+    "public": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "suspects": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 5,
+          "maxItems": 5,
+          "uniqueItems": true
+        },
+        "weapons": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 5,
+          "maxItems": 5,
+          "uniqueItems": true
+        },
+        "locations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 5,
+          "maxItems": 5,
+          "uniqueItems": true
+        },
+        "times": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "murder_time": {
+          "type": "string",
+          "minLength": 1
+        },
+        "profiles": {
+          "type": "object",
+          "properties": {
+            "suspects": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "weapons": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "locations": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "required": [
+            "suspects",
+            "weapons",
+            "locations"
+          ],
+          "additionalProperties": false
+        },
+        "honesty_policy": {
+          "type": "object",
+          "properties": {
+            "culprit_count": {
+              "const": 1
+            },
+            "self_protective_count": {
+              "const": 2
+            },
+            "truthful_count": {
+              "const": 2
+            },
+            "deceptive_topic": {
+              "const": "own_position"
+            },
+            "deceptive_times": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "required": [
+            "culprit_count",
+            "self_protective_count",
+            "truthful_count",
+            "deceptive_topic",
+            "deceptive_times"
+          ],
+          "additionalProperties": false
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "intent_contract": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "schema_version",
+        "description",
+        "suspects",
+        "weapons",
+        "locations",
+        "times",
+        "murder_time",
+        "profiles",
+        "honesty_policy",
+        "rules",
+        "intent_contract"
+      ],
+      "additionalProperties": false
+    },
+    "solution": {
+      "type": "object",
+      "properties": {
+        "culprit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "weapon": {
+          "type": "string",
+          "minLength": 1
+        },
+        "location": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "culprit",
+        "weapon",
+        "location"
+      ],
+      "additionalProperties": false
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/event"
+      }
+    },
+    "facts": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/fact"
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/claim"
+      }
+    },
+    "suspects": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/suspect"
+      }
+    },
+    "leads": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/lead"
+      }
+    },
+    "gold": {
+      "type": "object",
+      "properties": {
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "approved_false_claim_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "counter_evidence": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "contradiction_pairs": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 2,
+            "maxItems": 2,
+            "uniqueItems": true
+          }
+        },
+        "essential_trace_fact_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "evidence_ids",
+        "approved_false_claim_ids",
+        "counter_evidence",
+        "contradiction_pairs",
+        "essential_trace_fact_ids"
+      ],
+      "additionalProperties": false
+    },
+    "design": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "case_id",
+    "status",
+    "public",
+    "solution",
+    "events",
+    "facts",
+    "claims",
+    "suspects",
+    "leads",
+    "gold",
+    "design"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "fact": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "key",
+        "value",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "claim": {
+      "type": "object",
+      "properties": {
+        "speaker": {
+          "type": "string",
+          "minLength": 1
+        },
+        "key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "enum": [
+            "truthful",
+            "approved_false"
+          ]
+        },
+        "fact_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "speaker",
+        "key",
+        "value",
+        "text",
+        "kind"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "truthful"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "fact_id"
+            ]
+          }
+        }
+      ]
+    },
+    "suspect": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "enum": [
+            "culprit",
+            "self_protective",
+            "truthful"
+          ]
+        },
+        "motive": {
+          "type": "string",
+          "minLength": 1
+        },
+        "secret": {
+          "type": "string",
+          "minLength": 1
+        },
+        "known_fact_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "approved_false_claim_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "lead_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "role",
+        "motive",
+        "secret",
+        "known_fact_ids",
+        "approved_false_claim_ids",
+        "lead_ids"
+      ],
+      "additionalProperties": false
+    },
+    "lead": {
+      "type": "object",
+      "properties": {
+        "owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claim_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cue": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "owner",
+        "claim_id",
+        "cue",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "event": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subject": {
+          "type": "string",
+          "minLength": 1
+        },
+        "action": {
+          "enum": [
+            "present",
+            "murder",
+            "observe"
+          ]
+        },
+        "time": {
+          "type": "string",
+          "minLength": 1
+        },
+        "location": {
+          "type": "string",
+          "minLength": 1
+        },
+        "weapon": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "method": {
+          "type": "string",
+          "minLength": 1
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "subject",
+        "action",
+        "time"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "const": "present"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "location"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "const": "murder"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "location",
+              "weapon"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "const": "observe"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "fact_id"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

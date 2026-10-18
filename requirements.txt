@@ -1,0 +1,10 @@
+# DSA4213 Group 10 - current repository dependencies
+# Python 3.10+ is required; tested with Python 3.12.
+# Install/check from the repository root:
+#   python -m pip install -r requirements.txt
+#
+# No third-party packages are currently required.
+# Runtime code, examples, archived exploration, and unittest tests use only
+# Python's standard library and the local casework package.
+# Do not list standard-library modules or casework as pip dependencies.
+# Add tested external dependencies here when future modules introduce them.

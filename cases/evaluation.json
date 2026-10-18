@@ -1,0 +1,854 @@
+{
+  "schema_version": "1.0",
+  "case_id": "museum_evaluation_v1",
+  "status": "candidate_for_freeze_after_pilot",
+  "public": {
+    "schema_version": "1.0",
+    "description": "A museum curator was murdered at 21:00. It is now 21:30. Staff have reviewed different cropped recordings or forensic notes. Interview them to identify the killer, weapon and room.",
+    "suspects": [
+      "Avery",
+      "Brook",
+      "Cameron",
+      "Devon",
+      "Emery"
+    ],
+    "weapons": [
+      "Knife",
+      "Hatchet",
+      "Candlestick",
+      "Rope",
+      "Hammer"
+    ],
+    "locations": [
+      "Library",
+      "Study",
+      "Gallery",
+      "Kitchen",
+      "Conservatory"
+    ],
+    "times": [
+      "20:30",
+      "21:00"
+    ],
+    "murder_time": "21:00",
+    "profiles": {
+      "suspects": {
+        "Avery": {
+          "badge": "round",
+          "sleeve": "blue"
+        },
+        "Brook": {
+          "badge": "round",
+          "sleeve": "green"
+        },
+        "Cameron": {
+          "badge": "square",
+          "sleeve": "blue"
+        },
+        "Devon": {
+          "badge": "square",
+          "sleeve": "red"
+        },
+        "Emery": {
+          "badge": "triangle",
+          "sleeve": "green"
+        }
+      },
+      "weapons": {
+        "Knife": {
+          "material": "steel",
+          "edge": "sharp"
+        },
+        "Hatchet": {
+          "material": "iron",
+          "edge": "sharp"
+        },
+        "Candlestick": {
+          "material": "brass",
+          "edge": "blunt"
+        },
+        "Rope": {
+          "material": "fibre",
+          "edge": "flexible"
+        },
+        "Hammer": {
+          "material": "steel",
+          "edge": "blunt"
+        }
+      },
+      "locations": {
+        "Library": {
+          "floor": "stone",
+          "wall": "green"
+        },
+        "Study": {
+          "floor": "wood",
+          "wall": "green"
+        },
+        "Gallery": {
+          "floor": "stone",
+          "wall": "white"
+        },
+        "Kitchen": {
+          "floor": "tile",
+          "wall": "white"
+        },
+        "Conservatory": {
+          "floor": "wood",
+          "wall": "blue"
+        }
+      }
+    },
+    "honesty_policy": {
+      "culprit_count": 1,
+      "self_protective_count": 2,
+      "truthful_count": 2,
+      "deceptive_topic": "own_position",
+      "deceptive_times": [
+        "20:30",
+        "21:00"
+      ]
+    },
+    "rules": [
+      "Exactly one culprit, two self-protective innocents and two truthful innocents; identities are hidden.",
+      "Each person occupies one room at each listed time; the killer is in the murder room at 21:00.",
+      "The attacker wore their own assigned badge and uniform; badges and uniforms were not exchanged.",
+      "Badge shape and sleeve colour observed during the attack refer to the attacker.",
+      "Recovered weapon material and injury edge class refer to the actual murder weapon.",
+      "Floor and wall observations at the crime scene refer to the actual murder room.",
+      "Profiles are public and accurate. Possession or presence alone never proves guilt.",
+      "Designed lies are restricted to one's own whereabouts at the listed times, for the culprit and self-protective innocents.",
+      "All other designed claims, including observations of other people and forensic descriptions, must be truthful.",
+      "Suspects may withhold under disclosure rules; relevant explicit leads can be followed without magic wording.",
+      "LLM responses can violate these instructions. A false statement is not proof of guilt or a role assignment.",
+      "Voluntary conversations occur after interrogations 5, 10 and 15 if gathering can continue. Private exchanges are not automatically visible to the detective."
+    ],
+    "intent_contract": [
+      "overview",
+      "ask_lead(topic)",
+      "whereabouts(time)",
+      "corroborate(subject,time)",
+      "challenge(claim,cited_counter_evidence)"
+    ]
+  },
+  "solution": {
+    "culprit": "Cameron",
+    "weapon": "Hammer",
+    "location": "Gallery"
+  },
+  "events": [
+    {
+      "id": "event_1",
+      "subject": "Avery",
+      "action": "present",
+      "time": "20:30",
+      "location": "Study",
+      "purpose": "unapproved private visit"
+    },
+    {
+      "id": "event_2",
+      "subject": "Avery",
+      "action": "present",
+      "time": "21:00",
+      "location": "Gallery",
+      "purpose": "evening duties"
+    },
+    {
+      "id": "event_3",
+      "subject": "Brook",
+      "action": "present",
+      "time": "20:30",
+      "location": "Gallery",
+      "purpose": "unapproved private visit"
+    },
+    {
+      "id": "event_4",
+      "subject": "Brook",
+      "action": "present",
+      "time": "21:00",
+      "location": "Kitchen",
+      "purpose": "evening duties"
+    },
+    {
+      "id": "event_5",
+      "subject": "Cameron",
+      "action": "present",
+      "time": "20:30",
+      "location": "Kitchen",
+      "purpose": "unapproved private visit"
+    },
+    {
+      "id": "event_6",
+      "subject": "Cameron",
+      "action": "present",
+      "time": "21:00",
+      "location": "Gallery",
+      "purpose": "evening duties"
+    },
+    {
+      "id": "event_7",
+      "subject": "Devon",
+      "action": "present",
+      "time": "20:30",
+      "location": "Conservatory",
+      "purpose": "unapproved private visit"
+    },
+    {
+      "id": "event_8",
+      "subject": "Devon",
+      "action": "present",
+      "time": "21:00",
+      "location": "Library",
+      "purpose": "evening duties"
+    },
+    {
+      "id": "event_9",
+      "subject": "Emery",
+      "action": "present",
+      "time": "20:30",
+      "location": "Library",
+      "purpose": "unapproved private visit"
+    },
+    {
+      "id": "event_10",
+      "subject": "Emery",
+      "action": "present",
+      "time": "21:00",
+      "location": "Study",
+      "purpose": "evening duties"
+    },
+    {
+      "id": "murder",
+      "subject": "Cameron",
+      "action": "murder",
+      "time": "21:00",
+      "location": "Gallery",
+      "weapon": "Hammer"
+    },
+    {
+      "id": "observe_Brook_fact_badge_trace",
+      "subject": "Brook",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_badge_trace",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Cameron_fact_sleeve_trace",
+      "subject": "Cameron",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_sleeve_trace",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Devon_fact_weapon_material",
+      "subject": "Devon",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_weapon_material",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Emery_fact_weapon_edge",
+      "subject": "Emery",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_weapon_edge",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Avery_fact_scene_floor",
+      "subject": "Avery",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_scene_floor",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Brook_fact_scene_wall",
+      "subject": "Brook",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_scene_wall",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Avery_fact_position_Avery_20:30",
+      "subject": "Avery",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Avery_20:30",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Avery_fact_position_Avery_21:00",
+      "subject": "Avery",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Avery_21:00",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Brook_fact_position_Brook_20:30",
+      "subject": "Brook",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Brook_20:30",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Brook_fact_position_Brook_21:00",
+      "subject": "Brook",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Brook_21:00",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Cameron_fact_position_Cameron_20:30",
+      "subject": "Cameron",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Cameron_20:30",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Cameron_fact_position_Cameron_21:00",
+      "subject": "Cameron",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Cameron_21:00",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Devon_fact_position_Devon_20:30",
+      "subject": "Devon",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Devon_20:30",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Devon_fact_position_Devon_21:00",
+      "subject": "Devon",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Devon_21:00",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Emery_fact_position_Emery_20:30",
+      "subject": "Emery",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Emery_20:30",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Emery_fact_position_Emery_21:00",
+      "subject": "Emery",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Emery_21:00",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Devon_fact_position_Cameron_21:00",
+      "subject": "Devon",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Cameron_21:00",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Devon_fact_position_Avery_20:30",
+      "subject": "Devon",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Avery_20:30",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Emery_fact_position_Brook_20:30",
+      "subject": "Emery",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Brook_20:30",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    }
+  ],
+  "facts": {
+    "fact_badge_trace": {
+      "key": "attacker:badge",
+      "value": "square",
+      "text": "My cropped attack recording shows the attacker's badge: it was square."
+    },
+    "fact_sleeve_trace": {
+      "key": "attacker:sleeve",
+      "value": "blue",
+      "text": "My cropped attack recording shows the attacker's sleeve: it was blue."
+    },
+    "fact_weapon_material": {
+      "key": "weapon:material",
+      "value": "steel",
+      "text": "The recovered murder-weapon material was steel."
+    },
+    "fact_weapon_edge": {
+      "key": "weapon:edge",
+      "value": "blunt",
+      "text": "The injury identifies the weapon's edge class as blunt."
+    },
+    "fact_scene_floor": {
+      "key": "scene:floor",
+      "value": "stone",
+      "text": "The murder scene had a stone floor."
+    },
+    "fact_scene_wall": {
+      "key": "scene:wall",
+      "value": "white",
+      "text": "The murder scene had white walls."
+    },
+    "fact_position_Avery_20:30": {
+      "key": "position:Avery:20:30",
+      "value": "Study",
+      "text": "Avery was in the Study at 20:30."
+    },
+    "fact_position_Avery_21:00": {
+      "key": "position:Avery:21:00",
+      "value": "Gallery",
+      "text": "Avery was in the Gallery at 21:00."
+    },
+    "fact_position_Brook_20:30": {
+      "key": "position:Brook:20:30",
+      "value": "Gallery",
+      "text": "Brook was in the Gallery at 20:30."
+    },
+    "fact_position_Brook_21:00": {
+      "key": "position:Brook:21:00",
+      "value": "Kitchen",
+      "text": "Brook was in the Kitchen at 21:00."
+    },
+    "fact_position_Cameron_20:30": {
+      "key": "position:Cameron:20:30",
+      "value": "Kitchen",
+      "text": "Cameron was in the Kitchen at 20:30."
+    },
+    "fact_position_Cameron_21:00": {
+      "key": "position:Cameron:21:00",
+      "value": "Gallery",
+      "text": "Cameron was in the Gallery at 21:00."
+    },
+    "fact_position_Devon_20:30": {
+      "key": "position:Devon:20:30",
+      "value": "Conservatory",
+      "text": "Devon was in the Conservatory at 20:30."
+    },
+    "fact_position_Devon_21:00": {
+      "key": "position:Devon:21:00",
+      "value": "Library",
+      "text": "Devon was in the Library at 21:00."
+    },
+    "fact_position_Emery_20:30": {
+      "key": "position:Emery:20:30",
+      "value": "Library",
+      "text": "Emery was in the Library at 20:30."
+    },
+    "fact_position_Emery_21:00": {
+      "key": "position:Emery:21:00",
+      "value": "Study",
+      "text": "Emery was in the Study at 21:00."
+    }
+  },
+  "claims": {
+    "claim_badge_trace": {
+      "speaker": "Brook",
+      "key": "attacker:badge",
+      "value": "square",
+      "text": "My cropped attack recording shows the attacker's badge: it was square.",
+      "fact_id": "fact_badge_trace",
+      "kind": "truthful"
+    },
+    "claim_sleeve_trace": {
+      "speaker": "Cameron",
+      "key": "attacker:sleeve",
+      "value": "blue",
+      "text": "My cropped attack recording shows the attacker's sleeve: it was blue.",
+      "fact_id": "fact_sleeve_trace",
+      "kind": "truthful"
+    },
+    "claim_weapon_material": {
+      "speaker": "Devon",
+      "key": "weapon:material",
+      "value": "steel",
+      "text": "The recovered murder-weapon material was steel.",
+      "fact_id": "fact_weapon_material",
+      "kind": "truthful"
+    },
+    "claim_weapon_edge": {
+      "speaker": "Emery",
+      "key": "weapon:edge",
+      "value": "blunt",
+      "text": "The injury identifies the weapon's edge class as blunt.",
+      "fact_id": "fact_weapon_edge",
+      "kind": "truthful"
+    },
+    "claim_scene_floor": {
+      "speaker": "Avery",
+      "key": "scene:floor",
+      "value": "stone",
+      "text": "The murder scene had a stone floor.",
+      "fact_id": "fact_scene_floor",
+      "kind": "truthful"
+    },
+    "claim_scene_wall": {
+      "speaker": "Brook",
+      "key": "scene:wall",
+      "value": "white",
+      "text": "The murder scene had white walls.",
+      "fact_id": "fact_scene_wall",
+      "kind": "truthful"
+    },
+    "claim_self_Avery_20:30": {
+      "speaker": "Avery",
+      "key": "position:Avery:20:30",
+      "value": "Study",
+      "text": "Avery was in the Study at 20:30.",
+      "fact_id": "fact_position_Avery_20:30",
+      "kind": "truthful"
+    },
+    "claim_self_Avery_21:00": {
+      "speaker": "Avery",
+      "key": "position:Avery:21:00",
+      "value": "Gallery",
+      "text": "Avery was in the Gallery at 21:00.",
+      "fact_id": "fact_position_Avery_21:00",
+      "kind": "truthful"
+    },
+    "claim_self_Brook_20:30": {
+      "speaker": "Brook",
+      "key": "position:Brook:20:30",
+      "value": "Gallery",
+      "text": "Brook was in the Gallery at 20:30.",
+      "fact_id": "fact_position_Brook_20:30",
+      "kind": "truthful"
+    },
+    "claim_self_Brook_21:00": {
+      "speaker": "Brook",
+      "key": "position:Brook:21:00",
+      "value": "Kitchen",
+      "text": "Brook was in the Kitchen at 21:00.",
+      "fact_id": "fact_position_Brook_21:00",
+      "kind": "truthful"
+    },
+    "claim_self_Cameron_20:30": {
+      "speaker": "Cameron",
+      "key": "position:Cameron:20:30",
+      "value": "Kitchen",
+      "text": "Cameron was in the Kitchen at 20:30.",
+      "fact_id": "fact_position_Cameron_20:30",
+      "kind": "truthful"
+    },
+    "claim_self_Cameron_21:00": {
+      "speaker": "Cameron",
+      "key": "position:Cameron:21:00",
+      "value": "Gallery",
+      "text": "Cameron was in the Gallery at 21:00.",
+      "fact_id": "fact_position_Cameron_21:00",
+      "kind": "truthful"
+    },
+    "claim_self_Devon_20:30": {
+      "speaker": "Devon",
+      "key": "position:Devon:20:30",
+      "value": "Conservatory",
+      "text": "Devon was in the Conservatory at 20:30.",
+      "fact_id": "fact_position_Devon_20:30",
+      "kind": "truthful"
+    },
+    "claim_self_Devon_21:00": {
+      "speaker": "Devon",
+      "key": "position:Devon:21:00",
+      "value": "Library",
+      "text": "Devon was in the Library at 21:00.",
+      "fact_id": "fact_position_Devon_21:00",
+      "kind": "truthful"
+    },
+    "claim_self_Emery_20:30": {
+      "speaker": "Emery",
+      "key": "position:Emery:20:30",
+      "value": "Library",
+      "text": "Emery was in the Library at 20:30.",
+      "fact_id": "fact_position_Emery_20:30",
+      "kind": "truthful"
+    },
+    "claim_self_Emery_21:00": {
+      "speaker": "Emery",
+      "key": "position:Emery:21:00",
+      "value": "Study",
+      "text": "Emery was in the Study at 21:00.",
+      "fact_id": "fact_position_Emery_21:00",
+      "kind": "truthful"
+    },
+    "claim_cover_Cameron": {
+      "speaker": "Cameron",
+      "key": "position:Cameron:21:00",
+      "value": "Library",
+      "text": "I was in the Library at 21:00.",
+      "kind": "approved_false"
+    },
+    "claim_witness_Cameron": {
+      "speaker": "Devon",
+      "key": "position:Cameron:21:00",
+      "value": "Gallery",
+      "text": "The timestamped recording shows Cameron in the Gallery at 21:00.",
+      "fact_id": "fact_position_Cameron_21:00",
+      "kind": "truthful"
+    },
+    "claim_cover_Avery": {
+      "speaker": "Avery",
+      "key": "position:Avery:20:30",
+      "value": "Library",
+      "text": "I was in the Library at 20:30.",
+      "kind": "approved_false"
+    },
+    "claim_witness_Avery": {
+      "speaker": "Devon",
+      "key": "position:Avery:20:30",
+      "value": "Study",
+      "text": "The timestamped recording shows Avery in the Study at 20:30.",
+      "fact_id": "fact_position_Avery_20:30",
+      "kind": "truthful"
+    },
+    "claim_cover_Brook": {
+      "speaker": "Brook",
+      "key": "position:Brook:20:30",
+      "value": "Library",
+      "text": "I was in the Library at 20:30.",
+      "kind": "approved_false"
+    },
+    "claim_witness_Brook": {
+      "speaker": "Emery",
+      "key": "position:Brook:20:30",
+      "value": "Gallery",
+      "text": "The timestamped recording shows Brook in the Gallery at 20:30.",
+      "fact_id": "fact_position_Brook_20:30",
+      "kind": "truthful"
+    }
+  },
+  "suspects": {
+    "Avery": {
+      "role": "self_protective",
+      "motive": "Protect private business while responding to the investigation",
+      "secret": "An unapproved private visit at 20:30",
+      "known_fact_ids": [
+        "fact_scene_floor",
+        "fact_position_Avery_20:30",
+        "fact_position_Avery_21:00"
+      ],
+      "approved_false_claim_ids": [
+        "claim_cover_Avery"
+      ],
+      "lead_ids": [
+        "scene_floor"
+      ]
+    },
+    "Brook": {
+      "role": "self_protective",
+      "motive": "Protect private business while responding to the investigation",
+      "secret": "An unapproved private visit at 20:30",
+      "known_fact_ids": [
+        "fact_badge_trace",
+        "fact_scene_wall",
+        "fact_position_Brook_20:30",
+        "fact_position_Brook_21:00"
+      ],
+      "approved_false_claim_ids": [
+        "claim_cover_Brook"
+      ],
+      "lead_ids": [
+        "badge_trace",
+        "scene_wall"
+      ]
+    },
+    "Cameron": {
+      "role": "culprit",
+      "motive": "Conceal involvement in the murder",
+      "secret": "The murder",
+      "known_fact_ids": [
+        "fact_sleeve_trace",
+        "fact_position_Cameron_20:30",
+        "fact_position_Cameron_21:00"
+      ],
+      "approved_false_claim_ids": [
+        "claim_cover_Cameron"
+      ],
+      "lead_ids": [
+        "sleeve_trace"
+      ]
+    },
+    "Devon": {
+      "role": "truthful",
+      "motive": "Protect private business while responding to the investigation",
+      "secret": "An unapproved private visit at 20:30",
+      "known_fact_ids": [
+        "fact_weapon_material",
+        "fact_position_Devon_20:30",
+        "fact_position_Devon_21:00",
+        "fact_position_Cameron_21:00",
+        "fact_position_Avery_20:30"
+      ],
+      "approved_false_claim_ids": [],
+      "lead_ids": [
+        "weapon_material",
+        "meeting_Cameron",
+        "meeting_Avery"
+      ]
+    },
+    "Emery": {
+      "role": "truthful",
+      "motive": "Protect private business while responding to the investigation",
+      "secret": "An unapproved private visit at 20:30",
+      "known_fact_ids": [
+        "fact_weapon_edge",
+        "fact_position_Emery_20:30",
+        "fact_position_Emery_21:00",
+        "fact_position_Brook_20:30"
+      ],
+      "approved_false_claim_ids": [],
+      "lead_ids": [
+        "weapon_edge",
+        "meeting_Brook"
+      ]
+    }
+  },
+  "leads": {
+    "badge_trace": {
+      "owner": "Brook",
+      "claim_id": "claim_badge_trace",
+      "cue": "I have information about the attacker's badge; ask me about it.",
+      "label": "the attacker's badge"
+    },
+    "sleeve_trace": {
+      "owner": "Cameron",
+      "claim_id": "claim_sleeve_trace",
+      "cue": "I have information about the attacker's sleeve; ask me about it.",
+      "label": "the attacker's sleeve"
+    },
+    "weapon_material": {
+      "owner": "Devon",
+      "claim_id": "claim_weapon_material",
+      "cue": "I have information about the weapon material; ask me about it.",
+      "label": "the weapon material"
+    },
+    "weapon_edge": {
+      "owner": "Emery",
+      "claim_id": "claim_weapon_edge",
+      "cue": "I have information about the injury pattern; ask me about it.",
+      "label": "the injury pattern"
+    },
+    "scene_floor": {
+      "owner": "Avery",
+      "claim_id": "claim_scene_floor",
+      "cue": "I have information about the scene floor; ask me about it.",
+      "label": "the scene floor"
+    },
+    "scene_wall": {
+      "owner": "Brook",
+      "claim_id": "claim_scene_wall",
+      "cue": "I have information about the scene walls; ask me about it.",
+      "label": "the scene walls"
+    },
+    "meeting_Cameron": {
+      "owner": "Devon",
+      "claim_id": "claim_witness_Cameron",
+      "cue": "I saw Cameron at 21:00; ask where.",
+      "label": "Cameron's whereabouts at 21:00"
+    },
+    "meeting_Avery": {
+      "owner": "Devon",
+      "claim_id": "claim_witness_Avery",
+      "cue": "I saw Avery at 20:30; ask where.",
+      "label": "Avery's whereabouts at 20:30"
+    },
+    "meeting_Brook": {
+      "owner": "Emery",
+      "claim_id": "claim_witness_Brook",
+      "cue": "I saw Brook at 20:30; ask where.",
+      "label": "Brook's whereabouts at 20:30"
+    }
+  },
+  "gold": {
+    "evidence_ids": [
+      "fact_badge_trace",
+      "fact_sleeve_trace",
+      "fact_weapon_material",
+      "fact_weapon_edge",
+      "fact_scene_floor",
+      "fact_scene_wall",
+      "fact_position_Cameron_21:00",
+      "fact_position_Avery_20:30",
+      "fact_position_Brook_20:30"
+    ],
+    "approved_false_claim_ids": [
+      "claim_cover_Cameron",
+      "claim_cover_Avery",
+      "claim_cover_Brook"
+    ],
+    "counter_evidence": {
+      "claim_cover_Cameron": [
+        "claim_witness_Cameron"
+      ],
+      "claim_cover_Avery": [
+        "claim_witness_Avery"
+      ],
+      "claim_cover_Brook": [
+        "claim_witness_Brook"
+      ]
+    },
+    "contradiction_pairs": [
+      [
+        "claim_cover_Cameron",
+        "claim_witness_Cameron"
+      ],
+      [
+        "claim_cover_Cameron",
+        "claim_self_Cameron_21:00"
+      ],
+      [
+        "claim_cover_Avery",
+        "claim_witness_Avery"
+      ],
+      [
+        "claim_cover_Avery",
+        "claim_self_Avery_20:30"
+      ],
+      [
+        "claim_cover_Brook",
+        "claim_witness_Brook"
+      ],
+      [
+        "claim_cover_Brook",
+        "claim_self_Brook_20:30"
+      ]
+    ],
+    "essential_trace_fact_ids": [
+      "fact_badge_trace",
+      "fact_sleeve_trace",
+      "fact_weapon_material",
+      "fact_weapon_edge",
+      "fact_scene_floor",
+      "fact_scene_wall"
+    ]
+  },
+  "design": {
+    "template": "two_feature_museum_v1",
+    "recommended_initial_turn_budget": 20,
+    "memory_horizon_candidates": [
+      3,
+      5,
+      10
+    ],
+    "communication_note": "No essential clue requires private cooperation; sharing may change later testimony.",
+    "budget_note": "USD15 is a planning reference, not a hard cap. Agree a modest revised ceiling before paid runs."
+  }
+}
