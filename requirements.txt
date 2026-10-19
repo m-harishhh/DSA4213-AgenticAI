@@ -3,8 +3,10 @@
 # Install/check from the repository root:
 #   python -m pip install -r requirements.txt
 #
-# No third-party packages are currently required.
-# Runtime code, examples, archived exploration, and unittest tests use only
-# Python's standard library and the local casework package.
+# casework (Josh) uses only Python's standard library.
+# detective (Aravindh) uses pydantic for action-schema validation;
+# tested with pydantic 2.13.5 (Python 3.13) and 2.14.1 (Python 3.10).
 # Do not list standard-library modules or casework as pip dependencies.
 # Add tested external dependencies here when future modules introduce them.
+
+pydantic==2.13.5
