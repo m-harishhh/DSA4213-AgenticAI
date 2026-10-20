@@ -143,8 +143,11 @@ Retries: HTTP 408, 429 and 5xx (`errors.ServerError`), httpx transport errors an
 timeout/connection errors become `TransportError`, so the wrapper's bounded retries apply.
 400 (bad request), 401/403 (key) and 404 (unknown model) propagate unchanged: they are not
 transient and must stop the run. The SDK's own retry option is left off so retries happen
-in exactly one place. Thinking is off by default on `gemini-2.5-flash-lite` and at `minimal`
-on 3.5 Flash-Lite; set it explicitly in the frozen decoding settings before the pilot.
+in exactly one place. Set thinking explicitly in the frozen decoding settings before the
+pilot (`thinking_level` on 3.x models). Availability check on 20 Oct 2026 with a fresh AI
+Studio key: `gemini-2.5-flash-lite` is refused with 404 "no longer available to new users",
+so the pilot must use `gemini-3.1-flash-lite` or `gemini-3.5-flash-lite`. New AI Studio keys
+no longer all start with `AIza`; the smoke script only checks that Google accepts the key.
 
 Pricing: `pricing_for(model_id)` returns the wrapper's pricing dict for
 `gemini-2.5-flash-lite` (0.10 / 0.40), `gemini-3.1-flash-lite` (0.25 / 1.50) and

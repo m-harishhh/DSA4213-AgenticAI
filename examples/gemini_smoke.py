@@ -36,6 +36,16 @@ def load_dotenv(path):
         os.environ.setdefault(key.strip(), value.strip().strip("'\""))
 
 
+def hint_for(message):
+    if "API_KEY_INVALID" in message:
+        return ("Hint: the key was rejected. Use a Google AI Studio key (aistudio.google.com) in .env; "
+                "keys from other providers (for example sk-...) will not work.")
+    if "NOT_FOUND" in message or "404" in message[:12]:
+        return ("Hint: the model is unknown or not available to this key. Stable IDs are gemini-3.1-flash-lite "
+                "and gemini-3.5-flash-lite; gemini-2.5-flash-lite is refused for new keys (checked 20 Oct 2026).")
+    return "Hint: not a transient error; fix the request before retrying."
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--model", default=os.environ.get("GEMINI_MODEL"),
@@ -82,8 +92,7 @@ def main():
             except Exception as exc:  # non-retryable API errors: bad request, key, unknown model
                 message = str(exc).replace(os.environ["GEMINI_API_KEY"], "[key]")[:300]
                 print(f"Call failed and was not retried: {type(exc).__name__}: {message}")
-                print("A 400 API_KEY_INVALID means the key is not a Gemini (Google AI Studio) key; "
-                      "they start with AIza. Get one at aistudio.google.com and put it in .env.")
+                print(hint_for(message))
                 return 1
             print(json.dumps({"call_id": record["call_id"], "purpose": record["purpose"], "status": record["status"],
                               "text": record["text"][:120], "parsed": record["parsed"], "usage": record["usage"],
