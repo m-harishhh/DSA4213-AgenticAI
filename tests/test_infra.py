@@ -13,6 +13,7 @@ from pathlib import Path
 from casework import load_case
 from casework.diagnostics import eligible_exchanges, evidence_diagnostics, contradiction_diagnostics
 from infra import (LLMClient, MockBackend, GeminiBackend, TransportError, LLMCallError, EventLog, read_events,
+                   suspect_agent_ids,
                    validate_events, trace_prefix_before_first_accusation, to_annotation_exchanges,
                    summarise_cost, REQUIRED_KEYS)
 from infra.llm import REPAIR_INSTRUCTION, check_shape, parse_structured
@@ -52,7 +53,7 @@ def make_client(script, **kwargs):
 
 
 def call(client, **overrides):
-    arguments = {"role": "suspect", "agent_id": "Blair", "purpose": "interrogation_response",
+    arguments = {"role": "suspect", "agent_id": "suspect_2", "purpose": "interrogation_response",
                  "phase": "through_first_accusation",
                  "messages": [{"role": "user", "content": "Where were you?"}], "game_id": "g1"}
     arguments.update(overrides)
@@ -79,10 +80,15 @@ class WrapperTests(unittest.TestCase):
         client, log, _ = make_client(["q", "a", "e"])
         detective = call(client, role="detective", purpose="question", agent_id=None)
         self.assertEqual(detective["agent_id"], "detective")
-        self.assertEqual(call(client, agent_id="Casey")["agent_id"], "Casey")
+        self.assertEqual(call(client, agent_id="suspect_3")["agent_id"], "suspect_3")
         extractor = call(client, role="extractor", purpose="ledger_extraction", agent_id=None)
         self.assertEqual(extractor["agent_id"], "extractor")
-        self.assertEqual([event["agent_id"] for event in log.events], ["detective", "Casey", "extractor"])
+        self.assertEqual([event["agent_id"] for event in log.events], ["detective", "suspect_3", "extractor"])
+        names = ["Alex", "Blair", "Casey", "Drew", "Ellis"]
+        self.assertEqual(suspect_agent_ids(names), {"Alex": "suspect_1", "Blair": "suspect_2", "Casey": "suspect_3",
+                                                    "Drew": "suspect_4", "Ellis": "suspect_5"})
+        with self.assertRaises(ValueError):
+            suspect_agent_ids(names[:4])
 
     def test_no_pricing_means_null_cost_not_zero(self):
         client, _, _ = make_client(["x"])
@@ -91,7 +97,8 @@ class WrapperTests(unittest.TestCase):
     def test_vocabulary_and_message_shape_are_enforced(self):
         client, log, _ = make_client(["x"])
         for overrides in ({"role": "judge"}, {"purpose": "chat"}, {"phase": "warmup"}, {"purpose": "contradiction_report"},
-                          {"agent_id": None}, {"agent_id": ""},
+                          {"agent_id": None}, {"agent_id": ""}, {"agent_id": "Blair"}, {"agent_id": "suspect_9"},
+                          {"role": "detective", "purpose": "question", "agent_id": "suspect_1"},
                           {"messages": [{"role": "tool", "content": "x"}]}, {"messages": [{"role": "user"}]}):
             with self.subTest(overrides=overrides), self.assertRaises(ValueError):
                 call(client, **overrides)
@@ -239,7 +246,8 @@ class EventLogTests(unittest.TestCase):
         self.assertLess(report["seq"], first["seq"])
         call_record = next(e for e in self.events if e["kind"] == "llm_call" and e["call_id"] == first["call_id"])
         self.assertEqual(call_record["purpose"], "accusation")
-        self.assertEqual(report["reported_pairs_raw"], call_record["parsed"]["contradiction_report"])
+        self.assertIsNone(call_record["parsed"])  # decisions.md D1: detective calls carry no response_schema
+        self.assertEqual(report["reported_pairs_raw"], json.loads(call_record["text"])["contradiction_report"])
         self.assertNotIn("contradiction_report", {e["purpose"] for e in self.events if e["kind"] == "llm_call"})
 
     def test_prefix_stops_before_first_accusation(self):
@@ -335,9 +343,17 @@ class EventLogTests(unittest.TestCase):
         self.assertEqual(sum(b["total_tokens"] for b in summary["by_attempt_kind"].values()), summary["total_tokens"])
         self.assertAlmostEqual(summary["cost_usd"], sum(c["cost_usd"] for c in calls))
         self.assertEqual(set(summary["by_phase"]), {"through_first_accusation", "accusation_retries"})
-        self.assertEqual(set(summary["by_agent"]), {"detective", "extractor", "Blair", "Drew", "Casey", "Ellis"})
+        self.assertEqual(set(summary["by_agent"]),
+                         {"detective", "extractor", "suspect_2", "suspect_3", "suspect_4", "suspect_5"})
         self.assertEqual(sum(b["calls"] for b in summary["by_agent"].values()), summary["calls"])
         self.assertEqual(summary["calls_without_pricing"], 0)
+        self.assertEqual(summary["controller_repair_calls"], {"calls": 0, "total_tokens": 0})
+        client, log, _ = make_client(["bad", "good"])
+        first = call(client, role="detective", purpose="question", agent_id=None)
+        call(client, role="detective", purpose="question", agent_id=None, tags={"repair_of": first["call_id"]})
+        repairs = summarise_cost([{"kind": "llm_call", **event} for event in log.events])["controller_repair_calls"]
+        self.assertEqual(repairs["calls"], 1)
+        self.assertGreater(repairs["total_tokens"], 0)
         self.assertEqual(self.events[-1]["cost"], summary)
 
     def test_example_script_runs_from_the_command_line(self):

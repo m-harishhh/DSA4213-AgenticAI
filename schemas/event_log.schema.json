@@ -143,9 +143,18 @@
             ]
           },
           "agent_id": {
-            "type": "string",
-            "minLength": 1,
-            "description": "Persona across games: the suspect's case name for role suspect; detective, interpreter, extractor or annotator otherwise"
+            "enum": [
+              "detective",
+              "suspect_1",
+              "suspect_2",
+              "suspect_3",
+              "suspect_4",
+              "suspect_5",
+              "interpreter",
+              "extractor",
+              "annotator"
+            ],
+            "description": "Stable persona across games (decisions.md D3): suspects are numbered in the case's public suspect order"
           },
           "purpose": {
             "enum": [

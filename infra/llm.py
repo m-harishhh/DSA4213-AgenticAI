@@ -15,8 +15,19 @@ ROLES = ("detective", "suspect", "interpreter", "extractor", "annotator")
 PURPOSES = ("question", "accusation", "interrogation_response", "invitation", "acceptance",
             "conversation_message", "conversation_reply", "intent_interpretation",
             "ledger_extraction", "annotation")
-# The contradiction report (proposal 5.3) rides on the first accusation call; it is not a purpose.
+# The contradiction report (proposal 5.3) rides on the first accusation call; it is not a purpose (decisions.md D2).
 SINGLETON_AGENTS = ("detective", "interpreter", "extractor", "annotator")
+SUSPECT_AGENT_IDS = tuple(f"suspect_{i}" for i in range(1, 6))
+# decisions.md D3: stable agent IDs across games; suspects are numbered in the case's public suspect order.
+AGENT_IDS = ("detective",) + SUSPECT_AGENT_IDS + ("interpreter", "extractor", "annotator")
+
+
+def suspect_agent_ids(suspects):
+    """{suspect name: "suspect_<i>"} in public order (decisions.md D3), the controller's agent_ids_for mapping."""
+    names = list(suspects)
+    if len(names) != len(SUSPECT_AGENT_IDS):
+        raise ValueError(f"Expected {len(SUSPECT_AGENT_IDS)} suspects, got {len(names)}")
+    return dict(zip(names, SUSPECT_AGENT_IDS))
 # Proposal 5.2: cost through the first accusation, retry cost and post-game cost are reported separately.
 PHASES = ("through_first_accusation", "accusation_retries", "post_game_analysis")
 ATTEMPT_KINDS = ("initial", "transport_retry", "format_repair")
@@ -221,6 +232,10 @@ class LLMClient:
     log: an object with emit(kind, **payload), normally infra.eventlog.EventLog; None disables logging.
     pricing: {"input_per_million", "output_per_million", optional "reasoning_per_million", "basis"}.
     clock/sleep: injectable for deterministic tests and examples.
+
+    Detective decisions pass response_schema=None (decisions.md D1): the controller parses
+    them with detective.parse_decision and owns the single repair. The wrapper's own
+    format repair applies to calls that do pass a schema (extraction, invitation, acceptance).
     """
 
     def __init__(self, backend, model_id, decoding, log=None, pricing=None,
@@ -250,9 +265,10 @@ class LLMClient:
              max_output_tokens=None, tags=None):
         """Run one logical call with bounded transport retries and one bounded format repair.
 
-        agent_id names the persona across games: the suspect's case name for role
-        "suspect" (required), and the role itself for the singleton agents (detective,
-        interpreter, extractor, annotator) when omitted.
+        agent_id is the stable persona across games (decisions.md D3): suspect_1..suspect_5
+        in the case's public suspect order for role "suspect" (required; see
+        suspect_agent_ids), and the role itself for the singleton agents (detective,
+        interpreter, extractor, annotator), which is the default when omitted.
         Returns the call record (also logged). Raises LLMCallError after logging when
         the bounds are exhausted; the record then has status transport_failure or
         format_failure and the caller must treat the game as a failed run.
@@ -263,12 +279,14 @@ class LLMClient:
             raise ValueError(f"purpose must be one of {PURPOSES}")
         if phase not in PHASES:
             raise ValueError(f"phase must be one of {PHASES}")
-        if agent_id is None:
-            if role == "suspect":
-                raise ValueError("suspect calls must name the suspect in agent_id, e.g. agent_id='Blair'")
+        if agent_id is None and role != "suspect":
             agent_id = role
-        if not isinstance(agent_id, str) or not agent_id:
-            raise ValueError("agent_id must be a non-empty string")
+        if role == "suspect":
+            if agent_id not in SUSPECT_AGENT_IDS:
+                raise ValueError("suspect calls need agent_id suspect_1..suspect_5 in public suspect order "
+                                 "(decisions.md D3); use suspect_agent_ids(public['suspects'])")
+        elif agent_id != role:
+            raise ValueError(f"agent_id for role {role!r} must be {role!r} (decisions.md D3)")
         messages = [dict(message) for message in messages]
         for message in messages:
             if message.get("role") not in MESSAGE_ROLES or not isinstance(message.get("content"), str):

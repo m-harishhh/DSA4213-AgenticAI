@@ -4,11 +4,13 @@ See infra/README.md. Standard library only; the Gemini backend is a stub until T
 """
 
 from .llm import (LLMClient, MockBackend, GeminiBackend, TransportError, LLMCallError,
-                  ROLES, PURPOSES, PHASES, ATTEMPT_KINDS, CALL_STATUSES)
+                  ROLES, PURPOSES, PHASES, ATTEMPT_KINDS, CALL_STATUSES, AGENT_IDS, SUSPECT_AGENT_IDS,
+                  suspect_agent_ids)
 from .eventlog import (EventLog, read_events, validate_events, trace_prefix_before_first_accusation,
                        to_annotation_exchanges, summarise_cost, REQUIRED_KEYS, KINDS, CONDITIONS)
 
 __all__ = ["LLMClient", "MockBackend", "GeminiBackend", "TransportError", "LLMCallError",
-           "ROLES", "PURPOSES", "PHASES", "ATTEMPT_KINDS", "CALL_STATUSES",
+           "ROLES", "PURPOSES", "PHASES", "ATTEMPT_KINDS", "CALL_STATUSES", "AGENT_IDS", "SUSPECT_AGENT_IDS",
+           "suspect_agent_ids",
            "EventLog", "read_events", "validate_events", "trace_prefix_before_first_accusation",
            "to_annotation_exchanges", "summarise_cost", "REQUIRED_KEYS", "KINDS", "CONDITIONS"]

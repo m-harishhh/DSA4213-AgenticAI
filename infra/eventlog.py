@@ -11,7 +11,7 @@ import datetime
 import json
 from pathlib import Path
 
-from .llm import ROLES, PURPOSES, PHASES, ATTEMPT_KINDS, ATTEMPT_STATUSES, CALL_STATUSES
+from .llm import ROLES, PURPOSES, PHASES, ATTEMPT_KINDS, ATTEMPT_STATUSES, CALL_STATUSES, AGENT_IDS
 
 SCHEMA_VERSION = "1.0"
 ENVELOPE_KEYS = ("seq", "ts", "game_id", "kind")
@@ -243,8 +243,8 @@ def validate_events(events):
         if kind == "llm_call":
             if event["role"] not in ROLES or event["purpose"] not in PURPOSES or event["phase"] not in PHASES:
                 errors.append(f"Event {event['seq']}: role/purpose/phase outside the vocabulary")
-            if not isinstance(event["agent_id"], str) or not event["agent_id"]:
-                errors.append(f"Event {event['seq']}: agent_id must be a non-empty string")
+            if event["agent_id"] not in AGENT_IDS:
+                errors.append(f"Event {event['seq']}: agent_id {event['agent_id']!r} is outside the decisions.md D3 vocabulary")
             if event["status"] not in CALL_STATUSES:
                 errors.append(f"Event {event['seq']}: status {event['status']!r} unknown")
             for attempt in event["attempts"]:
@@ -365,7 +365,7 @@ def summarise_cost(events):
     """Token and USD totals by role, agent, purpose, phase and attempt kind, from llm_call events."""
     calls = [event for event in events if event["kind"] == "llm_call"]
     summary = {"calls": len(calls), "by_role": {}, "by_agent": {}, "by_purpose": {}, "by_phase": {},
-               "by_attempt_kind": {},
+               "by_attempt_kind": {}, "controller_repair_calls": {"calls": 0, "total_tokens": 0},
                "total_tokens": 0, "cost_usd": None, "calls_without_pricing": 0}
     priced_total = 0.0
     any_priced = False
@@ -379,6 +379,9 @@ def summarise_cost(events):
                 bucket[name] += usage[name]
             bucket["cost_usd"] += call["cost_usd"] or 0.0
         summary["total_tokens"] += usage["total_tokens"]
+        if (call.get("tags") or {}).get("repair_of"):  # decisions.md D1: controller-side detective repair
+            summary["controller_repair_calls"]["calls"] += 1
+            summary["controller_repair_calls"]["total_tokens"] += usage["total_tokens"]
         if call["cost_usd"] is None:
             summary["calls_without_pricing"] += 1
         else:

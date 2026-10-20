@@ -62,7 +62,7 @@ record["call_id"]   # "c000017": cite it in the controller event for this step
 |---|---|
 | `role` | `detective`, `suspect`, `interpreter`, `extractor`, `annotator`: which prompt family generated |
 | `purpose` | `question`, `accusation`, `interrogation_response`, `invitation`, `acceptance`, `conversation_message`, `conversation_reply`, `intent_interpretation`, `ledger_extraction`, `annotation`. The contradiction report is not a purpose: it rides on the first `accusation` call (Aravindh's action schema, proposal 5.3) |
-| `agent_id` | Which agent persona made the call, stable across games: the suspect's case name for `role="suspect"` (required; the case fixes names across all games, and the order of `public["suspects"]` gives a stable 1 to 5 index), defaulting to the role for the singleton agents `detective`, `interpreter`, `extractor`, `annotator` |
+| `agent_id` | Stable persona across games (decisions.md D3): `suspect_1`..`suspect_5` in `public["suspects"]` order for `role="suspect"` (required; `infra.suspect_agent_ids(public["suspects"])` or Harish's `agent_ids_for(case)` gives the mapping), and the role itself for the singleton agents `detective`, `interpreter`, `extractor`, `annotator` (the default when omitted). Anything else is rejected |
 | `phase` | `through_first_accusation`, `accusation_retries`, `post_game_analysis` (proposal 5.2 cost buckets; the first accusation call itself is in the first bucket) |
 | `messages` | `[{"role": "system"\|"user"\|"assistant", "content": str}]`; build them fresh every call (proposal 4.2) |
 | `game_id` | Copied onto the record; must match the log's game |
@@ -109,8 +109,12 @@ the field mapping (`usage_metadata.prompt_token_count` -> input,
 Aravindh: a mock wrapper is fine for the detective prompt work. Script the answers you
 need and call `llm.call(role="detective", ...)`; the signature will not change. Your
 first accusation output carries `contradiction_report`; the controller logs it as a
-`contradiction_report` event citing that call, so no second call is needed.
-Harish: the suspect pipeline calls `llm.call(role="suspect", agent_id=<suspect name>,
+`contradiction_report` event citing that call, so no second call is needed. Detective
+calls pass `response_schema=None` (decisions.md D1): the controller parses them with
+`parse_decision` and owns the single repair. Make that repair a second `llm.call` with
+the same `purpose` and `tags={"repair_of": <call_id>}`; `summarise_cost` reports those
+calls separately so repair cost stays visible.
+Harish: the suspect pipeline calls `llm.call(role="suspect", agent_id=agent_ids_for(case)[suspect],
 purpose="interrogation_response", ...)` with `branch_prompt(...)` rendered into the
 system message; the delivered `record["text"]` goes into the `interrogation` event
 unchanged.
@@ -132,6 +136,7 @@ ID conventions (enforced by `validate_events`):
 | Private conversation | `p1`, `p2`, ... | Suspect-only; exported as `p1_msg` and `p1_reply` |
 | Detective conversation | `conv1`, ... | Also carries `exchange_id` `e<t>` because it enters memory |
 | LLM call | `c000001`, ... | Per-client counter; every controller event cites the calls it used |
+| Agent | `detective`, `suspect_1`..`suspect_5`, `interpreter`, `extractor`, `annotator` | decisions.md D3; suspects numbered in `public["suspects"]` order, so the same ID means the same persona in every game of a case |
 
 Event kinds, who emits them and when (proposal 4.1 loop):
 
@@ -214,7 +219,7 @@ instead of an overlay. It exists so the metrics pipeline can be exercised on fak
 transcripts before labels exist. It is a smoke test, never a source of reported numbers.
 
 `examples/infra_example.py` shows the whole chain: with the overlay, the exported
-`e1`/`e2`/`e3` entries equal Josh's fixture and his adapters return coverage 2/9,
+`e1`/`e2`/`e3` entries equal Josh's fixture and his adapters return coverage 2/10,
 candidate count 50 and contradiction precision and recall 1.0, the same numbers as
 `examples/diagnostics_example.json`.
 
@@ -222,12 +227,21 @@ candidate count 50 and contradiction precision and recall 1.0, the same numbers 
 
 `summarise_cost(events)` totals tokens and USD by `role`, `agent_id`, `purpose`, `phase`
 and attempt kind from the `llm_call` events, and `game_end.cost` stores it. The
-`by_agent` table is what tracks one persona across games. Phases split
+`by_agent` table is what tracks one persona across games; `controller_repair_calls`
+counts calls tagged `repair_of` (the controller-side detective repairs of D1). Phases split
 cost through the first accusation, retry cost and post-game analysis as the proposal
 asks; attempt kinds split retries and repairs. `cost_usd` is `None` when no call had
 pricing, and `calls_without_pricing` says how many lacked it.
 
-## Open points to confirm on Mon 19
+## Alignment with decisions.md (19 Oct)
+
+D1: detective calls carry no `response_schema`; the wrapper repair applies only to
+schema calls. D2: the contradiction report rides on the first accusation call. D3:
+`agent_id` vocabulary as above. D4: `memory_view.window_exchange_ids` is the same k
+window for raw and ledger. The `role`/`purpose`/`phase` vocabularies are frozen with
+`controller/interfaces.py`.
+
+## Open points
 
 - Josh: private conversations are exported as two `suspect_conversation` exchanges
   (`p<n>_msg`, `p<n>_reply`) so each utterance keeps its speaker and spans. Invitations
@@ -240,8 +254,8 @@ pricing, and `calls_without_pricing` says how many lacked it.
   after turn 2 to stay short); the scheduler owns that rule. `proposal_order` and
   `seed_used` must be the values actually used.
 - Elena: whether the overlay above is enough as the hand-off from the annotation step.
-- Everyone: the `role`/`purpose`/`phase` vocabularies. Adding a value is a one-line
-  change in `infra/llm.py` plus the schema enum; do it before the pilot, not after.
+- Everyone: adding a vocabulary value is a one-line change in `infra/llm.py` plus the
+  schema enum, and needs a PR because the interface file is frozen.
 
 ## What this module does not do
 

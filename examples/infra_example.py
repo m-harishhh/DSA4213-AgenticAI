@@ -29,7 +29,7 @@ from casework import load_case, initial_state, allowed_content, record_delivery 
 from casework.disclosure import branch_prompt  # noqa: E402
 from casework.diagnostics import evidence_diagnostics, contradiction_diagnostics  # noqa: E402
 from infra import (LLMClient, MockBackend, EventLog, to_annotation_exchanges, summarise_cost,  # noqa: E402
-                   validate_events)
+                   validate_events, suspect_agent_ids)
 
 EVENT_LOG_PATH = ROOT / "examples" / "event_log_example.jsonl"
 OVERLAY_PATH = ROOT / "examples" / "annotation_overlay_example.json"
@@ -41,13 +41,9 @@ PRICING = {"input_per_million": 0.10, "output_per_million": 0.40,
            "basis": "Gemini 2.5 Flash-Lite list prices quoted in the proposal (checked 28 Sep 2026); re-check before paid runs"}
 PROMPT_VERSIONS = {"detective": "mock-v0", "suspect": "mock-v0", "extractor": "mock-v0"}
 
-# Illustrative structured-output schemas. The real ones belong to their owners
-# (Aravindh: detective action and ledger entry; Harish: invitation and acceptance).
-DETECTIVE_ACTION = {"type": "object", "required": ["action"],
-                    "properties": {"action": {"enum": ["interrogate", "accuse"]}, "suspect": {"type": "string"},
-                                   "question": {"type": "string"}, "culprit": {"type": "string"},
-                                   "weapon": {"type": "string"}, "location": {"type": "string"},
-                                   "contradiction_report": {"type": "array"}}}
+# Illustrative structured-output schemas for the suspect-side and extraction calls (Harish,
+# Aravindh own the real ones). Detective calls pass no schema: the controller parses them with
+# detective.parse_decision and owns the single repair (decisions.md D1).
 INVITATION = {"type": "object", "required": ["invite"], "properties": {"invite": {"type": ["string", "null"]}}}
 ACCEPTANCE = {"type": "object", "required": ["accept"], "properties": {"accept": {"type": "boolean"}}}
 LEDGER = {"type": "object", "required": ["entries"], "properties": {"entries": {"type": "array"}}}
@@ -159,26 +155,32 @@ def run_mock_game(log_path, case=None, clocks=None):
                        model_id="mock-model", decoding=DECODING, prompt_versions=PROMPT_VERSIONS,
                        pricing=PRICING, manifest_sha256=None, code_version="example")
         states = {name: initial_state(case, name) for name in public["suspects"]}
+        agent_ids = suspect_agent_ids(public["suspects"])  # decisions.md D3: suspect_1..5 in public order
         ledger = {}  # exchange_id -> entries, the ledger condition's memory source
         window = []
         decisions = 0
 
-        def detective(purpose, decision_type, schema, user_text, phase_now=None):
+        def detective(purpose, decision_type, user_text, phase_now=None):
+            """Returns (record, parsed). MOCK parsing: live, the controller runs detective.parse_decision (D1)."""
             nonlocal decisions
             decisions += 1
             payload = [ledger[eid] for eid in window[-K:]]
             record = llm.call(role="detective", purpose=purpose, phase=phase_now or phase,
                               messages=[{"role": "system", "content": "You are the detective. " + public["description"]},
                                         {"role": "user", "content": f"Memory: {json.dumps(payload)}\n{user_text}"}],
-                              game_id="example_game", response_schema=schema)
+                              game_id="example_game", response_schema=None)
             log.memory_view(decision_index=decisions, decision_type=decision_type,
                             window_exchange_ids=window[-K:], memory_payload=payload, call_id=record["call_id"])
-            return record
+            try:
+                parsed = json.loads(record["text"])
+            except json.JSONDecodeError:
+                parsed = None  # free-text replies
+            return record, parsed
 
         def suspect_call(name, purpose, user_text, schema=None, system_text=None):
             messages = ([{"role": "system", "content": system_text}] if system_text else []) + \
                        [{"role": "user", "content": user_text}]
-            return llm.call(role="suspect", agent_id=name, purpose=purpose, phase=phase, messages=messages,
+            return llm.call(role="suspect", agent_id=agent_ids[name], purpose=purpose, phase=phase, messages=messages,
                             game_id="example_game", response_schema=schema)
 
         def extract(exchange_id, speaker, text):
@@ -193,8 +195,8 @@ def run_mock_game(log_path, case=None, clocks=None):
         # Two interrogations (the real loop continues to the turn budget or an accusation).
         intents = [{"kind": "whereabouts", "time": "20:30"}, {"kind": "corroborate", "subject": "Blair", "time": "20:30"}]
         for turn, intent in enumerate(intents, start=1):
-            question = detective("question", "question", DETECTIVE_ACTION, "Interrogate one suspect or accuse.")
-            suspect, text = question["parsed"]["suspect"], question["parsed"]["question"]
+            question, decision = detective("question", "question", "Interrogate one suspect or accuse.")
+            suspect, text = decision["suspect"], decision["question"]
             branches = allowed_content(case, suspect, intent, states[suspect])
             selected = branches[-1]  # MOCK: the live suspect model chooses among the allowed branches
             instructions = branch_prompt(case, selected)
@@ -216,11 +218,11 @@ def run_mock_game(log_path, case=None, clocks=None):
         log.checkpoint_start(checkpoint_index=1, after_interrogation=2, proposal_order=order, seed_used=SEED)
 
         invite = suspect_call("Blair", "invitation", "Invite one participant or null.", INVITATION)
-        accept = detective("acceptance", "acceptance", ACCEPTANCE, "Blair invites you. Accept?")
+        accept, _ = detective("acceptance", "acceptance", "Blair invites you. Accept?")
         log.invitation(invitation_id="inv1", checkpoint_index=1, pass_no=1, sender="Blair", recipient="Detective",
                        decision="accepted", invitation_call_id=invite["call_id"], decision_call_id=accept["call_id"])
         message = suspect_call("Blair", "conversation_message", "Send one bounded message to the detective.")
-        reply = detective("conversation_reply", "conversation_reply", None, f"Blair says: {message['text']}\nReply briefly.")
+        reply, _ = detective("conversation_reply", "conversation_reply", f"Blair says: {message['text']}\nReply briefly.")
         matched = match_claims(case, "Blair", message["text"])
         states["Blair"] = record_delivery(case, "Blair", states["Blair"], matched)
         conversation = log.conversation(conversation_id="conv1", checkpoint_index=1, visibility="detective",
@@ -251,11 +253,11 @@ def run_mock_game(log_path, case=None, clocks=None):
             phase_now = "through_first_accusation" if attempt == 1 else "accusation_retries"
             prompt = ("Make your accusation. On your first accusation also list conflicting claims in your "
                       "memory as contradiction_report, citing exchange IDs and quotes.")
-            action = detective("accusation", "accusation", DETECTIVE_ACTION, prompt, phase_now)
+            action, decision = detective("accusation", "accusation", prompt, phase_now)
             if attempt == 1:
                 log.contradiction_report(call_id=action["call_id"], window_exchange_ids=window[-K:],
-                                         reported_pairs_raw=action["parsed"]["contradiction_report"])
-            triple = {key: action["parsed"][key] for key in ("culprit", "weapon", "location")}
+                                         reported_pairs_raw=decision["contradiction_report"])
+            triple = {key: decision[key] for key in ("culprit", "weapon", "location")}
             correct = triple == solution
             outcomes.append((triple, correct))
             log.accusation(attempt=attempt, triple=triple, valid=True, correct=correct,
