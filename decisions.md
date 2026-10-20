@@ -24,8 +24,8 @@ Why: The proposal (§3.5) mentions it but never defines it; Josh's case gives al
 
 
 ## D6. Turn budget and k fixed without a pilot sweep
-Decision: turn budget = 20 and k = 5, fixed now. We will not compare 20/30/40 turns or k ∈ {3, 5, 10} as proposed in §3.5 and §4.3.
-Why: time. Both are within the proposal's candidate sets and were chosen before seeing any results, so they're not picked for a ledger advantage. Josh's certificate shows the case is solvable in 14 turns, which is within 20.
+Decision: turn budget = 20 and k = 8, fixed now. We will not compare 20/30/40 turns or k ∈ {3, 5, 10} as proposed in §3.5 and §4.3.
+Why: time. Both are within the proposal's candidate sets and were chosen before seeing any results, so they're not picked for a ledger advantage. Josh's certificate shows the case is solvable in 14 turns, which is within 20. And solvable in 6-7 conversations.
 Still set during the pilot: message and character caps, model version, and the cost per game.
 
 ## D7. Stubs for Aravindh's functions live in detective/
