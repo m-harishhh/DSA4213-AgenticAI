@@ -21,7 +21,10 @@ nothing (Josh's conventions). Run everything from the repository root.
 python -m unittest discover -s tests -v
 python examples/infra_example.py            # mock game -> export -> Josh's diagnostics
 python examples/infra_example.py --write    # regenerate the checked-in example files
-GEMINI_API_KEY=... python examples/gemini_smoke.py --model gemini-2.5-flash-lite   # two tiny PAID calls
+python -m infra run --config configs/experiment_config.example.json --case cases/pilot.json \
+    --run-dir runs/mock_demo --games-per-condition 2 --workers 2   # offline mock games
+python -m infra replay runs/mock_demo/<game_id>.jsonl               # transcript of one game
+GEMINI_API_KEY=... python examples/gemini_smoke.py --model gemini-3.1-flash-lite   # two tiny PAID calls
 ```
 
 The repo tests and examples run on a bare Python 3.10+. The live backend and Aravindh's
@@ -44,9 +47,14 @@ git-ignored.
 | `tests/test_infra.py` | Wrapper policy, log validation, export equality with Josh's fixture, round trip through his adapters |
 | `tests/test_gemini_backend.py` | Live backend against a fake SDK client: request mapping, usage and finish-reason extraction, error classification, retries through the wrapper, pricing |
 | `examples/gemini_smoke.py` | Two tiny paid calls through the live backend; refuses to run without `GEMINI_API_KEY`; logs to `runs/smoke/` |
+| `infra/orchestrate.py` | Seeded run plan, results file, resume, cost ceiling, parallel workers, per-condition summary |
+| `infra/replay.py` | Transcript rendering, annotation export per game, `ReplayBackend` for no-cost re-execution |
+| `infra/mockgame.py` | Seeded mock game with `run_game`'s signature and return shape; stand-in for Harish's controller |
+| `infra/__main__.py` | `python -m infra run / replay / summary` |
+| `tests/test_orchestration.py` | Plan determinism, mock-game validity, parallel execution, resume, crash and budget accounting, replay, CLI |
 
-Deferred, in task-plan order: seeded run orchestration and run-level index (Wed 21),
-cost estimate and metrics on these logs (Fri 23), bootstrap CIs and figures (Mon 26).
+Deferred, in task-plan order: cost estimate and metrics on these logs (Fri 23), bootstrap
+CIs and figures (Mon 26).
 
 ## LLM wrapper
 
@@ -282,6 +290,60 @@ cost through the first accusation, retry cost and post-game analysis as the prop
 asks; attempt kinds split retries and repairs. `cost_usd` is `None` when no call had
 pricing, and `calls_without_pricing` says how many lacked it.
 
+## Orchestration, transcripts and replay
+
+`python -m infra run` plays a seeded run through `run_game`: Harish's
+`controller.interfaces.run_game` with `--game controller`, or the stand-in
+`infra.mockgame.run_game` (default) that plays a seeded mock game against Josh's case so
+the pipeline can be exercised offline. A run is a folder:
+
+```
+runs/<run_id>/run.json                 plan written once: master seed, per-game seeds, shuffled order, config, case hash
+runs/<run_id>/results.jsonl            one row per finished game, appended as games finish (crash-safe)
+runs/<run_id>/<game_id>.jsonl          the event log
+runs/<run_id>/<game_id>.transcript.md  readable transcript (private conversations marked)
+runs/<run_id>/<game_id>.exchanges.json Josh-format exchanges with empty claim_ids, for Elena
+```
+
+- **Seeding.** Each game's seed is `sha256(master_seed:condition:repeat)`, and the order of
+  games is shuffled by the master seed (proposal 5.5), so a run is reproducible from
+  `run.json` alone. Pass the game's `seed` to the scheduler's RNG and log it in
+  `checkpoint_start.seed_used`.
+- **Resume.** Running the same `--run-dir` again skips finished plan entries. `--limit N`
+  plays at most N games now; `--dry-run` prints what is left.
+- **Cost ceiling.** `--max-cost-usd` (default: the config's `budget_usd`) stops new games from
+  starting once the summed `cost_usd` of finished games reaches it; games in flight finish.
+- **Parallel games.** `--workers N` plays N games at once (threads; the work is I/O bound).
+  The smoke test measured 8 to 35 s per call with 503/504 retries, so sequential runs of
+  300 games would take days: plan on 4 to 8 workers and keep `timeout_s` above 60 in the
+  config. Each game gets its own `LLMClient` (fresh call counter) and its own log file.
+- **Accounting.** A `run_game` that raises becomes a results row with `status: crashed`
+  and the error text; a game that ends with `game_end.outcome = failed_run` stays an
+  unsuccessful game. `summary` reports both separately, and operational first-accusation
+  accuracy counts them as failures (proposal 5.4). Every log is validated after the game
+  and `validation_passed` is stored on the row.
+
+**Contract for Harish's `run_game(case_path, config, seed, condition, llm, log_dir)`:**
+it receives an `LLMClient` whose `log` is `None`; create
+`EventLog(Path(log_dir) / f"{game_id}.jsonl", game_id)`, set `llm.log = log`, emit
+`game_start` first, and return `{"game_id", "log_path", "outcome",
+"first_accusations_correct"}`. `config` is the experiment config plus `run_id` and
+`case_sha256`. The orchestrator reads outcome, counters and cost from the log's
+`game_end`, so the return dict only needs to be right about `log_path`.
+
+**Replay.** `python -m infra replay <log>` prints the transcript (`--no-private` hides
+suspect-only conversations, `--write` writes the two artifact files, `--check` validates
+the log). `infra.replay.ReplayBackend(events)` re-serves the recorded responses of one game
+in call order through the normal `LLMClient`, with no API calls: a recorded failure is
+replayed as the same number of transport errors, and a prompt that differs from the
+recording raises `ReplayMismatch`, which is how a controller change that alters prompts
+shows up. A recorded format repair replays as its final text in one attempt.
+
+**Mock game caveats.** It picks intents, branches, invitations and accusations at random
+from the seed, copies the chosen branch IDs into `controller_matched` (a live controller
+must match delivered text instead), and its outcome odds per condition are arbitrary.
+Use it for plumbing, metrics code and labelling practice, never for results.
+
 ## Alignment with decisions.md (19 Oct)
 
 D1: detective calls carry no `response_schema`; the wrapper repair applies only to
@@ -308,8 +370,9 @@ window for raw and ledger. The `role`/`purpose`/`phase` vocabularies are frozen 
 
 ## What this module does not do
 
-Only the live backend makes API calls (never from tests or `examples/infra_example.py`).
-It does not orchestrate games, does not schedule checkpoints,
+Only the live backend makes API calls (never from tests, the mock game or the examples).
+It does not play real games (the mock game stands in for Harish's controller), does not
+schedule checkpoints,
 does not interpret questions and does not compute the primary metrics. Those arrive
 in later items and in the other owners' modules. The event log records what happened;
 it never changes a delivered response, regenerates testimony or feeds annotations back
