@@ -278,7 +278,7 @@ class EventLogTests(unittest.TestCase):
         conflicts = contradiction_diagnostics(self.case, export["exchanges"], export["reported_pairs"], "ledger", 3)
         self.assertEqual((conflicts["precision"], conflicts["recall"]), (1.0, 1.0))
         coverage = evidence_diagnostics(self.case, export["exchanges"], "ledger", 3)
-        self.assertEqual((coverage["coverage_numerator"], coverage["coverage_denominator"]), (2, 9))
+        self.assertEqual((coverage["coverage_numerator"], coverage["coverage_denominator"]), (2, 10))
         self.assertEqual(coverage["approved_false_claims_disclosed"], ["claim_cover_Blair"])
         self.assertEqual(coverage["source_window_exchange_ids"], ["e1", "e2", "e3"])
         none = contradiction_diagnostics(self.case, export["exchanges"], export["reported_pairs"], "none", 3)

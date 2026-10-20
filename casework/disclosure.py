@@ -37,6 +37,8 @@ def allowed_content(case, suspect, intent, state, cited_claim_ids=()):
         lead = case["leads"].get(intent.get("topic"))
         if lead and lead["owner"] == suspect:
             return [_branch("required_disclosure", [lead["claim_id"]])]
+        if lead and suspect in lead["cue_speakers"]:
+            return [_branch("refer_to_evidence_holder", lead_ids=[intent["topic"]])]
         return [_branch("unknown_lead", withholding=True)]
     if kind in ("whereabouts", "corroborate"):
         subject = suspect if kind == "whereabouts" else intent.get("subject")
@@ -95,8 +97,8 @@ def record_delivery(case, suspect, state, actual_claim_ids=(), actual_lead_ids=(
         if cid not in result["delivered_claim_ids"]:
             result["delivered_claim_ids"].append(cid)
     for lid in actual_lead_ids:
-        if lid not in case["leads"] or case["leads"][lid]["owner"] != suspect:
-            raise ValueError("Lead belongs to another suspect")
+        if lid not in case["leads"] or suspect not in case["leads"][lid]["cue_speakers"]:
+            raise ValueError("Speaker is not authorised to disclose this lead cue")
         if lid not in result["disclosed_leads"]:
             result["disclosed_leads"].append(lid)
     for cid in actual_retraction_ids:

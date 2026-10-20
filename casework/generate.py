@@ -1,8 +1,9 @@
 """Two reproducible authored templates, not an unrestricted story generator."""
 
 import json
+from itertools import combinations
 from pathlib import Path
-from .model import SCHEMA_VERSION, event_values
+from .model import SCHEMA_VERSION, TURN_BUDGET, MEMORY_K, event_values
 
 
 def make_case(kind="pilot"):
@@ -12,7 +13,7 @@ def make_case(kind="pilot"):
     people = ["Alex", "Blair", "Casey", "Drew", "Ellis"] if pilot else ["Avery", "Brook", "Cameron", "Devon", "Emery"]
     weapons = ["Knife", "Hatchet", "Candlestick", "Rope", "Hammer"]
     rooms = ["Library", "Study", "Gallery", "Kitchen", "Conservatory"]
-    # Each feature pair is unique. Selected answers require both trace features.
+    # Weapon and room pairs remain unique; two suspects deliberately share traits.
     person_pairs = [("round", "blue"), ("round", "green"), ("square", "blue"),
                     ("square", "red"), ("triangle", "green")]
     weapon_pairs = [("steel", "sharp"), ("iron", "sharp"), ("brass", "blunt"),
@@ -23,6 +24,9 @@ def make_case(kind="pilot"):
     culprit, weapon, location = people[ci], weapons[wi], rooms[li]
     others = [p for p in people if p != culprit]
     protectors, truthful = others[:2], others[2:]
+    # Choose a self-protective innocent who is elsewhere at murder time.
+    decoy = next(p for p in protectors if rooms[(people.index(p) + 2) % 5] != location)
+    person_pairs[people.index(decoy)] = person_pairs[ci]
     public = {
         "schema_version": SCHEMA_VERSION,
         "description": "A museum curator was murdered at 21:00. It is now 21:30. Staff have reviewed different cropped recordings or forensic notes. Interview them to identify the killer, weapon and room.",
@@ -51,13 +55,12 @@ def make_case(kind="pilot"):
         "intent_contract": ["overview", "ask_lead(topic)", "whereabouts(time)",
                             "corroborate(subject,time)", "challenge(claim,cited_counter_evidence)"],
     }
-    case = {"schema_version": SCHEMA_VERSION, "case_id": f"museum_{kind}_v1",
+    case = {"schema_version": SCHEMA_VERSION, "case_id": f"museum_{kind}_v2",
             "status": "pilot" if pilot else "candidate_for_freeze_after_pilot",
             "public": public, "solution": {"culprit": culprit, "weapon": weapon, "location": location},
             "events": [], "facts": {}, "claims": {}, "suspects": {}, "leads": {},
-            "gold": {}, "design": {"template": "two_feature_museum_v1",
-                "recommended_initial_turn_budget": 20,
-                "memory_horizon_candidates": [3, 5, 10],
+            "gold": {}, "design": {"template": "alibi_referral_museum_v2",
+                "turn_budget": TURN_BUDGET, "memory_k": MEMORY_K,
                 "communication_note": "No essential clue requires private cooperation; sharing may change later testimony.",
                 "budget_note": "USD15 is a planning reference, not a hard cap. Agree a modest revised ceiling before paid runs."}}
     for index, person in enumerate(people):
@@ -77,6 +80,14 @@ def make_case(kind="pilot"):
             "motive": "Conceal involvement in the murder" if role == "culprit" else "Protect private business while responding to the investigation",
             "secret": "The murder" if role == "culprit" else "An unapproved private visit at 20:30",
             "known_fact_ids": [], "approved_false_claim_ids": [], "lead_ids": []}
+    for person, spec in case["suspects"].items():
+        if spec["role"] == "culprit":
+            spec["motive"] += ". You may approach the detective to offer your account before suspicion grows, but only use approved claims; you may also remain silent."
+        elif spec["role"] == "self_protective":
+            spec["motive"] += ". You may approach the detective to clear suspicion while protecting your private visit; truth, withholding and your approved cover remain choices."
+        else:
+            spec["motive"] += ". You may approach the detective to share a relevant observation or correct a misleading impression; do not invent evidence."
+    case["suspects"][decoy]["secret"] = "An unapproved private visit at 20:30, unrelated to the murder. Sharing physical traits with another staff member does not establish guilt."
     # Facts are evaluable propositions; testimony remains attributed to its speaker.
     def add_fact(fid, key, text):
         case["facts"][fid] = {"key": key, "value": truth[key], "text": text.format(value=truth[key])}
@@ -113,7 +124,7 @@ def make_case(kind="pilot"):
             fid = f"fact_position_{person}_{time}"
             add_fact(fid, f"position:{person}:{time}", f"{person} was in the {{value}} at {time}.")
             add_claim(f"claim_self_{person}_{time}", person, fid)
-    false_ids, pairs, counter = [], [], {}
+    false_ids, counter = [], {}
     for idx, person in enumerate([culprit] + protectors):
         time = "21:00" if person == culprit else "20:30"
         key = f"position:{person}:{time}"
@@ -134,8 +145,34 @@ def make_case(kind="pilot"):
         case["suspects"][witness]["lead_ids"].append(topic)
         false_ids.append(cid)
         counter[cid] = [witness_cid]
-        pairs.extend([[cid, witness_cid], [cid, f"claim_self_{person}_{time}"]])
         evidence_ids.append(fid)
+    # Independent exculpatory testimony, not the innocent's own potentially false alibi.
+    fid = f"fact_position_{decoy}_21:00"
+    cid = f"claim_alibi_{decoy}"
+    witness = truthful[-1]
+    add_claim(cid, witness, fid)
+    case["claims"][cid]["text"] = f"The timestamped recording shows {decoy} in the {truth[f'position:{decoy}:21:00']} at 21:00."
+    topic = f"alibi_{decoy}"
+    case["leads"][topic] = {"owner": witness, "claim_id": cid,
+        "cue": f"I have information about {decoy}'s whereabouts at 21:00; ask me where.",
+        "label": f"{decoy}'s whereabouts at 21:00"}
+    case["suspects"][witness]["lead_ids"].append(topic)
+    evidence_ids.append(fid)
+
+    # owner = evidence holder; cue_speakers = authored knowledge of whom to ask.
+    # A referral conveys no underlying observation and does not copy private facts.
+    for lead in case["leads"].values():
+        lead["cue_speakers"] = [lead["owner"]]
+    for lid, giver in (("scene_floor", people[3]), (topic, decoy)):
+        lead = case["leads"][lid]
+        case["suspects"][lead["owner"]]["lead_ids"].remove(lid)
+        case["suspects"][giver]["lead_ids"].append(lid)
+        lead["cue_speakers"] = [giver]
+        lead["cue"] = f"{lead['owner']} has information about {lead['label']}; ask {lead['owner']} about it."
+    # Derive every incompatible finite pair, including any newly authored claims.
+    pairs = [[a, b] for a, b in combinations(case["claims"], 2)
+             if case["claims"][a]["key"] == case["claims"][b]["key"]
+             and case["claims"][a]["value"] != case["claims"][b]["value"]]
     case["gold"] = {"evidence_ids": evidence_ids, "approved_false_claim_ids": false_ids,
                     "counter_evidence": counter, "contradiction_pairs": pairs,
                     "essential_trace_fact_ids": [f"fact_{row[0]}" for row in topics]}

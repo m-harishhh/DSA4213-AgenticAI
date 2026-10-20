@@ -20,7 +20,7 @@ relative to that root. No separate compilation step is required.
 
 Use your existing compatible Python environment, then run
 `python -m pip install -r requirements.txt` from the root. The current requirements
-file has no third-party dependencies, so this installs nothing. See the
+file includes Pydantic for the detective module; casework itself remains standard-library only. See the
 [root README](../README.md) for the repository layout and setup instructions.
 
 ```bash
@@ -41,8 +41,8 @@ python -m casework validate cases/evaluation.json --turn-budget 20 --output vali
 ```
 
 Expected for both supplied cases: **one unique solution, 108 successful terminal
-branches, zero failed branches, and a 14-turn worst case for the certified
-strategy**. These counts describe the designed response tree, not 108 LLM games.
+branches, zero failed branches, and certified worst cases of **18 turns for pilot / 19 for evaluation** at **k=8**,
+including uninformative detective conversations at all three checkpoints**. These counts describe the designed response tree, not 108 LLM games.
 The certificate is intentionally conservative; it is not a shortest-path proof.
 
 ## Files and ownership
@@ -103,45 +103,41 @@ Six main clues concern:
 5. The scene's floor.
 6. The scene's wall colour.
 
-In the **pilot**, round badge + blue sleeve identify Alex; steel + sharp identify
-Knife; stone floor + green walls identify Library. Each clue is attributed to its
-speaker. These are evaluator explanations, not a public answer key.
+In case revision v2, two suspects share the same physical traits. In the pilot,
+Alex and Blair share round badges and blue sleeves; in evaluation, Cameron and
+Brook share square badges and blue sleeves. Six physical traces alone now leave
+**two** feasible murder triples. A newly discoverable, independently attributed
+21:00 alibi excludes the self-protective innocent from the established murder room.
+Catching a lie or obtaining a retraction alone does not identify the culprit.
 
-The **evaluation candidate** has different names, events, culprit, weapon and
-room. Both cases share the same deliberately small rule template. They are not
-independent samples from a broad distribution of plots. Do not tune prompts on
-evaluation answers or choose this case because it gives a ledger advantage.
+The innocent alternative still has a permitted false account about a private
+20:30 visit. A lie about that earlier time must not be confused with presence at
+the 21:00 murder. The underlying solver and public own-alibi deception policy are
+unchanged: even a deception-permitted speaker must make truthful designed claims
+about other people's whereabouts. Actual LLM violations are still delivered unchanged.
 
-The culprit and two self-protective innocents each have one approved false alibi,
-with a discoverable witness counterclaim. Everyone also knows their own timeline.
-Three additional witness facts produce a fixed coverage denominator of **nine**.
-The six trace clues suffice for the triple; the other clues support deception,
-challenge and contradiction diagnostics. High coverage is therefore not required
-for a correct answer.
+Each case has **ten** discoverable evidence facts: six physical traces, three
+counter-witness facts, and the independent innocent alibi. Gold coverage counts
+facts, not referrals. Two explicit referrals direct the detective to a different
+suspect: the scene-floor clue and the independent alibi. The giver knows whom to
+ask, not automatically the answer. Asking the evidence holder directly is allowed;
+there is no prerequisite password or mandatory sequence.
 
-### Deliberate limits of this first case design
+Case IDs are `museum_pilot_v2` and `museum_evaluation_v2`; case schema version is
+**1.1**. Old case JSON lacks required referral metadata and must be regenerated
+or deliberately migrated; do not silently mix old cases and new reports.
+The event-log schema has its own version and is unchanged.
 
-The proposal leaves exact public deduction rules and approved deceptive topics
-to case design. This implementation chooses a **narrow public deception rule**:
-the culprit and self-protective innocents may lie about their own whereabouts at
-the two listed times; other designed claims must be truthful. Their actual private
-permission is narrower still: one particular cover account each.
+The pilot and evaluation remain separate authored cases with fixed names, roles,
+clues and motives within each case. They are not independent samples from a broad
+plot distribution. Do not tune on evaluation outcomes or select a case for a ledger
+advantage. Motives encourage optional, permitted checkpoint sharing without forcing
+an invitation, acceptance, or lie. No essential clue requires private cooperation.
 
-This supports innocent deception without treating every unreliable speaker as
-the murderer. It also makes the finite solver tractable and understandable.
-However, the essential trace clues cannot be deliberately falsified under this
-template. An agent can solve the case without resolving every false alibi. Thus,
-the main result will concern memory over distributed, partly distracting testimony;
-it will not establish robustness to arbitrary lies about essential clues.
-
-This is a design choice to review during the pilot. If the group wants lying about
-weapon/scene/attacker traces, extend the public permission model, solver, gold
-counter-evidence and tests together before freezing the evaluation. Changing a
-prompt alone would invalidate the certificate.
-
-One suspect holds two of the six main traces; others hold one. Additional witness
-knowledge also differs. The role-to-output-length/clue-count shortcut audit still
-belongs in the pilot. This module does not claim those surface patterns are balanced.
+The finite model still restricts deliberate lies to own whereabouts. It does not
+model arbitrary false forensic evidence or geographical "nearness". Character
+motive wording is private context, not an extra solver fact. Review wording,
+role-to-clue-count/length shortcuts, interpretation, and cost during the pilot.
 
 ## Facts, claims and delivered text are different
 
@@ -175,7 +171,7 @@ annotated separately. Gold pairs concern statements, not proof of guilt.
 - Each initially known fact has an explicit observation record.
 - Truthful claims match known facts; each approved false claim is actually false,
   within its owner's permission, and has discoverable counter-evidence.
-- Required clue leads are explicitly discoverable and belong to their speakers.
+- Required evidence belongs to its holder; cue-speaker permissions separately establish discoverable referrals.
 - Coverage labels and contradiction pairs match the finite claim catalogue.
 - Public evidence leaves one answer even when role identities are hidden.
 - No single innocent's initial true facts, plus knowledge of their own innocence,
@@ -191,16 +187,31 @@ all other observed claims constrain the candidate world. A contradictory set can
 have zero feasible worlds. That is a conditional-rule diagnostic, not a verdict
 that the LLM detective itself is irrational.
 
-The certificate asks every suspect for an overview, then follows all explicitly
-offered leads. Each overview can truthfully answer or partially withhold; the three
-deception-permitted suspects can instead offer their approved cover. This yields
-`3 * 3 * 3 * 2 * 2 = 108` terminal branch combinations. There are five overview
-questions and nine lead questions: fourteen interrogations.
+The certificate asks everyone for an overview, then follows the disclosed leads
+in a deterministic order: cues mentioning 20:30, cues mentioning 21:00, then the
+other cues (ties by topic ID). It follows the **evidence holder**, not the cue-giver.
+This is a finite evaluator strategy, not an optimal policy or a detective prompt.
 
-Certification uses all evidence collected by that strategy. It does **not** prove
-that a detective with a short rolling window can retain enough evidence, that an
-LLM will choose the strategy, or that every natural-language interpretation works.
-The certificate is never supplied as detective instructions.
+Every overview can truthfully answer or partially withhold; three suspects may
+instead use their approved cover, yielding `3 * 3 * 3 * 2 * 2 = 108` branch combinations.
+Five overviews plus ten distinct leads take fifteen interrogations. The certificate
+also inserts one empty detective conversation after interrogations 5, 10 and 15,
+which is the maximum memory displacement without useful new evidence. It then
+re-asks displaced recent leads when needed. All branches finish in eighteen pilot
+turns or nineteen evaluation turns, below the fixed twenty-turn limit.
+
+Both the complete observed evidence and the final **eight source exchanges** must
+uniquely identify the stored triple using the public solver. The latter includes
+checkpoint conversations. Reports contain an example final window for inspection.
+Removing the inserted conversations only frees memory slots on the same route;
+compliant additional statements cannot invalidate the true solution. Arbitrary
+violations remain outside this guarantee.
+
+This proves a source-evidence route exists at k=8; it does not promise that the
+LLM chooses it, extracts faithfully, or reasons correctly. Recovery bookkeeping
+and all certificate IDs are evaluator-only: never pass them as extra memory.
+No-memory still sees only the latest exchange and is not certified to retain a
+solution. Certificates do not claim every possible detective policy succeeds.
 
 Voluntary conversations can share claims or propose an approved cover, but cannot
 change events, create new permitted lies, or remove a required original clue.
@@ -238,7 +249,7 @@ The finite intents are:
 | Intent dict | Behaviour |
 |---|---|
 | `{"kind": "overview"}` | Useful explicit leads, with truthful/partial/approved-cover alternatives |
-| `{"kind": "ask_lead", "topic": "badge_trace"}` | Required disclosure by that lead's owner |
+| `{"kind": "ask_lead", "topic": "badge_trace"}` | Required disclosure by the evidence holder; authorised cue-givers redirect to that holder |
 | `{"kind": "whereabouts", "time": "20:30"}` | Own alibi, with permitted withholding/cover branches |
 | `{"kind": "corroborate", "subject": "Blair", "time": "20:30"}` | Known observation of that person's whereabouts |
 | `{"kind": "challenge", "claim_id": "claim_cover_Blair"}` | Maintain or retract according to relevant cited evidence |
@@ -249,6 +260,37 @@ topics. Resolve a question against public information and actually delivered cue
 For a challenge, resolve cited source text to IDs; pass only actually cited,
 detective-visible counterclaims in `cited_claim_ids`. The interpreter must not use
 the hidden answer or the detective memory condition.
+
+### Referral contract (schema 1.1)
+
+A lead retains `owner`, `claim_id`, `cue`, and `label`, and adds required
+`cue_speakers`: the people explicitly authorised to disclose its cue. A suspect's
+`lead_ids` now lists **cues they can disclose**, not necessarily evidence they own.
+These lists are the authored referral-knowledge boundary, checked by validation.
+The holder's actual evidence knowledge still needs an observation event and fact.
+
+For example, Drew refers the detective to Alex for the pilot's `scene_floor` lead.
+`record_delivery(case, "Drew", state, actual_lead_ids=["scene_floor"])` records that
+Drew supplied the referral. It does not record Alex's evidence as delivered and
+it does not transfer that evidence into Drew's private knowledge. A subsequent
+`ask_lead` to Alex supplies the clue; the same intent to Drew repeats the referral.
+A response branch keeps the existing `claim_ids`, `lead_ids`, and retraction fields.
+
+Harish: resolve free-form follow-ups using delivered cues, route to `owner`, and
+match cue delivery separately from evidence delivery. The helper signatures remain
+unchanged. Pass `suspect_view` motives/instructions into invitation/message prompts;
+invitation content itself must stay identity-only. The new motive instructions do
+not grant permission for invented claims or change conversation limits.
+
+Aravindh: retain the explicitly stated referral speaker, target and topic in the
+ledger, with source attribution. Do not import the private lead catalogue into
+memory or keep an unresolved lead after its source exchange expires.
+
+Elena: label the referral and its relevant follow-up separately from actual evidence
+coverage. Deduplicate the same actionable lead if repeated. Distinguish an innocent's
+20:30 lie from their independent 21:00 alibi; keep the original lie after retraction.
+Aniroodh: the case fingerprint and coverage denominator changed; regenerate examples
+and use new manifests for revised cases. No additional metric system is introduced.
 
 `record_delivery(...)` updates finite state from matched **actual** claims, leads
 and retractions. It never assumes a selected branch was delivered. It deliberately
@@ -293,9 +335,9 @@ ID while keeping separate exchange occurrences.
 from casework.diagnostics import evidence_diagnostics, contradiction_diagnostics
 
 # Pass the trace PREFIX ending just before the first accusation.
-coverage = evidence_diagnostics(case, exchanges, condition="raw", k=5)
+coverage = evidence_diagnostics(case, exchanges, condition="raw", k=8)
 conflicts = contradiction_diagnostics(case, exchanges, reported_pairs,
-                                    condition="ledger", k=5)
+                                    condition="ledger", k=8)
 ```
 
 Coverage deduplicates relevant true facts, tracks approved false claims separately,
@@ -345,7 +387,8 @@ Harish/Elena's end-to-end suite (they are outside Josh's offline module):
 
 The evaluation JSON is a **candidate**, not a claim that main evaluation has begun.
 Use only the pilot for wording/interpretation/cost tuning. Agree one model version,
-prompts, decoding settings, `k`, turn budget, repeat count and annotation allocation.
+prompts, decoding settings, repeat count and annotation allocation. The group has
+already fixed **k=8 and turn_budget=20**, with no horizon/budget sweep.
 Do not change those after looking at main-condition results.
 
 USD15 is no longer enforced as a hard limit. `budget_usd` is deliberately null in
@@ -362,7 +405,7 @@ python -m casework manifest cases/evaluation.json --config configs/experiment_co
 ```
 
 This records a case hash, module-source hashes, selected settings and certificate.
-It refuses unfinished settings. It does not modify the case, lock files, execute
+It refuses unfinished settings or settings other than k=8 / turn_budget=20. It does not modify the case, lock files, execute
 games, or make model calls. Preserve the manifest with prompts and run logs. Any
 later case/code change needs a new record and a documented decision about affected
 runs. Do not call a case frozen merely because its offline certificate passed.
@@ -384,3 +427,24 @@ Design references: final proposal Sections 3.1-3.5, 4.2-4.3 and 5.1-5.5; Task Pl
 Josh allocation and cross-owner dependencies; final rubric technical quality,
 evaluation and contribution evidence. The supplied implementation deliberately
 documents its template restrictions and remaining integrated-game responsibilities.
+
+## Settings and integration status for this revision
+
+`casework.model.MEMORY_K = 8` and `TURN_BUDGET = 20` are also exported from
+`casework`. Diagnostics, validation and CLI defaults use these values. The example
+experiment configuration sets them explicitly. `validate --memory-k N` may explore
+other horizons for offline diagnostics; `manifest` accepts only the agreed 8/20
+configuration. This prevents an old k=5 configuration being frozen accidentally.
+
+The current `josh` checkout does not contain Harish's unmerged controller interfaces
+or Aniroodh's latest unmerged logging update. No other branch was merged or edited.
+When integrating, Harish should import the shared constants or set his controller
+`MEMORY_K` to 8 and update D6; Aravindh must use 8 for both raw and ledger windows.
+The small infrastructure mock deliberately remains a three-exchange demonstration,
+not a main experiment. Unit tests with smaller windows exercise edge cases.
+
+Use `tests/test_case_revision.py` for the referral, alibi-necessity, checkpoint-window,
+retraction, and manifest regression checks. Saved validation reports and the mock's
+case hash have been regenerated. The independent alibi is necessary in the designed
+case, while the culprit remains free to tell the truth or withhold instead of lying.
+There is no dependency on a lie occurring or a voluntary conversation being accepted.

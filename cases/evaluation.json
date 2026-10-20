@@ -1,9 +1,9 @@
 {
-  "schema_version": "1.0",
-  "case_id": "museum_evaluation_v1",
+  "schema_version": "1.1",
+  "case_id": "museum_evaluation_v2",
   "status": "candidate_for_freeze_after_pilot",
   "public": {
-    "schema_version": "1.0",
+    "schema_version": "1.1",
     "description": "A museum curator was murdered at 21:00. It is now 21:30. Staff have reviewed different cropped recordings or forensic notes. Interview them to identify the killer, weapon and room.",
     "suspects": [
       "Avery",
@@ -38,8 +38,8 @@
           "sleeve": "blue"
         },
         "Brook": {
-          "badge": "round",
-          "sleeve": "green"
+          "badge": "square",
+          "sleeve": "blue"
         },
         "Cameron": {
           "badge": "square",
@@ -376,6 +376,14 @@
       "time": "21:10",
       "fact_id": "fact_position_Brook_20:30",
       "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Emery_fact_position_Brook_21:00",
+      "subject": "Emery",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Brook_21:00",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
     }
   ],
   "facts": {
@@ -633,12 +641,20 @@
       "text": "The timestamped recording shows Brook in the Gallery at 20:30.",
       "fact_id": "fact_position_Brook_20:30",
       "kind": "truthful"
+    },
+    "claim_alibi_Brook": {
+      "speaker": "Emery",
+      "key": "position:Brook:21:00",
+      "value": "Kitchen",
+      "text": "The timestamped recording shows Brook in the Kitchen at 21:00.",
+      "fact_id": "fact_position_Brook_21:00",
+      "kind": "truthful"
     }
   },
   "suspects": {
     "Avery": {
       "role": "self_protective",
-      "motive": "Protect private business while responding to the investigation",
+      "motive": "Protect private business while responding to the investigation. You may approach the detective to clear suspicion while protecting your private visit; truth, withholding and your approved cover remain choices.",
       "secret": "An unapproved private visit at 20:30",
       "known_fact_ids": [
         "fact_scene_floor",
@@ -648,14 +664,12 @@
       "approved_false_claim_ids": [
         "claim_cover_Avery"
       ],
-      "lead_ids": [
-        "scene_floor"
-      ]
+      "lead_ids": []
     },
     "Brook": {
       "role": "self_protective",
-      "motive": "Protect private business while responding to the investigation",
-      "secret": "An unapproved private visit at 20:30",
+      "motive": "Protect private business while responding to the investigation. You may approach the detective to clear suspicion while protecting your private visit; truth, withholding and your approved cover remain choices.",
+      "secret": "An unapproved private visit at 20:30, unrelated to the murder. Sharing physical traits with another staff member does not establish guilt.",
       "known_fact_ids": [
         "fact_badge_trace",
         "fact_scene_wall",
@@ -667,12 +681,13 @@
       ],
       "lead_ids": [
         "badge_trace",
-        "scene_wall"
+        "scene_wall",
+        "alibi_Brook"
       ]
     },
     "Cameron": {
       "role": "culprit",
-      "motive": "Conceal involvement in the murder",
+      "motive": "Conceal involvement in the murder. You may approach the detective to offer your account before suspicion grows, but only use approved claims; you may also remain silent.",
       "secret": "The murder",
       "known_fact_ids": [
         "fact_sleeve_trace",
@@ -688,7 +703,7 @@
     },
     "Devon": {
       "role": "truthful",
-      "motive": "Protect private business while responding to the investigation",
+      "motive": "Protect private business while responding to the investigation. You may approach the detective to share a relevant observation or correct a misleading impression; do not invent evidence.",
       "secret": "An unapproved private visit at 20:30",
       "known_fact_ids": [
         "fact_weapon_material",
@@ -701,18 +716,20 @@
       "lead_ids": [
         "weapon_material",
         "meeting_Cameron",
-        "meeting_Avery"
+        "meeting_Avery",
+        "scene_floor"
       ]
     },
     "Emery": {
       "role": "truthful",
-      "motive": "Protect private business while responding to the investigation",
+      "motive": "Protect private business while responding to the investigation. You may approach the detective to share a relevant observation or correct a misleading impression; do not invent evidence.",
       "secret": "An unapproved private visit at 20:30",
       "known_fact_ids": [
         "fact_weapon_edge",
         "fact_position_Emery_20:30",
         "fact_position_Emery_21:00",
-        "fact_position_Brook_20:30"
+        "fact_position_Brook_20:30",
+        "fact_position_Brook_21:00"
       ],
       "approved_false_claim_ids": [],
       "lead_ids": [
@@ -726,55 +743,91 @@
       "owner": "Brook",
       "claim_id": "claim_badge_trace",
       "cue": "I have information about the attacker's badge; ask me about it.",
-      "label": "the attacker's badge"
+      "label": "the attacker's badge",
+      "cue_speakers": [
+        "Brook"
+      ]
     },
     "sleeve_trace": {
       "owner": "Cameron",
       "claim_id": "claim_sleeve_trace",
       "cue": "I have information about the attacker's sleeve; ask me about it.",
-      "label": "the attacker's sleeve"
+      "label": "the attacker's sleeve",
+      "cue_speakers": [
+        "Cameron"
+      ]
     },
     "weapon_material": {
       "owner": "Devon",
       "claim_id": "claim_weapon_material",
       "cue": "I have information about the weapon material; ask me about it.",
-      "label": "the weapon material"
+      "label": "the weapon material",
+      "cue_speakers": [
+        "Devon"
+      ]
     },
     "weapon_edge": {
       "owner": "Emery",
       "claim_id": "claim_weapon_edge",
       "cue": "I have information about the injury pattern; ask me about it.",
-      "label": "the injury pattern"
+      "label": "the injury pattern",
+      "cue_speakers": [
+        "Emery"
+      ]
     },
     "scene_floor": {
       "owner": "Avery",
       "claim_id": "claim_scene_floor",
-      "cue": "I have information about the scene floor; ask me about it.",
-      "label": "the scene floor"
+      "cue": "Avery has information about the scene floor; ask Avery about it.",
+      "label": "the scene floor",
+      "cue_speakers": [
+        "Devon"
+      ]
     },
     "scene_wall": {
       "owner": "Brook",
       "claim_id": "claim_scene_wall",
       "cue": "I have information about the scene walls; ask me about it.",
-      "label": "the scene walls"
+      "label": "the scene walls",
+      "cue_speakers": [
+        "Brook"
+      ]
     },
     "meeting_Cameron": {
       "owner": "Devon",
       "claim_id": "claim_witness_Cameron",
       "cue": "I saw Cameron at 21:00; ask where.",
-      "label": "Cameron's whereabouts at 21:00"
+      "label": "Cameron's whereabouts at 21:00",
+      "cue_speakers": [
+        "Devon"
+      ]
     },
     "meeting_Avery": {
       "owner": "Devon",
       "claim_id": "claim_witness_Avery",
       "cue": "I saw Avery at 20:30; ask where.",
-      "label": "Avery's whereabouts at 20:30"
+      "label": "Avery's whereabouts at 20:30",
+      "cue_speakers": [
+        "Devon"
+      ]
     },
     "meeting_Brook": {
       "owner": "Emery",
       "claim_id": "claim_witness_Brook",
       "cue": "I saw Brook at 20:30; ask where.",
-      "label": "Brook's whereabouts at 20:30"
+      "label": "Brook's whereabouts at 20:30",
+      "cue_speakers": [
+        "Emery"
+      ]
+    },
+    "alibi_Brook": {
+      "owner": "Emery",
+      "claim_id": "claim_alibi_Brook",
+      "cue": "Emery has information about Brook's whereabouts at 21:00; ask Emery about it.",
+      "label": "Brook's whereabouts at 21:00",
+      "cue_speakers": [
+        "Brook"
+      ]
     }
   },
   "gold": {
@@ -787,7 +840,8 @@
       "fact_scene_wall",
       "fact_position_Cameron_21:00",
       "fact_position_Avery_20:30",
-      "fact_position_Brook_20:30"
+      "fact_position_Brook_20:30",
+      "fact_position_Brook_21:00"
     ],
     "approved_false_claim_ids": [
       "claim_cover_Cameron",
@@ -807,28 +861,28 @@
     },
     "contradiction_pairs": [
       [
-        "claim_cover_Cameron",
-        "claim_witness_Cameron"
+        "claim_self_Avery_20:30",
+        "claim_cover_Avery"
+      ],
+      [
+        "claim_self_Brook_20:30",
+        "claim_cover_Brook"
+      ],
+      [
+        "claim_self_Cameron_21:00",
+        "claim_cover_Cameron"
       ],
       [
         "claim_cover_Cameron",
-        "claim_self_Cameron_21:00"
+        "claim_witness_Cameron"
       ],
       [
         "claim_cover_Avery",
         "claim_witness_Avery"
       ],
       [
-        "claim_cover_Avery",
-        "claim_self_Avery_20:30"
-      ],
-      [
         "claim_cover_Brook",
         "claim_witness_Brook"
-      ],
-      [
-        "claim_cover_Brook",
-        "claim_self_Brook_20:30"
       ]
     ],
     "essential_trace_fact_ids": [
@@ -841,13 +895,9 @@
     ]
   },
   "design": {
-    "template": "two_feature_museum_v1",
-    "recommended_initial_turn_budget": 20,
-    "memory_horizon_candidates": [
-      3,
-      5,
-      10
-    ],
+    "template": "alibi_referral_museum_v2",
+    "turn_budget": 20,
+    "memory_k": 8,
     "communication_note": "No essential clue requires private cooperation; sharing may change later testimony.",
     "budget_note": "USD15 is a planning reference, not a hard cap. Agree a modest revised ceiling before paid runs."
   }
