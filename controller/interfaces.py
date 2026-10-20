@@ -11,6 +11,7 @@ Disclaimer: This file is frozen, any changes requires a pr.
 
 # Casework module (owned by Josh)
 from casework import load_case, public_view, suspect_view, initial_state, allowed_content, record_delivery, share_information
+from casework import TURN_BUDGET, MEMORY_K # see decisions.md D6
 from casework.disclosure import branch_prompt, communication_options
 from casework.model import INTENTS
 
@@ -25,7 +26,7 @@ from detective.memory import build_memory, extract_ledger
 
 
 # Agreed Rules 
-TURN_BUDGET = 20 # fixed budget, see decision.md D6
+TURN_BUDGET = 20 # fixed budget, see decisions.md D6
 ACCUSATION_BUDGET = 3 
 
 # The below is parameters for conversation between agents in checkpoints
@@ -36,7 +37,7 @@ MAX_DETECTIVE_CONVERSATIONS_PER_CHECKPOINT = 1 # per checkpoint
 MAX_CONVERSATIONS_PER_PARTICIPANT = 1 #see decisions.md 
 DETECTIVE_FORMAT_REPAIRS = 1 #see decisions.md
 AGENT_IDS = ('detective', 'suspect_1', 'suspect_2', 'suspect_3', 'suspect_4', 'suspect_5', 'interpreter', 'extractor', 'annotator') #see decisions.md
-MEMORY_K = 5 # fixed budget, see decision.md D6
+MEMORY_K = 8 # fixed budget, see decisions.md D6
 
 
 def handle_accusation(game, action): 
