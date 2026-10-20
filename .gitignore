@@ -216,3 +216,13 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+<<<<<<< Updated upstream
+=======
+
+# Per-game event logs: private case information and large; never commit
+runs/
+
+#ai
+Claude.local.md
+Settings.local.json
+>>>>>>> Stashed changes
