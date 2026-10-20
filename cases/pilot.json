@@ -1,9 +1,9 @@
 {
-  "schema_version": "1.0",
-  "case_id": "museum_pilot_v1",
+  "schema_version": "1.1",
+  "case_id": "museum_pilot_v2",
   "status": "pilot",
   "public": {
-    "schema_version": "1.0",
+    "schema_version": "1.1",
     "description": "A museum curator was murdered at 21:00. It is now 21:30. Staff have reviewed different cropped recordings or forensic notes. Interview them to identify the killer, weapon and room.",
     "suspects": [
       "Alex",
@@ -39,7 +39,7 @@
         },
         "Blair": {
           "badge": "round",
-          "sleeve": "green"
+          "sleeve": "blue"
         },
         "Casey": {
           "badge": "square",
@@ -376,6 +376,14 @@
       "time": "21:10",
       "fact_id": "fact_position_Casey_20:30",
       "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
+    },
+    {
+      "id": "observe_Ellis_fact_position_Blair_21:00",
+      "subject": "Ellis",
+      "action": "observe",
+      "time": "21:10",
+      "fact_id": "fact_position_Blair_21:00",
+      "method": "Direct memory of own whereabouts or a supplied cropped record; only this fact is visible."
     }
   ],
   "facts": {
@@ -633,12 +641,20 @@
       "text": "The timestamped recording shows Casey in the Kitchen at 20:30.",
       "fact_id": "fact_position_Casey_20:30",
       "kind": "truthful"
+    },
+    "claim_alibi_Blair": {
+      "speaker": "Ellis",
+      "key": "position:Blair:21:00",
+      "value": "Kitchen",
+      "text": "The timestamped recording shows Blair in the Kitchen at 21:00.",
+      "fact_id": "fact_position_Blair_21:00",
+      "kind": "truthful"
     }
   },
   "suspects": {
     "Alex": {
       "role": "culprit",
-      "motive": "Conceal involvement in the murder",
+      "motive": "Conceal involvement in the murder. You may approach the detective to offer your account before suspicion grows, but only use approved claims; you may also remain silent.",
       "secret": "The murder",
       "known_fact_ids": [
         "fact_scene_floor",
@@ -648,14 +664,12 @@
       "approved_false_claim_ids": [
         "claim_cover_Alex"
       ],
-      "lead_ids": [
-        "scene_floor"
-      ]
+      "lead_ids": []
     },
     "Blair": {
       "role": "self_protective",
-      "motive": "Protect private business while responding to the investigation",
-      "secret": "An unapproved private visit at 20:30",
+      "motive": "Protect private business while responding to the investigation. You may approach the detective to clear suspicion while protecting your private visit; truth, withholding and your approved cover remain choices.",
+      "secret": "An unapproved private visit at 20:30, unrelated to the murder. Sharing physical traits with another staff member does not establish guilt.",
       "known_fact_ids": [
         "fact_badge_trace",
         "fact_scene_wall",
@@ -667,12 +681,13 @@
       ],
       "lead_ids": [
         "badge_trace",
-        "scene_wall"
+        "scene_wall",
+        "alibi_Blair"
       ]
     },
     "Casey": {
       "role": "self_protective",
-      "motive": "Protect private business while responding to the investigation",
+      "motive": "Protect private business while responding to the investigation. You may approach the detective to clear suspicion while protecting your private visit; truth, withholding and your approved cover remain choices.",
       "secret": "An unapproved private visit at 20:30",
       "known_fact_ids": [
         "fact_sleeve_trace",
@@ -688,7 +703,7 @@
     },
     "Drew": {
       "role": "truthful",
-      "motive": "Protect private business while responding to the investigation",
+      "motive": "Protect private business while responding to the investigation. You may approach the detective to share a relevant observation or correct a misleading impression; do not invent evidence.",
       "secret": "An unapproved private visit at 20:30",
       "known_fact_ids": [
         "fact_weapon_material",
@@ -701,18 +716,20 @@
       "lead_ids": [
         "weapon_material",
         "meeting_Alex",
-        "meeting_Blair"
+        "meeting_Blair",
+        "scene_floor"
       ]
     },
     "Ellis": {
       "role": "truthful",
-      "motive": "Protect private business while responding to the investigation",
+      "motive": "Protect private business while responding to the investigation. You may approach the detective to share a relevant observation or correct a misleading impression; do not invent evidence.",
       "secret": "An unapproved private visit at 20:30",
       "known_fact_ids": [
         "fact_weapon_edge",
         "fact_position_Ellis_20:30",
         "fact_position_Ellis_21:00",
-        "fact_position_Casey_20:30"
+        "fact_position_Casey_20:30",
+        "fact_position_Blair_21:00"
       ],
       "approved_false_claim_ids": [],
       "lead_ids": [
@@ -726,55 +743,91 @@
       "owner": "Blair",
       "claim_id": "claim_badge_trace",
       "cue": "I have information about the attacker's badge; ask me about it.",
-      "label": "the attacker's badge"
+      "label": "the attacker's badge",
+      "cue_speakers": [
+        "Blair"
+      ]
     },
     "sleeve_trace": {
       "owner": "Casey",
       "claim_id": "claim_sleeve_trace",
       "cue": "I have information about the attacker's sleeve; ask me about it.",
-      "label": "the attacker's sleeve"
+      "label": "the attacker's sleeve",
+      "cue_speakers": [
+        "Casey"
+      ]
     },
     "weapon_material": {
       "owner": "Drew",
       "claim_id": "claim_weapon_material",
       "cue": "I have information about the weapon material; ask me about it.",
-      "label": "the weapon material"
+      "label": "the weapon material",
+      "cue_speakers": [
+        "Drew"
+      ]
     },
     "weapon_edge": {
       "owner": "Ellis",
       "claim_id": "claim_weapon_edge",
       "cue": "I have information about the injury pattern; ask me about it.",
-      "label": "the injury pattern"
+      "label": "the injury pattern",
+      "cue_speakers": [
+        "Ellis"
+      ]
     },
     "scene_floor": {
       "owner": "Alex",
       "claim_id": "claim_scene_floor",
-      "cue": "I have information about the scene floor; ask me about it.",
-      "label": "the scene floor"
+      "cue": "Alex has information about the scene floor; ask Alex about it.",
+      "label": "the scene floor",
+      "cue_speakers": [
+        "Drew"
+      ]
     },
     "scene_wall": {
       "owner": "Blair",
       "claim_id": "claim_scene_wall",
       "cue": "I have information about the scene walls; ask me about it.",
-      "label": "the scene walls"
+      "label": "the scene walls",
+      "cue_speakers": [
+        "Blair"
+      ]
     },
     "meeting_Alex": {
       "owner": "Drew",
       "claim_id": "claim_witness_Alex",
       "cue": "I saw Alex at 21:00; ask where.",
-      "label": "Alex's whereabouts at 21:00"
+      "label": "Alex's whereabouts at 21:00",
+      "cue_speakers": [
+        "Drew"
+      ]
     },
     "meeting_Blair": {
       "owner": "Drew",
       "claim_id": "claim_witness_Blair",
       "cue": "I saw Blair at 20:30; ask where.",
-      "label": "Blair's whereabouts at 20:30"
+      "label": "Blair's whereabouts at 20:30",
+      "cue_speakers": [
+        "Drew"
+      ]
     },
     "meeting_Casey": {
       "owner": "Ellis",
       "claim_id": "claim_witness_Casey",
       "cue": "I saw Casey at 20:30; ask where.",
-      "label": "Casey's whereabouts at 20:30"
+      "label": "Casey's whereabouts at 20:30",
+      "cue_speakers": [
+        "Ellis"
+      ]
+    },
+    "alibi_Blair": {
+      "owner": "Ellis",
+      "claim_id": "claim_alibi_Blair",
+      "cue": "Ellis has information about Blair's whereabouts at 21:00; ask Ellis about it.",
+      "label": "Blair's whereabouts at 21:00",
+      "cue_speakers": [
+        "Blair"
+      ]
     }
   },
   "gold": {
@@ -787,7 +840,8 @@
       "fact_scene_wall",
       "fact_position_Alex_21:00",
       "fact_position_Blair_20:30",
-      "fact_position_Casey_20:30"
+      "fact_position_Casey_20:30",
+      "fact_position_Blair_21:00"
     ],
     "approved_false_claim_ids": [
       "claim_cover_Alex",
@@ -807,28 +861,28 @@
     },
     "contradiction_pairs": [
       [
-        "claim_cover_Alex",
-        "claim_witness_Alex"
+        "claim_self_Alex_21:00",
+        "claim_cover_Alex"
+      ],
+      [
+        "claim_self_Blair_20:30",
+        "claim_cover_Blair"
+      ],
+      [
+        "claim_self_Casey_20:30",
+        "claim_cover_Casey"
       ],
       [
         "claim_cover_Alex",
-        "claim_self_Alex_21:00"
+        "claim_witness_Alex"
       ],
       [
         "claim_cover_Blair",
         "claim_witness_Blair"
       ],
       [
-        "claim_cover_Blair",
-        "claim_self_Blair_20:30"
-      ],
-      [
         "claim_cover_Casey",
         "claim_witness_Casey"
-      ],
-      [
-        "claim_cover_Casey",
-        "claim_self_Casey_20:30"
       ]
     ],
     "essential_trace_fact_ids": [
@@ -841,13 +895,9 @@
     ]
   },
   "design": {
-    "template": "two_feature_museum_v1",
-    "recommended_initial_turn_budget": 20,
-    "memory_horizon_candidates": [
-      3,
-      5,
-      10
-    ],
+    "template": "alibi_referral_museum_v2",
+    "turn_budget": 20,
+    "memory_k": 8,
     "communication_note": "No essential clue requires private cooperation; sharing may change later testimony.",
     "budget_note": "USD15 is a planning reference, not a hard cap. Agree a modest revised ceiling before paid runs."
   }

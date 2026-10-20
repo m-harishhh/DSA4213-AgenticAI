@@ -5,7 +5,7 @@ content is not an annotation. Unknown generated claims need separate annotation
 records; the finite case gold is not a complete label set for arbitrary output.
 """
 
-from .model import claims_for_solver, public_view
+from .model import claims_for_solver, public_view, MEMORY_K
 from .solver import solve
 
 
@@ -23,7 +23,7 @@ def eligible_exchanges(exchanges, condition, k):
     return visible[-(1 if condition == "none" else k):]
 
 
-def evidence_diagnostics(case, exchanges, condition="raw", k=5):
+def evidence_diagnostics(case, exchanges, condition="raw", k=MEMORY_K):
     visible = [e for e in exchanges if e["kind"] in ("interrogation", "detective_conversation")]
     window = eligible_exchanges(exchanges, condition, k)
     all_ids = {cid for e in visible for cid in e.get("claim_ids", [])}
@@ -44,7 +44,7 @@ def evidence_diagnostics(case, exchanges, condition="raw", k=5):
             "note": "Candidate counts use only matched finite claims. Unknown claims and policy violations require separate interpretation; counts never prove an actual run was solvable."}
 
 
-def contradiction_diagnostics(case, exchanges, reported_pairs, condition="raw", k=5,
+def contradiction_diagnostics(case, exchanges, reported_pairs, condition="raw", k=MEMORY_K,
                               additional_gold_pairs=()):
     """Score case-mapped claim pairs, requiring valid source-exchange citations.
 
