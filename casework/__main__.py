@@ -4,7 +4,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
-from .model import load_case, public_view
+from .model import load_case, public_view, TURN_BUDGET, MEMORY_K
 from .validation import validate_case
 from .generate import write_examples
 
@@ -19,7 +19,8 @@ def main():
         child.add_argument("case")
         child.add_argument("--output")
         if command in ("validate", "manifest"):
-            child.add_argument("--turn-budget", type=int, default=20)
+            child.add_argument("--turn-budget", type=int, default=TURN_BUDGET)
+            child.add_argument("--memory-k", type=int, default=MEMORY_K)
         if command == "manifest":
             child.add_argument("--config", required=True,
                                help="Final experiment settings agreed after pilot")
@@ -33,7 +34,7 @@ def main():
     if args.command == "public":
         report = public_view(case)
     else:
-        validation = validate_case(case, args.turn_budget)
+        validation = validate_case(case, args.turn_budget, memory_k=args.memory_k)
         report = validation
         status = 0 if validation["passed"] else 1
         if args.command == "manifest" and validation["passed"]:
@@ -42,8 +43,8 @@ def main():
                         "budget_usd", "annotation_sample_size", "prompt_versions")
             if any(key not in config or config[key] is None for key in required):
                 parser.error("Fill every final setting in the experiment config before creating a manifest")
-            if config["turn_budget"] != args.turn_budget:
-                parser.error("Config turn_budget must match --turn-budget")
+            if (config["k"], config["turn_budget"], args.memory_k, args.turn_budget) != (MEMORY_K, TURN_BUDGET, MEMORY_K, TURN_BUDGET):
+                parser.error("Main experiment is fixed at k=8 and turn_budget=20; alternative validation settings are exploratory only")
             for key in ("k", "turn_budget", "runs_per_condition"):
                 if not isinstance(config[key], int) or isinstance(config[key], bool) or config[key] <= 0:
                     parser.error(f"{key} must be a positive integer")

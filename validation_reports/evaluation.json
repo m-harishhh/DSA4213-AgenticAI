@@ -1,5 +1,5 @@
 {
-  "case_id": "museum_evaluation_v1",
+  "case_id": "museum_evaluation_v2",
   "passed": true,
   "errors": [],
   "checks": [
@@ -11,14 +11,15 @@
   "certificate": {
     "passed": true,
     "turn_budget": 20,
-    "strategy": "overview_each_public_suspect_then_follow_all_disclosed_leads",
-    "nodes_checked": 1174,
+    "memory_k": 8,
+    "strategy": "overview_then_time_ordered_referrals_then_recover_displaced_lead",
+    "nodes_checked": 1714,
     "successful_terminal_branches": 108,
     "failed_terminal_branches": 0,
     "turn_distribution": {
-      "14": 108
+      "19": 108
     },
-    "worst_case_turns": 14,
+    "worst_case_turns": 19,
     "failures": [],
     "example_path": [
       {
@@ -31,9 +32,7 @@
         "claim_ids": [
           "claim_self_Avery_20:30"
         ],
-        "lead_ids": [
-          "scene_floor"
-        ]
+        "lead_ids": []
       },
       {
         "turn": 2,
@@ -47,7 +46,8 @@
         ],
         "lead_ids": [
           "badge_trace",
-          "scene_wall"
+          "scene_wall",
+          "alibi_Brook"
         ]
       },
       {
@@ -77,7 +77,8 @@
         "lead_ids": [
           "weapon_material",
           "meeting_Cameron",
-          "meeting_Avery"
+          "meeting_Avery",
+          "scene_floor"
         ]
       },
       {
@@ -97,84 +98,6 @@
       },
       {
         "turn": 6,
-        "suspect": "Avery",
-        "intent": {
-          "kind": "ask_lead",
-          "topic": "scene_floor"
-        },
-        "branch_id": "required_disclosure",
-        "claim_ids": [
-          "claim_scene_floor"
-        ],
-        "lead_ids": []
-      },
-      {
-        "turn": 7,
-        "suspect": "Brook",
-        "intent": {
-          "kind": "ask_lead",
-          "topic": "badge_trace"
-        },
-        "branch_id": "required_disclosure",
-        "claim_ids": [
-          "claim_badge_trace"
-        ],
-        "lead_ids": []
-      },
-      {
-        "turn": 8,
-        "suspect": "Brook",
-        "intent": {
-          "kind": "ask_lead",
-          "topic": "scene_wall"
-        },
-        "branch_id": "required_disclosure",
-        "claim_ids": [
-          "claim_scene_wall"
-        ],
-        "lead_ids": []
-      },
-      {
-        "turn": 9,
-        "suspect": "Cameron",
-        "intent": {
-          "kind": "ask_lead",
-          "topic": "sleeve_trace"
-        },
-        "branch_id": "required_disclosure",
-        "claim_ids": [
-          "claim_sleeve_trace"
-        ],
-        "lead_ids": []
-      },
-      {
-        "turn": 10,
-        "suspect": "Devon",
-        "intent": {
-          "kind": "ask_lead",
-          "topic": "weapon_material"
-        },
-        "branch_id": "required_disclosure",
-        "claim_ids": [
-          "claim_weapon_material"
-        ],
-        "lead_ids": []
-      },
-      {
-        "turn": 11,
-        "suspect": "Devon",
-        "intent": {
-          "kind": "ask_lead",
-          "topic": "meeting_Cameron"
-        },
-        "branch_id": "required_disclosure",
-        "claim_ids": [
-          "claim_witness_Cameron"
-        ],
-        "lead_ids": []
-      },
-      {
-        "turn": 12,
         "suspect": "Devon",
         "intent": {
           "kind": "ask_lead",
@@ -187,7 +110,98 @@
         "lead_ids": []
       },
       {
+        "turn": 7,
+        "suspect": "Emery",
+        "intent": {
+          "kind": "ask_lead",
+          "topic": "meeting_Brook"
+        },
+        "branch_id": "required_disclosure",
+        "claim_ids": [
+          "claim_witness_Brook"
+        ],
+        "lead_ids": []
+      },
+      {
+        "turn": 8,
+        "suspect": "Emery",
+        "intent": {
+          "kind": "ask_lead",
+          "topic": "alibi_Brook"
+        },
+        "branch_id": "required_disclosure",
+        "claim_ids": [
+          "claim_alibi_Brook"
+        ],
+        "lead_ids": []
+      },
+      {
+        "turn": 9,
+        "suspect": "Devon",
+        "intent": {
+          "kind": "ask_lead",
+          "topic": "meeting_Cameron"
+        },
+        "branch_id": "required_disclosure",
+        "claim_ids": [
+          "claim_witness_Cameron"
+        ],
+        "lead_ids": []
+      },
+      {
+        "turn": 10,
+        "suspect": "Brook",
+        "intent": {
+          "kind": "ask_lead",
+          "topic": "badge_trace"
+        },
+        "branch_id": "required_disclosure",
+        "claim_ids": [
+          "claim_badge_trace"
+        ],
+        "lead_ids": []
+      },
+      {
+        "turn": 11,
+        "suspect": "Avery",
+        "intent": {
+          "kind": "ask_lead",
+          "topic": "scene_floor"
+        },
+        "branch_id": "required_disclosure",
+        "claim_ids": [
+          "claim_scene_floor"
+        ],
+        "lead_ids": []
+      },
+      {
+        "turn": 12,
+        "suspect": "Brook",
+        "intent": {
+          "kind": "ask_lead",
+          "topic": "scene_wall"
+        },
+        "branch_id": "required_disclosure",
+        "claim_ids": [
+          "claim_scene_wall"
+        ],
+        "lead_ids": []
+      },
+      {
         "turn": 13,
+        "suspect": "Cameron",
+        "intent": {
+          "kind": "ask_lead",
+          "topic": "sleeve_trace"
+        },
+        "branch_id": "required_disclosure",
+        "claim_ids": [
+          "claim_sleeve_trace"
+        ],
+        "lead_ids": []
+      },
+      {
+        "turn": 14,
         "suspect": "Emery",
         "intent": {
           "kind": "ask_lead",
@@ -200,25 +214,142 @@
         "lead_ids": []
       },
       {
-        "turn": 14,
-        "suspect": "Emery",
+        "turn": 15,
+        "suspect": "Devon",
         "intent": {
           "kind": "ask_lead",
-          "topic": "meeting_Brook"
+          "topic": "weapon_material"
         },
         "branch_id": "required_disclosure",
         "claim_ids": [
-          "claim_witness_Brook"
+          "claim_weapon_material"
+        ],
+        "lead_ids": []
+      },
+      {
+        "turn": 16,
+        "suspect": "Emery",
+        "intent": {
+          "kind": "ask_lead",
+          "topic": "alibi_Brook"
+        },
+        "branch_id": "required_disclosure",
+        "claim_ids": [
+          "claim_alibi_Brook"
+        ],
+        "lead_ids": []
+      },
+      {
+        "turn": 17,
+        "suspect": "Devon",
+        "intent": {
+          "kind": "ask_lead",
+          "topic": "meeting_Cameron"
+        },
+        "branch_id": "required_disclosure",
+        "claim_ids": [
+          "claim_witness_Cameron"
+        ],
+        "lead_ids": []
+      },
+      {
+        "turn": 18,
+        "suspect": "Brook",
+        "intent": {
+          "kind": "ask_lead",
+          "topic": "badge_trace"
+        },
+        "branch_id": "required_disclosure",
+        "claim_ids": [
+          "claim_badge_trace"
+        ],
+        "lead_ids": []
+      },
+      {
+        "turn": 19,
+        "suspect": "Avery",
+        "intent": {
+          "kind": "ask_lead",
+          "topic": "scene_floor"
+        },
+        "branch_id": "required_disclosure",
+        "claim_ids": [
+          "claim_scene_floor"
         ],
         "lead_ids": []
       }
     ],
+    "example_final_source_window": [
+      {
+        "kind": "interrogation",
+        "turn": 13,
+        "topic": "sleeve_trace",
+        "claim_ids": [
+          "claim_sleeve_trace"
+        ]
+      },
+      {
+        "kind": "interrogation",
+        "turn": 14,
+        "topic": "weapon_edge",
+        "claim_ids": [
+          "claim_weapon_edge"
+        ]
+      },
+      {
+        "kind": "interrogation",
+        "turn": 15,
+        "topic": "weapon_material",
+        "claim_ids": [
+          "claim_weapon_material"
+        ]
+      },
+      {
+        "kind": "detective_conversation",
+        "turn": 15,
+        "claim_ids": []
+      },
+      {
+        "kind": "interrogation",
+        "turn": 16,
+        "topic": "alibi_Brook",
+        "claim_ids": [
+          "claim_alibi_Brook"
+        ]
+      },
+      {
+        "kind": "interrogation",
+        "turn": 17,
+        "topic": "meeting_Cameron",
+        "claim_ids": [
+          "claim_witness_Cameron"
+        ]
+      },
+      {
+        "kind": "interrogation",
+        "turn": 18,
+        "topic": "badge_trace",
+        "claim_ids": [
+          "claim_badge_trace"
+        ]
+      },
+      {
+        "kind": "interrogation",
+        "turn": 19,
+        "topic": "scene_floor",
+        "claim_ids": [
+          "claim_scene_floor"
+        ]
+      }
+    ],
     "scope": [
       "All finite response branches along this strategy, with compliant content delivery.",
-      "Optional private conversations cannot remove the required original clue disclosures in this template; their policy is state-independent.",
-      "Voluntary conversations cost zero interrogation turns, so they do not affect this feasibility budget.",
-      "This does not certify LLM compliance, memory-window retention, free-form interpretation, or every possible detective policy.",
-      "Example path and private IDs are evaluator-only; never put this certificate in a detective prompt."
+      "One uninformative detective conversation after interrogations 5, 10 and 15 when budget remains; each consumes a memory slot.",
+      "Checks uniqueness from both all observed claims and the final latest-k source exchanges.",
+      "Optional private communication cannot remove required original clues in this template.",
+      "This does not certify LLM choices, compliance, extraction quality, or every questioning policy.",
+      "Certificate recovery bookkeeping is evaluator-only, never extra detective memory.",
+      "The no-memory condition is not certified to retain a solution; it remains a lower-information baseline."
     ]
   }
 }

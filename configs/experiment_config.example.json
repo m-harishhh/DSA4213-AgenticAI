@@ -1,7 +1,7 @@
 {
   "model_id": null,
   "decoding_settings": null,
-  "k": null,
+  "k": 8,
   "turn_budget": 20,
   "runs_per_condition": 100,
   "budget_usd": null,
