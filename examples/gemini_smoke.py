@@ -79,6 +79,12 @@ def main():
                 record = llm.call(game_id=log.game_id, **spec)
             except LLMCallError as exc:
                 record = exc.record
+            except Exception as exc:  # non-retryable API errors: bad request, key, unknown model
+                message = str(exc).replace(os.environ["GEMINI_API_KEY"], "[key]")[:300]
+                print(f"Call failed and was not retried: {type(exc).__name__}: {message}")
+                print("A 400 API_KEY_INVALID means the key is not a Gemini (Google AI Studio) key; "
+                      "they start with AIza. Get one at aistudio.google.com and put it in .env.")
+                return 1
             print(json.dumps({"call_id": record["call_id"], "purpose": record["purpose"], "status": record["status"],
                               "text": record["text"][:120], "parsed": record["parsed"], "usage": record["usage"],
                               "latency_ms": record["latency_ms"], "finish_reason": record["finish_reason"],
