@@ -16,7 +16,7 @@ from .llm import ROLES, PURPOSES, PHASES, ATTEMPT_KINDS, ATTEMPT_STATUSES, CALL_
 SCHEMA_VERSION = "1.0"
 ENVELOPE_KEYS = ("seq", "ts", "game_id", "kind")
 CONDITIONS = ("none", "raw", "ledger")
-DECISION_TYPES = ("question", "accusation", "acceptance", "conversation_reply")
+DECISION_TYPES = ("decision", "question", "accusation", "acceptance", "conversation_reply")
 INVITATION_DECISIONS = ("accepted", "rejected", "no_slot")
 VISIBILITIES = ("private", "detective")
 EXTRACTION_STATUSES = ("ok", "repaired", "failed")

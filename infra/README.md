@@ -71,7 +71,7 @@ record["call_id"]   # "c000017": cite it in the controller event for this step
 | Argument | Meaning |
 |---|---|
 | `role` | `detective`, `suspect`, `interpreter`, `extractor`, `annotator`: which prompt family generated |
-| `purpose` | `question`, `accusation`, `interrogation_response`, `invitation`, `acceptance`, `conversation_message`, `conversation_reply`, `intent_interpretation`, `ledger_extraction`, `annotation`. The contradiction report is not a purpose: it rides on the first `accusation` call (Aravindh's action schema, proposal 5.3) |
+| `purpose` | `detective_decision` (the game loop's single decide call, a question or an accusation depending on the output; the `accusation` event's `call_id` says which), `question`, `accusation`, `interrogation_response`, `invitation`, `acceptance`, `conversation_message`, `conversation_reply`, `intent_interpretation`, `ledger_extraction`, `annotation`. The contradiction report is not a purpose: it rides on the first `accusation` call (Aravindh's action schema, proposal 5.3) |
 | `agent_id` | Stable persona across games (decisions.md D3): `suspect_1`..`suspect_5` in `public["suspects"]` order for `role="suspect"` (required; `infra.suspect_agent_ids(public["suspects"])` or Harish's `agent_ids_for(case)` gives the mapping), and the role itself for the singleton agents `detective`, `interpreter`, `extractor`, `annotator` (the default when omitted). Anything else is rejected |
 | `phase` | `through_first_accusation`, `accusation_retries`, `post_game_analysis` (proposal 5.2 cost buckets; the first accusation call itself is in the first bucket) |
 | `messages` | `[{"role": "system"\|"user"\|"assistant", "content": str}]`; build them fresh every call (proposal 4.2) |
@@ -193,7 +193,7 @@ Event kinds, who emits them and when (proposal 4.1 loop):
 |---|---|---|---|
 | `game_start` | Orchestrator | Once, first | `run_id`, `case_id`, `case_sha256`, `condition`, `k`, `turn_budget`, `accusation_budget`, `seed`, `model_id`, `decoding`, `prompt_versions`, `pricing`, `manifest_sha256`, `code_version` |
 | `llm_call` | `LLMClient` | Every call, automatically | the record above |
-| `memory_view` | Aravindh's memory module / controller | Right after each detective call returns | `decision_index`, `decision_type`, `window_exchange_ids` (H_t), `memory_payload` (what was actually in the prompt), `call_id` |
+| `memory_view` | Aravindh's memory module / controller | Right after each detective call returns | `decision_index`, `decision_type` (`decision` for the loop's decide call, else `question`/`accusation`/`acceptance`/`conversation_reply`), `window_exchange_ids` (H_t), `memory_payload` (what was actually in the prompt), `call_id` |
 | `interrogation` | Harish's loop | After the suspect reply is delivered | `interrogation_index`, `exchange_index`, `exchange_id`, `suspect`, `question`, `intent`, `allowed_branches`, `instructions`, `selected_branch_id`, `response` (unchanged), call IDs, `controller_matched` |
 | `extraction` | Aravindh's ledger extractor | After each delivered exchange, ledger condition only | `exchange_id`, `call_id`, `status` (`ok`/`repaired`/`failed`), `entries`, `failure_entry` |
 | `checkpoint_start` | Harish's scheduler | After interrogations 5, 10, 15 when gathering can continue | `checkpoint_index`, `after_interrogation`, `proposal_order`, `seed_used` |
