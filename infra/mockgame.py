@@ -19,7 +19,7 @@ from .llm import MockBackend, TransportError, LLMCallError, suspect_agent_ids
 
 CHECKPOINTS_AFTER_INTERROGATION = (5, 10, 15)
 # Mock-only odds: varied, valid traces are the point, not realism.
-P_FIRST_CORRECT = {"none": 0.25, "raw": 0.45, "ledger": 0.6}
+P_FIRST_CORRECT, P_RETRY_CORRECT = 0.4, 0.5   # equal across conditions: the mock must not bake in a result
 P_INVITE, P_ACCEPT, P_FAILED_RUN = 0.5, 0.7, 0.05
 LEDGER_SCHEMA = {"type": "object", "required": ["entries"], "properties": {"entries": {"type": "array"}}}
 ACCEPT_SCHEMA = {"type": "object", "required": ["accept"], "properties": {"accept": {"type": "boolean"}}}
@@ -261,7 +261,7 @@ def run_game(case_path, config, seed, condition, llm, log_dir="runs"):
         outcome = "unsolved"
         for attempt in (1, 2, 3):
             phase_now = "through_first_accusation" if attempt == 1 else "accusation_retries"
-            correct = rng.random() < (P_FIRST_CORRECT[condition] if attempt == 1 else 0.5)
+            correct = rng.random() < (P_FIRST_CORRECT if attempt == 1 else P_RETRY_CORRECT)
             triple = dict(solution) if correct else _wrong_triple(rng, public, solution, used)
             used.append(triple)
             decision = {"action": "accuse", **triple}

@@ -30,15 +30,24 @@ def derive_seed(master_seed, condition, repeat):
 
 
 def plan_games(master_seed, conditions, runs_per_condition):
-    """All (condition, repeat) games in a condition order shuffled by the master seed (proposal 5.5)."""
-    games = [{"plan_index": index, "condition": condition, "repeat": repeat,
-              "seed": derive_seed(master_seed, condition, repeat)}
-             for index, (condition, repeat) in enumerate((c, r) for c in conditions for r in range(runs_per_condition))]
-    order = list(range(len(games)))
-    random.Random(master_seed).shuffle(order)
-    for position, index in enumerate(order):
-        games[index]["order"] = position
-    return sorted(games, key=lambda game: game["order"])
+    """Blocks of one game per condition, conditions shuffled within each block by the master seed.
+
+    Any prefix of the order (a cost stop, an interrupted run) therefore leaves the conditions
+    within one game of each other, and because execute() stops only between blocks a cost
+    stop reduces every condition equally (proposal 5.5). plan_index is the stable
+    condition-major index used by results.jsonl; order is the play order.
+    """
+    rng = random.Random(master_seed)
+    conditions = list(conditions)
+    plan_index = {(c, r): i for i, (c, r) in enumerate((c, r) for c in conditions for r in range(runs_per_condition))}
+    games = []
+    for repeat in range(runs_per_condition):
+        block = list(conditions)
+        rng.shuffle(block)
+        for condition in block:
+            games.append({"plan_index": plan_index[(condition, repeat)], "block": repeat, "order": len(games),
+                          "condition": condition, "repeat": repeat, "seed": derive_seed(master_seed, condition, repeat)})
+    return games
 
 
 def case_sha256(case_path):
@@ -113,13 +122,13 @@ def play_one(run, game, run_game, make_llm):
                           log_dir=str(run.dir)) or {}
     except Exception as exc:  # a crashed game is a scheduled game that failed: keep it in the accounting
         status, error = "crashed", f"{type(exc).__name__}: {exc}"[:500]
-    row = {"plan_index": game["plan_index"], "order": game["order"], "condition": game["condition"],
+    row = {"plan_index": game["plan_index"], "order": game["order"], "block": game.get("block"), "condition": game["condition"],
            "repeat": game["repeat"], "seed": game["seed"], "game_id": result.get("game_id"),
            "log_path": result.get("log_path"), "status": status, "error": error,
            "outcome": result.get("outcome"), "first_accusation_correct": result.get(
                "first_accusation_correct", result.get("first_accusations_correct")),
            "attempts_used": None, "interrogations_used": None, "exchanges_total": None,
-           "total_tokens": None, "cost_usd": None, "validation_passed": None, "validation_errors": [],
+           "total_tokens": None, "cost_usd": None, "truncated_calls": None, "validation_passed": None, "validation_errors": [],
            "transcript_path": None, "exchanges_path": None, "duration_s": None}
     log_path = result.get("log_path") or getattr(getattr(llm, "log", None), "path", None)
     if log_path and Path(log_path).exists():
@@ -130,6 +139,7 @@ def play_one(run, game, run_game, make_llm):
         end = next((event for event in events if event["kind"] == "game_end"), None)
         cost = end["cost"] if end else summarise_cost(events)
         row["total_tokens"], row["cost_usd"] = cost["total_tokens"], cost["cost_usd"]
+        row["truncated_calls"] = sum(1 for e in events if e["kind"] == "llm_call" and e.get("finish_reason") == "MAX_TOKENS")
         if end:
             row.update({"outcome": end["outcome"], "first_accusation_correct": end["first_accusation_correct"],
                         "attempts_used": end["attempts_used"], "interrogations_used": end["interrogations_used"],
@@ -146,22 +156,30 @@ def play_one(run, game, run_game, make_llm):
     return row
 
 
-def execute(run, run_game, make_llm, workers=1, limit=None, max_cost_usd=None, progress=None):
-    """Play the remaining planned games, up to `limit`, with `workers` threads, under the cost ceiling."""
+def execute(run, run_game, make_llm, workers=1, limit_blocks=None, max_cost_usd=None, progress=None):
+    """Play the remaining planned games block by block with `workers` threads.
+
+    The cost ceiling is checked only before a new block starts, so a stop leaves every
+    condition with the same number of games. limit_blocks plays at most that many blocks now.
+    """
     pending = run.remaining()
-    if limit is not None:
-        pending = pending[:limit]
+    if limit_blocks is not None:
+        allowed = sorted({game["block"] for game in pending})[:limit_blocks]
+        pending = [game for game in pending if game["block"] in allowed]
     ceiling = max_cost_usd if max_cost_usd is not None else run.manifest.get("max_cost_usd")
     rows, stopped_for_budget = [], False
     with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
         in_flight = set()
         queue = list(pending)
+        current_block = None
         while queue or in_flight:
             while queue and len(in_flight) < max(1, workers):
-                if ceiling is not None and run.cost_so_far() >= ceiling:
-                    stopped_for_budget = True
-                    queue.clear()
-                    break
+                if queue[0]["block"] != current_block:  # a new block is about to start
+                    if ceiling is not None and run.cost_so_far() >= ceiling:
+                        stopped_for_budget = True
+                        queue.clear()
+                        break
+                    current_block = queue[0]["block"]
                 game = queue.pop(0)
                 in_flight.add(pool.submit(play_one, run, game, run_game, make_llm))
             if not in_flight:
@@ -184,7 +202,7 @@ def summarise(rows):
     for row in rows:
         bucket = by_condition.setdefault(row["condition"], {"games": 0, "ok": 0, "failed_run": 0, "crashed": 0,
                                                              "first_correct": 0, "total_tokens": 0, "cost_usd": 0.0,
-                                                             "validation_failures": 0})
+                                                             "truncated_calls": 0, "validation_failures": 0})
         bucket["games"] += 1
         if row["status"] == "crashed":
             bucket["crashed"] += 1
@@ -196,9 +214,13 @@ def summarise(rows):
         bucket["total_tokens"] += row.get("total_tokens") or 0
         bucket["cost_usd"] += row.get("cost_usd") or 0.0
         bucket["validation_failures"] += 1 if row.get("validation_passed") is False else 0
+        bucket["truncated_calls"] += row.get("truncated_calls") or 0
     for bucket in by_condition.values():
         # Operational accuracy: failed and crashed games count as unsuccessful (proposal 5.4).
         bucket["first_accusation_accuracy"] = bucket["first_correct"] / bucket["games"] if bucket["games"] else None
-    return {"games": len(rows), "by_condition": by_condition,
-            "cost_usd": sum(b["cost_usd"] for b in by_condition.values()),
-            "total_tokens": sum(b["total_tokens"] for b in by_condition.values())}
+        bucket["cost_per_game_usd"] = bucket["cost_usd"] / bucket["games"] if bucket["games"] else None
+    cost = sum(b["cost_usd"] for b in by_condition.values())
+    return {"games": len(rows), "by_condition": by_condition, "cost_usd": cost,
+            "cost_per_game_usd": cost / len(rows) if rows else None,
+            "total_tokens": sum(b["total_tokens"] for b in by_condition.values()),
+            "truncated_calls": sum(b["truncated_calls"] for b in by_condition.values())}

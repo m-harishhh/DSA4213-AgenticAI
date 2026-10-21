@@ -305,14 +305,17 @@ runs/<run_id>/<game_id>.transcript.md  readable transcript (private conversation
 runs/<run_id>/<game_id>.exchanges.json Josh-format exchanges with empty claim_ids, for Elena
 ```
 
-- **Seeding.** Each game's seed is `sha256(master_seed:condition:repeat)`, and the order of
-  games is shuffled by the master seed (proposal 5.5), so a run is reproducible from
-  `run.json` alone. Pass the game's `seed` to the scheduler's RNG and log it in
-  `checkpoint_start.seed_used`.
-- **Resume.** Running the same `--run-dir` again skips finished plan entries. `--limit N`
-  plays at most N games now; `--dry-run` prints what is left.
-- **Cost ceiling.** `--max-cost-usd` (default: the config's `budget_usd`) stops new games from
-  starting once the summed `cost_usd` of finished games reaches it; games in flight finish.
+- **Seeding and blocks.** Each game's seed is `sha256(master_seed:condition:repeat)`. Games
+  are played in blocks of one game per condition, with the conditions shuffled inside each
+  block by the master seed (proposal 5.5), so a run is reproducible from `run.json` alone
+  and any stop leaves the conditions equal. Pass the game's `seed` to the scheduler's RNG
+  and log it in `checkpoint_start.seed_used`.
+- **Resume.** Running the same `--run-dir` again skips finished plan entries. `--limit-blocks N`
+  plays at most N blocks now; `--dry-run` prints what is left.
+- **Cost ceiling.** `--max-cost-usd` (default: the config's `budget_usd`) is checked only before
+  a new block starts: once the summed `cost_usd` of finished games reaches it, no further block
+  starts and the games of the current block finish, so a budget stop reduces every condition
+  equally. `summary` reports `cost_per_game_usd` per condition for the early cost estimate.
 - **Parallel games.** `--workers N` plays N games at once (threads; the work is I/O bound).
   The smoke test measured 8 to 35 s per call with 503/504 retries, so sequential runs of
   300 games would take days: plan on 4 to 8 workers and keep `timeout_s` above 60 in the
@@ -321,7 +324,8 @@ runs/<run_id>/<game_id>.exchanges.json Josh-format exchanges with empty claim_id
   and the error text; a game that ends with `game_end.outcome = failed_run` stays an
   unsuccessful game. `summary` reports both separately, and operational first-accusation
   accuracy counts them as failures (proposal 5.4). Every log is validated after the game
-  and `validation_passed` is stored on the row.
+  and `validation_passed` is stored on the row, with `truncated_calls` (calls that ended with
+  `finish_reason` `MAX_TOKENS`) so output caps that cut off a decision are visible per game.
 
 **Contract for Harish's `run_game(case_path, config, seed, condition, llm, log_dir)`:**
 it receives an `LLMClient` whose `log` is `None`; create
@@ -341,7 +345,8 @@ shows up. A recorded format repair replays as its final text in one attempt.
 
 **Mock game caveats.** It picks intents, branches, invitations and accusations at random
 from the seed, copies the chosen branch IDs into `controller_matched` (a live controller
-must match delivered text instead), and its outcome odds per condition are arbitrary.
+must match delivered text instead), and its outcome odds are the same for every condition
+on purpose, so nothing in it can look like a result.
 Use it for plumbing, metrics code and labelling practice, never for results.
 
 ## Alignment with decisions.md (19 Oct)

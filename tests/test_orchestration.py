@@ -35,14 +35,19 @@ class PlanTests(unittest.TestCase):
         self.assertNotEqual(derive_seed(1, "raw", 3), derive_seed(1, "ledger", 3))
         self.assertNotEqual(derive_seed(1, "raw", 3), derive_seed(2, "raw", 3))
 
-    def test_plan_covers_every_pair_in_a_seeded_shuffled_order(self):
+    def test_plan_is_blocks_of_one_game_per_condition_shuffled_by_seed(self):
         plan = plan_games(7, CONDITIONS, 4)
         self.assertEqual(len(plan), 12)
         self.assertEqual({(g["condition"], g["repeat"]) for g in plan}, {(c, r) for c in CONDITIONS for r in range(4)})
         self.assertEqual([g["order"] for g in plan], list(range(12)))
+        self.assertEqual(len({g["plan_index"] for g in plan}), 12)
+        for block in range(4):
+            games = [g for g in plan if g["block"] == block]
+            self.assertEqual(sorted(g["condition"] for g in games), sorted(CONDITIONS))
+            self.assertEqual([g["order"] for g in games], list(range(block * 3, block * 3 + 3)))
         self.assertEqual(plan, plan_games(7, CONDITIONS, 4))
-        self.assertNotEqual([g["plan_index"] for g in plan], [g["plan_index"] for g in plan_games(8, CONDITIONS, 4)])
-        self.assertNotEqual([g["condition"] for g in plan], sorted(g["condition"] for g in plan))
+        self.assertNotEqual([g["condition"] for g in plan], [g["condition"] for g in plan_games(8, CONDITIONS, 4)])
+        self.assertNotEqual([g["condition"] for g in plan], list(CONDITIONS) * 4)
 
 
 class MockGameTests(unittest.TestCase):
@@ -146,20 +151,25 @@ class OrchestrationTests(unittest.TestCase):
         self.assertEqual(summary["remaining"], 0)
         self.assertEqual(sum(b["validation_failures"] for b in summary["by_condition"].values()), 0)
 
-    def test_cost_ceiling_stops_scheduling_new_games(self):
+    def test_cost_ceiling_stops_only_between_blocks_keeping_conditions_equal(self):
         run = self.create(max_cost_usd=1e-9)
         summary = execute(run, mock_run_game, make_llm, workers=1)
-        self.assertEqual(summary["played_now"], 1)
+        self.assertEqual(summary["played_now"], 2)  # the whole first block, one game per condition
         self.assertTrue(summary["stopped_for_budget"])
-        self.assertEqual(summary["remaining"], 3)
-        later = execute(run, mock_run_game, make_llm, workers=1, max_cost_usd=10.0)
-        self.assertEqual((later["played_now"], later["remaining"]), (3, 0))
+        self.assertEqual(summary["remaining"], 2)
+        self.assertEqual({row["condition"] for row in run.results()}, {"none", "ledger"})
+        self.assertEqual({row["block"] for row in run.results()}, {0})
+        later = execute(run, mock_run_game, make_llm, workers=2, max_cost_usd=10.0)
+        self.assertEqual((later["played_now"], later["remaining"]), (2, 0))
+        self.assertIn("cost_per_game_usd", later)
+        self.assertIn("truncated_calls", later["by_condition"]["none"])
 
-    def test_limit_plays_a_prefix_of_the_plan(self):
+    def test_limit_blocks_plays_whole_blocks(self):
         run = self.create()
-        summary = execute(run, mock_run_game, make_llm, workers=3, limit=1)
-        self.assertEqual((summary["played_now"], summary["remaining"]), (1, 3))
-        self.assertEqual(run.results()[0]["order"], 0)
+        summary = execute(run, mock_run_game, make_llm, workers=3, limit_blocks=1)
+        self.assertEqual((summary["played_now"], summary["remaining"]), (2, 2))
+        self.assertEqual(sorted(row["order"] for row in run.results()), [0, 1])
+        self.assertTrue(all(row["truncated_calls"] == 0 for row in run.results()))
 
 
 class ReplayTests(unittest.TestCase):

@@ -1,7 +1,7 @@
 """Orchestration commands (see infra/README.md):
 
     python -m infra run --config configs/experiment_config.final.json --case cases/evaluation.json \\
-        --run-id pilot_01 --seed 1 --games-per-condition 3 --workers 4 --backend gemini --game controller
+        --run-id pilot_01 --seed 1 --games-per-condition 3 --workers 3 --backend gemini --game controller
     python -m infra run --config configs/experiment_config.example.json --case cases/pilot.json \\
         --run-dir runs/mock_demo --games-per-condition 2 --workers 2            # offline mock game
     python -m infra replay runs/mock_demo/<game>.jsonl [--write] [--no-private] [--check]
@@ -82,7 +82,7 @@ def cmd_run(args):
               f"{row['outcome'] or '-':13} tokens={row['total_tokens']} cost={row['cost_usd']}", file=sys.stderr)
 
     summary = execute(run, game_runner(args.game), make_llm_factory(args.backend, run.config), workers=args.workers,
-                      limit=args.limit, max_cost_usd=args.max_cost_usd, progress=progress)
+                      limit_blocks=args.limit_blocks, max_cost_usd=args.max_cost_usd, progress=progress)
     print(json.dumps(summary, indent=2))
     return 0
 
@@ -126,7 +126,8 @@ def main(argv=None):
     run.add_argument("--game", choices=("mock", "controller"), default="mock",
                      help="mock: infra.mockgame.run_game; controller: controller.interfaces.run_game")
     run.add_argument("--max-cost-usd", type=float, default=None, help="Stop scheduling games past this; default config budget_usd")
-    run.add_argument("--limit", type=int, default=None, help="Play at most this many games now")
+    run.add_argument("--limit-blocks", type=int, default=None,
+                     help="Play at most this many blocks (one game per condition) now")
     run.add_argument("--dry-run", action="store_true", help="Create or open the run and print the remaining plan")
     run.set_defaults(func=cmd_run)
     replay = sub.add_parser("replay", help="Print a game's transcript, or write its transcript and annotation export")
