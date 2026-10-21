@@ -98,12 +98,12 @@ class WrapperTests(unittest.TestCase):
         call(client, role="detective", purpose="detective_decision", agent_id=None,
              tags={"repair_of": first["call_id"]})
         self.assertEqual([e["purpose"] for e in log.events], ["detective_decision"] * 2)
-        events = [{"seq": 1, "ts": "t", "game_id": "g", "kind": "game_start", "schema_version": "1.0", "run_id": "r",
+        events = [{"seq": 1, "ts": "t", "game_id": "g1", "kind": "game_start", "schema_version": "1.0", "run_id": "r",
                    "case_id": "c", "case_sha256": "x", "condition": "raw", "k": 5, "turn_budget": 20,
                    "accusation_budget": 3, "seed": 1, "model_id": "m", "decoding": {}, "prompt_versions": {},
                    "pricing": None, "manifest_sha256": None, "code_version": None},
-                  {"seq": 2, "ts": "t", "game_id": "g", "kind": "llm_call", **log.events[0]},
-                  {"seq": 3, "ts": "t", "game_id": "g", "kind": "memory_view", "decision_index": 1,
+                  {"seq": 2, "ts": "t", "game_id": "g1", "kind": "llm_call", **log.events[0]},
+                  {"seq": 3, "ts": "t", "game_id": "g1", "kind": "memory_view", "decision_index": 1,
                    "decision_type": "decision", "window_exchange_ids": [], "memory_payload": [],
                    "call_id": first["call_id"]}]
         self.assertEqual(validate_events(events), {"passed": True, "errors": []})
