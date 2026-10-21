@@ -11,9 +11,11 @@ import json
 import time
 
 ROLES = ("detective", "suspect", "interpreter", "extractor", "annotator")
-PURPOSES = ("question", "accusation", "interrogation_response", "invitation", "acceptance",
-            "conversation_message", "conversation_reply", "intent_interpretation",
+PURPOSES = ("detective_decision", "question", "accusation", "interrogation_response", "invitation",
+            "acceptance", "conversation_message", "conversation_reply", "intent_interpretation",
             "ledger_extraction", "annotation")
+# detective_decision: the one decide() call of the game loop, whose output turns out to be a question
+# or an accusation; classify it afterwards through the accusation events' call_ids.
 # The contradiction report (proposal 5.3) rides on the first accusation call; it is not a purpose (decisions.md D2).
 SINGLETON_AGENTS = ("detective", "interpreter", "extractor", "annotator")
 SUSPECT_AGENT_IDS = tuple(f"suspect_{i}" for i in range(1, 6))

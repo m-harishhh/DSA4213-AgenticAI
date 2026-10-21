@@ -90,6 +90,24 @@ class WrapperTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             suspect_agent_ids(names[:4])
 
+    def test_game_loop_vocabulary_is_accepted(self):
+        # Harish's decide() logs one detective_decision call and a memory_view of type "decision";
+        # Aravindh tags the controller-side repair with repair_of.
+        client, log, _ = make_client(["{\"action\": \"interrogate\"}", "{\"action\": \"accuse\"}"])
+        first = call(client, role="detective", purpose="detective_decision", agent_id=None)
+        call(client, role="detective", purpose="detective_decision", agent_id=None,
+             tags={"repair_of": first["call_id"]})
+        self.assertEqual([e["purpose"] for e in log.events], ["detective_decision"] * 2)
+        events = [{"seq": 1, "ts": "t", "game_id": "g1", "kind": "game_start", "schema_version": "1.0", "run_id": "r",
+                   "case_id": "c", "case_sha256": "x", "condition": "raw", "k": 5, "turn_budget": 20,
+                   "accusation_budget": 3, "seed": 1, "model_id": "m", "decoding": {}, "prompt_versions": {},
+                   "pricing": None, "manifest_sha256": None, "code_version": None},
+                  {"seq": 2, "ts": "t", "game_id": "g1", "kind": "llm_call", **log.events[0]},
+                  {"seq": 3, "ts": "t", "game_id": "g1", "kind": "memory_view", "decision_index": 1,
+                   "decision_type": "decision", "window_exchange_ids": [], "memory_payload": [],
+                   "call_id": first["call_id"]}]
+        self.assertEqual(validate_events(events), {"passed": True, "errors": []})
+
     def test_no_pricing_means_null_cost_not_zero(self):
         client, _, _ = make_client(["x"])
         self.assertIsNone(call(client)["cost_usd"])

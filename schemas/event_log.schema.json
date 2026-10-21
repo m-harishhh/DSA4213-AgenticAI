@@ -158,6 +158,7 @@
           },
           "purpose": {
             "enum": [
+              "detective_decision",
               "question",
               "accusation",
               "interrogation_response",
@@ -260,6 +261,7 @@
           },
           "decision_type": {
             "enum": [
+              "decision",
               "question",
               "accusation",
               "acceptance",
