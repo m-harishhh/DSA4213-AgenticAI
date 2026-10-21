@@ -25,9 +25,6 @@ from detective.memory import build_memory, extract_ledger
 
 
 
-# Agreed Rules 
-TURN_BUDGET = 20 # fixed budget, see decisions.md D6
-ACCUSATION_BUDGET = 3 
 
 # The below is parameters for conversation between agents in checkpoints
 CHECKPOINTS_AFTER_INTERROGATION = (5, 10, 15)
