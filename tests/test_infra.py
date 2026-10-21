@@ -171,9 +171,10 @@ class WrapperTests(unittest.TestCase):
         self.assertIsNone(parsed)
         self.assertTrue(errors[0].startswith("not JSON"))
 
-    def test_gemini_backend_is_a_documented_stub(self):
-        with self.assertRaises(NotImplementedError):
-            GeminiBackend().generate(model_id="m", messages=[], decoding={})
+    def test_gemini_backend_needs_a_key_before_any_network(self):
+        backend = GeminiBackend(api_key_env="NO_SUCH_KEY_VAR_FOR_TESTS")
+        with self.assertRaises(RuntimeError):
+            backend.generate(model_id="m", messages=[{"role": "user", "content": "hi"}], decoding={})
 
 
 class EventLogTests(unittest.TestCase):
