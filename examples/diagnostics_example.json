@@ -1,8 +1,8 @@
 {
   "evidence": {
     "coverage_numerator": 2,
-    "coverage_denominator": 9,
-    "coverage": 0.2222222222222222,
+    "coverage_denominator": 10,
+    "coverage": 0.2,
     "disclosed_evidence_ids": [
       "fact_badge_trace",
       "fact_position_Blair_20:30"

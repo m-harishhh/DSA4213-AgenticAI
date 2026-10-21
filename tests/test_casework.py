@@ -36,7 +36,7 @@ class CaseTests(unittest.TestCase):
                 report = validate_case(make_case(kind))
                 self.assertTrue(report["passed"], report["errors"])
                 self.assertEqual(report["certificate"]["successful_terminal_branches"], 108)
-                self.assertEqual(report["certificate"]["worst_case_turns"], 14)
+                self.assertEqual(report["certificate"]["worst_case_turns"], 18 if kind == "pilot" else 19)
 
     def test_saved_cases_equal_reproducible_authored_templates(self):
         for kind in ("pilot", "evaluation"):
@@ -216,7 +216,7 @@ class DisclosureTests(unittest.TestCase):
     def test_coordination_never_removes_required_original_clues(self):
         for person in self.case["public"]["suspects"]:
             state = share_information(self.case, initial_state(self.case, person), list(self.case["claims"]))
-            for lid in self.case["suspects"][person]["lead_ids"]:
+            for lid in [lid for lid, lead in self.case["leads"].items() if lead["owner"] == person]:
                 b = allowed_content(self.case, person, {"kind": "ask_lead", "topic": lid}, state)
                 self.assertEqual(len(b), 1)
                 self.assertEqual(b[0]["claim_ids"], [self.case["leads"][lid]["claim_id"]])
@@ -250,7 +250,7 @@ class DiagnosticsTests(unittest.TestCase):
     def test_coverage_deduplicates_and_tracks_false_separately(self):
         self.exchanges.append({"exchange_id": "e4", "kind": "interrogation", "claim_ids": ["claim_badge_trace"]})
         r = evidence_diagnostics(self.case, self.exchanges)
-        self.assertEqual((r["coverage_numerator"], r["coverage_denominator"]), (2, 9))
+        self.assertEqual((r["coverage_numerator"], r["coverage_denominator"]), (2, 10))
         self.assertEqual(r["approved_false_claims_disclosed"], ["claim_cover_Blair"])
 
     def test_private_only_counterclaim_is_not_observable(self):
@@ -300,7 +300,7 @@ class CommandTests(unittest.TestCase):
             self.assertTrue(json.loads(out.read_text())["passed"])
             config = Path(temporary) / "config.json"
             config.write_text(json.dumps({"model_id": "test-only-no-calls", "decoding_settings": {"temperature": 0.5},
-                "k": 5, "turn_budget": 20, "runs_per_condition": 10, "budget_usd": 20,
+                "k": 8, "turn_budget": 20, "runs_per_condition": 10, "budget_usd": 20,
                 "annotation_sample_size": 12, "prompt_versions": {"detective": "test-v1"}}))
             result = subprocess.run([sys.executable, "-m", "casework", "manifest", "cases/evaluation.json",
                 "--config", str(config), "--output", str(out)], cwd=ROOT, capture_output=True, text=True)

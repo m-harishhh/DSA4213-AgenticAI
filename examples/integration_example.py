@@ -28,5 +28,5 @@ event = {"exchange_id": "exchange_1", "kind": "interrogation",
 print(json.dumps({"public_case_keys": list(public_view(case)),
                   "suspect_generation_instructions": branch_prompt(case, selected),
                   "evaluator_only_mock_event": event,
-                  "evaluator_only_diagnostics": evidence_diagnostics(case, [event], "raw", 5)}, indent=2))
+                  "evaluator_only_diagnostics": evidence_diagnostics(case, [event], "raw", 8)}, indent=2))
 print("Live integration must derive annotations from actual delivered text, never copy the intended branch IDs.")

@@ -1,12 +1,12 @@
 """Admission checks for the versioned museum template and its gold labels."""
 
 from itertools import combinations
-from .model import SCHEMA_VERSION, domains, event_values, public_view, claims_for_solver
+from .model import SCHEMA_VERSION, TURN_BUDGET, MEMORY_K, domains, event_values, public_view, claims_for_solver
 from .solver import solve, triple_set, may_lie, initial_knowledge_solutions
 from .certificate import certify
 
 
-def validate_case(case, turn_budget=20, include_certificate=True):
+def validate_case(case, turn_budget=TURN_BUDGET, include_certificate=True, memory_k=MEMORY_K):
     """Return a serializable report. Invalid input raises no unhandled schema error."""
     errors, checks = [], []
 
@@ -94,10 +94,14 @@ def validate_case(case, turn_budget=20, include_certificate=True):
         for lid, lead in case["leads"].items():
             claim = case["claims"][lead["claim_id"]]
             require(claim["speaker"] == lead["owner"] and claim["kind"] == "truthful", f"Invalid required lead: {lid}")
-            require(lid in case["suspects"][lead["owner"]]["lead_ids"], f"Undiscoverable lead: {lid}")
+            givers = lead["cue_speakers"]
+            require(bool(givers) and len(givers) == len(set(givers)) and set(givers) <= set(people),
+                    f"Invalid cue speakers: {lid}")
+            require(set(givers) == {p for p in people if lid in case["suspects"][p]["lead_ids"]},
+                    f"Undiscoverable lead or cue knowledge mismatch: {lid}")
             require(bool(lead["cue"].strip()), f"Missing discoverable cue: {lid}")
         for person, spec in case["suspects"].items():
-            require(all(case["leads"][lid]["owner"] == person for lid in spec["lead_ids"]),
+            require(all(person in case["leads"][lid]["cue_speakers"] for lid in spec["lead_ids"]),
                     f"Lead ownership mismatch: {person}")
         discoverable = {lead["claim_id"] for lead in case["leads"].values()}
         discovered_facts = {case["claims"][cid]["fact_id"] for cid in discoverable}
@@ -136,7 +140,7 @@ def validate_case(case, turn_budget=20, include_certificate=True):
             checks.append("Unique solution under hidden role assignments; no single innocent initially solves it")
         certificate = None
         if include_certificate and not errors:
-            certificate = certify(case, turn_budget)
+            certificate = certify(case, turn_budget, memory_k)
             require(certificate["passed"], "Finite disclosure strategy failed certification")
             checks.append("Every designed response branch along the certified strategy checked")
         return {"case_id": case.get("case_id"), "passed": not errors,
