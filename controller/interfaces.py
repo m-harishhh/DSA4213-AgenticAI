@@ -36,7 +36,7 @@ MAX_DETECTIVE_CONVERSATIONS_PER_CHECKPOINT = 1 # per checkpoint
 MAX_CONVERSATIONS_PER_PARTICIPANT = 1 #see decisions.md 
 DETECTIVE_FORMAT_REPAIRS = 1 #see decisions.md
 AGENT_IDS = ('detective', 'suspect_1', 'suspect_2', 'suspect_3', 'suspect_4', 'suspect_5', 'interpreter', 'extractor', 'annotator') #see decisions.md
-MEMORY_K = 5 # fixed budget, see decision.md D6
+MEMORY_K = 8 # fixed budget, see decision.md D6
 
 
 def handle_accusation(game, action): 
