@@ -1,4 +1,3 @@
-from .action_schema import SCHEMA_CONFIG
 from .prompts import (NEXT_STEP, PROMPT_VERSION, REPAIR_TEMPLATE, SYSTEM_PROMPT, render_public_case,
                       render_status)
 
@@ -23,13 +22,11 @@ def detective_decide(memory_view , context, llm, game_id, repair_errors = None, 
         user_content += "\n\n" + REPAIR_TEMPLATE.format(errors="; ".join(repair_errors))
     messages = [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": user_content}]
 
-    # Workaround: this mislabels accusations made while turns remain as "question",
-    # pending a "detective_decision" purpose from Aniroodh.
-    purpose = "question" if context.turns_left > 0 else "accusation"
     phase = "through_first_accusation" if not context.previous_accusations else "accusation_retries"
 
     # LLMCallError is not caught: the controller treats it as a failed run.
-    record = llm.call(role="detective", purpose=purpose, phase=phase, messages=messages, game_id=game_id,
-                      response_schema=None, max_output_tokens=SCHEMA_CONFIG["max_output_tokens"],
+    record = llm.call(role="detective", purpose="detective_decision", phase=phase, messages=messages,
+                      game_id=game_id, response_schema=None,
+                      max_output_tokens=context.config["max_output_tokens"],
                       tags={"repair_of": repair_of} if repair_of is not None else None)
     return {"text": record["text"], "call_id": record["call_id"], "prompt_version": PROMPT_VERSION}

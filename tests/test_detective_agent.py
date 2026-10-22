@@ -99,7 +99,7 @@ class RoundTripTests(unittest.TestCase):
         self.assertEqual(result["call_id"], log.events[0]["call_id"])
         parsed = parse_decision(result["text"], context)
         self.assertTrue(parsed["ok"], parsed["errors"])
-        self.assertEqual((log.events[0]["purpose"], log.events[0]["phase"]), ("question", "through_first_accusation"))
+        self.assertEqual((log.events[0]["purpose"], log.events[0]["phase"]), ("detective_decision", "through_first_accusation"))
         self.assertEqual(log.events[0]["role"], "detective")
         self.assertEqual(log.events[0]["max_output_tokens"], 800)
 
@@ -112,8 +112,7 @@ class RoundTripTests(unittest.TestCase):
         parsed = parse_decision(result["text"], context)
         self.assertTrue(parsed["ok"], parsed["errors"])
         self.assertEqual(parsed["warnings"], [])
-        # Early accusation is logged as "question" until a detective_decision purpose exists.
-        self.assertEqual((log.events[0]["purpose"], log.events[0]["phase"]), ("question", "through_first_accusation"))
+        self.assertEqual((log.events[0]["purpose"], log.events[0]["phase"]), ("detective_decision", "through_first_accusation"))
 
     def test_retry_phase(self):
         context = ctx(previous_accusations=[("Blair", "Knife", "Study")])
@@ -142,7 +141,7 @@ class BudgetTests(unittest.TestCase):
     def test_no_turns_left_forces_accusation(self):
         _, backend, log = decide(ctx(turns_left=0))
         self.assertIn("must accuse now", backend.requests[0]["messages"][1]["content"])
-        self.assertEqual(log.events[0]["purpose"], "accusation")
+        self.assertEqual(log.events[0]["purpose"], "detective_decision")
 
 
 class ContextTests(unittest.TestCase):
