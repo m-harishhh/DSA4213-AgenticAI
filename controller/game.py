@@ -180,6 +180,7 @@ def play_interrogation(game, decision, parts, llm):
     exchange = {
         'exchange_id': event['exchange_id'],
         'kind': 'interrogation',
+        'lead_labels': {lid: case['leads'][lid]['label'] for lid in matched['lead_ids']},   # topics now heard (interpreter)
         'matched_claim_ids': matched['claim_ids'],
         'speaker': suspect,
         'text': f"Detective: {question}\n{suspect}: {answer['text']}",

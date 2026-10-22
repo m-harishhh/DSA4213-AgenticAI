@@ -202,6 +202,68 @@ class SuspectPipeline(GameTest):
             self.assertNotIn(internal, prompt)
 
 
+def interpretation(kind, **fields):
+    return {"kind": kind, "time": None, "subject": None, "topic": None, "challenged": None, "evidence": [], **fields}
+
+
+def extraction(speaker, span):
+    return {"entries": [{"type": "claim", "speaker": speaker, "statement": span, "entities": [], "time": None,
+                         "target": None, "topic": None, "retracts": False, "source_span": span}]}
+
+
+class DefaultParts(GameTest):
+    """A complete mock game through default_parts(): every real module is connected
+    (memory, detective, interpreter, suspect pipeline, matching, extraction); only the LLM is scripted."""
+
+    def turn(self, condition, suspect, question_text, interp, answer):
+        responses = [{"action": "interrogate", "suspect": suspect, "question": question_text}, interp, answer]
+        if condition == "ledger":
+            responses.append(extraction(suspect, answer))
+        return responses
+
+    def challenge_script(self, condition):
+        return (self.turn(condition, "Alex", "Where were you at 21:00?",
+                          interpretation("whereabouts", time="21:00"), "I was in the Study at 21:00.")
+                + self.turn(condition, "Drew", "Did you see Alex at 21:00?",
+                            interpretation("corroborate", subject="Alex", time="21:00"),
+                            "The timestamped recording shows Alex in the Library at 21:00.")
+                + self.turn(condition, "Alex", "Drew's recording puts you in the Library at 21:00. Why did you lie?",
+                            interpretation("challenge", challenged="e1", evidence=["e2"]),
+                            "Fine. I was in the Library at 21:00, but I did not kill anyone.")
+                + [accuse("Alex", first=True)])
+
+    def test_complete_game_with_a_challenge_and_retraction(self):
+        for condition in ("none", "raw", "ledger"):
+            with self.subTest(condition=condition):
+                result, events = self.play(self.challenge_script(condition), condition, default_parts())
+                self.assertEqual(result["outcome"], "solved_first")
+                turns = [e for e in events if e["kind"] == "interrogation"]
+                self.assertEqual([t["intent"]["kind"] for t in turns], ["whereabouts", "corroborate", "challenge"])
+                self.assertEqual(turns[0]["controller_matched"]["claim_ids"], ["claim_cover_Alex"])
+                self.assertEqual(turns[2]["intent"]["claim_id"], "claim_cover_Alex")
+                self.assertEqual(turns[2]["controller_matched"]["retraction_ids"], ["claim_cover_Alex"])
+                roles = {e["role"] for e in events if e["kind"] == "llm_call"}
+                expected = {"detective", "interpreter", "suspect"} | ({"extractor"} if condition == "ledger" else set())
+                self.assertEqual(roles, expected)
+
+    def test_memory_window_holds_the_latest_k_exchanges(self):
+        script = []
+        for _ in range(10):
+            script += self.turn("raw", "Alex", "Where were you at 21:00?",
+                                interpretation("whereabouts", time="21:00"), "I was in the Study at 21:00.")
+        _, events = self.play(script + [accuse("Alex", first=True)], "raw", default_parts())
+        windows = [e["window_exchange_ids"] for e in events if e["kind"] == "memory_view"]
+        self.assertEqual(windows[0], [])                                   # empty before the first question
+        self.assertEqual(windows[-1], [f"e{i}" for i in range(3, 11)])     # k = 8 at the accusation
+
+    def test_interpreter_ignores_topics_never_mentioned(self):
+        script = self.turn("raw", "Blair", "What about the injury pattern?",
+                           interpretation("ask_lead", topic="weapon_edge"), "I'd rather not say.")
+        _, events = self.play(script + [accuse("Alex", first=True)], "raw", default_parts())
+        turn = next(e for e in events if e["kind"] == "interrogation")
+        self.assertEqual(turn["intent"], {"kind": "ask_lead", "topic": None})
+
+
 class MatchDelivery(unittest.TestCase):
     def match(self, suspect, intent, text):
         branches = allowed_content(CASE, suspect, intent, initial_state(CASE, suspect))
