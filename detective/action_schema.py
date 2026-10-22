@@ -45,8 +45,10 @@ SCHEMA_CONFIG: dict[str, Any] = {
     "max_output_tokens": 800,
     # Proposal §3.5; mirrors controller ACCUSATION_BUDGET (detective must not import controller, decisions.md D7).
     "max_accusations": 3,
-    # Output token cap for ledger extraction calls; placeholder until the pilot.
-    "max_extraction_tokens": 600,
+    # Output token cap for ledger extraction calls. pilot_01 extractor outputs were median 448 / max 585 tokens
+    # vs a 600 cap, with one truncation + repair; pilot_02 lost exchange e19 to a failed extraction.
+    # Revisit after the pilot.
+    "max_extraction_tokens": 1200,
 }
 
 

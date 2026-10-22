@@ -12,8 +12,9 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from casework import load_case
-from detective import build_memory, extract_ledger
-from detective.prompts import EMPTY_MEMORY, MEMORY_LABELS
+from detective import SCHEMA_CONFIG, build_memory, extract_ledger
+from detective.prompts import (EMPTY_MEMORY, EXTRACTION_PROMPT, EXTRACTOR_VERSION, MEMORY_LABELS,
+                               render_ledger_block)
 from infra import LLMCallError, LLMClient, MockBackend, TransportError
 
 CASE = load_case(ROOT / "cases" / "pilot.json")
@@ -213,8 +214,49 @@ class ExtractionTests(unittest.TestCase):
         event = log.events[0]
         self.assertEqual((event["role"], event["agent_id"], event["purpose"], event["phase"]),
                          ("extractor", "extractor", "ledger_extraction", "through_first_accusation"))
-        self.assertEqual(event["max_output_tokens"], 600)
+        self.assertEqual(event["max_output_tokens"], SCHEMA_CONFIG["max_extraction_tokens"])
         self.assertEqual(event["game_id"], "g1")
+
+    def test_referral_round_trip(self):
+        lead = entry("unresolved_lead", "Drew", "Ask Alex about the floor.", "Ask Alex about the floor.",
+                     ["Alex"], target="Alex", topic="the floor")
+        llm, _, _ = client([{"entries": [lead]}])
+        result = extract_ledger(GAME[1], llm, "g1")
+        kept = result["entries"][0]
+        self.assertEqual((kept["speaker"], kept["target"], kept["topic"]), ("Drew", "Alex", "the floor"))
+        payload = build_memory("ledger", GAME[:2], {"e2": result["entries"]}, 8)["payload"]
+        self.assertIn("ask: Alex | topic: the floor", payload)
+
+    def test_extraction_prompt_v2(self):
+        self.assertEqual(EXTRACTOR_VERSION, "extractor-v2")
+        self.assertIn('Lines starting with "Detective:" are the detective\'s own words.', EXTRACTION_PROMPT)
+        self.assertIn('with speaker exactly "Detective"', EXTRACTION_PROMPT)
+        self.assertIn("The detective's questions are never unresolved leads.", EXTRACTION_PROMPT)
+        self.assertIn("Extract every explicit claim, observation, refusal and unresolved lead", EXTRACTION_PROMPT)
+
+
+class DetectiveLabelTests(unittest.TestCase):
+    ENTRIES = [entry("claim", " detective ", "Drew saw Blair in the Gallery.", "Drew saw you in the Gallery.",
+                     ["Drew", "Blair", "Gallery"]),
+               LEDGER["e3"][0]]
+
+    def test_question_label_in_interrogation(self):
+        block = render_ledger_block(GAME[2], self.ENTRIES)
+        self.assertIn("- claim | speaker: Detective (your question) | entities: Drew, Blair, Gallery", block)
+        self.assertIn('- (retraction) claim | speaker: Blair | retracts: yes | "I was not in the Library at 20:30."',
+                      block)
+
+    def test_reply_label_in_detective_conversation(self):
+        block = render_ledger_block(dict(GAME[2], kind="detective_conversation"), self.ENTRIES)
+        self.assertIn("speaker: Detective (your reply)", block)
+        self.assertNotIn("(your question)", block)
+
+    def test_suspect_entries_unchanged(self):
+        for kind in ("interrogation", "detective_conversation"):
+            block = render_ledger_block(dict(GAME[1], kind=kind), LEDGER["e2"])
+            self.assertNotIn("(your", block)
+            self.assertIn('- unresolved lead | speaker: Drew | ask: Alex | topic: the floor | "Ask Alex about the floor."',
+                          block)
 
 
 if __name__ == "__main__":

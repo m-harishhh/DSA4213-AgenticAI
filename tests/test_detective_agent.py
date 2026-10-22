@@ -88,6 +88,14 @@ class ConditionInvarianceTests(unittest.TestCase):
         self.assertEqual(len(set(systems)), 1)
         self.assertEqual(len(set(users)), 1)
 
+    def test_one_target_rule_v2(self):
+        self.assertEqual(PROMPT_VERSION, "detective-v2")
+        sentence = ("Each question should ask about one thing only, such as one person's whereabouts at one time, "
+                    "or one clue. Suspects answer only one part of a multi-part question.")
+        for payload in PAYLOADS.values():
+            _, backend, _ = decide(ctx(), payload=payload)
+            self.assertIn(sentence, backend.requests[0]["messages"][0]["content"])
+
 
 class RoundTripTests(unittest.TestCase):
     def test_interrogate_reply_parses(self):
