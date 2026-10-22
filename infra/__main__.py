@@ -14,6 +14,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+from dotenv import load_dotenv
 
 from .eventlog import read_events, validate_events
 from .llm import LLMClient, MockBackend, GeminiBackend
@@ -110,6 +111,7 @@ def cmd_summary(args):
 
 
 def main(argv=None):
+    load_dotenv()
     parser = argparse.ArgumentParser(prog="python -m infra", description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest="command", required=True)
