@@ -41,6 +41,10 @@ SCHEMA_CONFIG: dict[str, Any] = {
     "max_rationale_chars": 300,
     # No upper bound on reported contradictions for now, letting the detective report everything it finds.
     "max_contradiction_pairs": None,
+    # Output token cap for detective calls; placeholder until the pilot.
+    "max_output_tokens": 800,
+    # Proposal §3.5; mirrors controller ACCUSATION_BUDGET (detective must not import controller, decisions.md D7).
+    "max_accusations": 3,
 }
 
 
@@ -64,6 +68,8 @@ class DecisionContext(BaseModel):
     # Remaining interrogation turns. Once depleted (0), interrogation is locked and the detective must accuse (§3.5).
     turns_left: int
     config: dict[str, Any] = Field(default_factory=lambda: dict(SCHEMA_CONFIG))
+    # Public case view (public_view output) used to render the detective prompt.
+    public: dict | None = None
 
     @property
     def is_first_accusation(self) -> bool:
@@ -73,7 +79,7 @@ class DecisionContext(BaseModel):
     def from_public(cls, public: dict, **kwargs: Any) -> "DecisionContext":
         """Construct context from public case data, making sure ground truth isn't leaked."""
         return cls(suspects=list(public["suspects"]), weapons=list(public["weapons"]),
-                   locations=list(public["locations"]), **kwargs)
+                   locations=list(public["locations"]), public=public, **kwargs)
 
 
 def _ctx(info: ValidationInfo) -> DecisionContext:
