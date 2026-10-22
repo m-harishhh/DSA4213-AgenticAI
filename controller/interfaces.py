@@ -11,20 +11,20 @@ Disclaimer: This file is frozen, any changes requires a pr.
 
 # Casework module (owned by Josh)
 from casework import load_case, public_view, suspect_view, initial_state, allowed_content, record_delivery, share_information
-from casework import TURN_BUDGET, MEMORY_K # see decisions.md D6
+from casework import TURN_BUDGET, MEMORY_K# see decisions.md D6
 from casework.disclosure import branch_prompt, communication_options
 from casework.model import INTENTS
 
 # Infrastructure (Owned by Aniroodh)
 from infra import LLMClient, MockBackend, TransportError, LLMCallError, EventLog, ROLES, PURPOSES, PHASES, CONDITIONS
-
+from infra import summarise_cost
 # Detective (owned by Aravindh)
 from detective import DecisionContext, parse_decision, parse_invitation_response, parse_conversation_reply
 from detective.agent import detective_decide
 from detective.memory import build_memory, extract_ledger
 
 
-
+ACCUSATION_BUDGET = 3
 
 # The below is parameters for conversation between agents in checkpoints
 CHECKPOINTS_AFTER_INTERROGATION = (5, 10, 15)
@@ -34,7 +34,7 @@ MAX_DETECTIVE_CONVERSATIONS_PER_CHECKPOINT = 1 # per checkpoint
 MAX_CONVERSATIONS_PER_PARTICIPANT = 1 #see decisions.md 
 DETECTIVE_FORMAT_REPAIRS = 1 #see decisions.md
 AGENT_IDS = ('detective', 'suspect_1', 'suspect_2', 'suspect_3', 'suspect_4', 'suspect_5', 'interpreter', 'extractor', 'annotator') #see decisions.md
-MEMORY_K = 8 # fixed budget, see decisions.md D6
+
 
 
 def handle_accusation(game, action): 
@@ -54,7 +54,9 @@ def run_game(case_path, config, seed, condition, llm, log_dir = 'runs'):
 
     returns: {game_id, log_path, outcome, first_accusations_correct}
     '''
-    raise NotImplementedError("Harish, Tue 20")
+    from controller.game import run_game as _run_game
+
+    return _run_game(case_path, config, seed, condition, llm, log_dir, parts = None)
 
 
 def run_checkpoint(game, checkpoint_index, after_interrogation, rng):

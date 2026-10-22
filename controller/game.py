@@ -3,10 +3,19 @@ Game loop and controller state (Owned by Harish)
 '''
 
 from controller.interfaces import public_view, CONDITIONS, EventLog, agent_ids_for, initial_state
-from controller.interfaces import MEMORY_K, TURN_BUDGET
-from controller.interfaces import DecisionContext, parse_decision, record_delivery
+from controller.interfaces import MEMORY_K, TURN_BUDGET, ACCUSATION_BUDGET
+from controller.interfaces import DecisionContext, parse_decision, record_delivery, load_case
+from controller.interfaces import LLMCallError, summarise_cost
+from controller.interfaces import build_memory, detective_decide, interpret, suspect_respond, match_delivery, extract_ledger
 import random
+from pathlib import Path
+import time
 
+
+class FailedRun(Exception):
+    """
+    The game cannot continue (proposal section 3.5: persistent invalid output is a failed run)
+    """
 
 def new_game(case, condition, seed, log):
     '''
@@ -76,7 +85,7 @@ def decide(game, parts, llm):
     ctx = DecisionContext.from_public(game['public'],
                                       visible_exchanges = memory["visible_exchanges"],
                                       previous_accusations = game['accusations'],
-                                      turns_left = TURN_BUDGET - game['interrogations_used']
+                                      turns_left = 0 if game.get('testimony_frozen') else TURN_BUDGET - game['interrogations_used']
                                       )
 
     raw = parts["decide"](memory, ctx, llm, game['game_id'])
@@ -85,18 +94,38 @@ def decide(game, parts, llm):
 
     if not result['ok']:
         repair_errors = result['errors']
-        raw = parts['decide'](memory, ctx, llm, game['game_id'], repair_errors)
+        raw = parts['decide'](memory, ctx, llm, game['game_id'], 
+                              repair_errors = repair_errors, repair_of = raw['call_id'])
 
         result = parse_decision(raw['text'], ctx)
 
     
+    if result['ok'] and result['action']['action'] == 'accuse':
+        decision_type = "accusation"
+    
+    elif result['ok']:
+        decision_type = 'question'
+
+    else:
+        decision_type = 'decision'
+
+    
     game['log'].memory_view(decision_index = game['decision_index'], 
-                            decision_type = 'decision', 
+                            decision_type = decision_type, 
                             window_exchange_ids= memory['window_exchange_ids'],
                             memory_payload = memory['payload'],
                             call_id = raw['call_id']
                             )
+
+    if not result['ok']:
+        game['log'].failure(stage = 'detective_decision', 
+                            reason = 'format_failure', 
+                            call_id = raw['call_id'], 
+                            detail = result['errors'])
+        raise FailedRun('Format Failure')
+    
     result['call_id'] = raw['call_id']
+    result['window_exchange_ids'] = memory['window_exchange_ids']
     return result
 
 
@@ -167,3 +196,119 @@ def play_interrogation(game, decision, parts, llm):
                                entries = extraction['entries'])
 
     return exchange
+
+
+def handle_accusation(game,action):
+    triple = (action['culprit'], action['weapon'], action['location'])
+    solution = game['case']['solution']
+    answer = (solution['culprit'], solution['weapon'], solution['location'])
+    game['accusations'].append(triple)
+    correct = triple == answer
+    
+    return {
+        "correct": correct,
+        'feedback': 'correct' if correct else 'incorrect',
+        "game_over": correct or len(game['accusations']) >= ACCUSATION_BUDGET, 
+    }
+
+def accusation_phase(game, decision, parts, llm):
+    game['testimony_frozen'] = True
+
+    game['log'].contradiction_report(call_id = decision['call_id'],
+        window_exchange_ids = decision['window_exchange_ids'],
+        reported_pairs_raw = decision['action']['contradiction_report'])
+
+    while True:
+        action  = decision['action']
+        verdict = handle_accusation(game, action)
+        game['log'].accusation(attempt = len(game['accusations']),
+            triple = {'culprit': action['culprit'], 'weapon': action['weapon'], 'location': action['location']},
+            valid = True,
+            correct = verdict['correct'], feedback = verdict['feedback'],
+            call_id = decision['call_id'], exchange_index = game['exchange_index'],
+            interrogations_used = game['interrogations_used'])
+        
+        if verdict['game_over']: 
+            break
+        decision = decide(game, parts, llm)      
+        
+        if not decision['ok']: 
+            break
+
+    return {
+        "correct": verdict['correct'],
+        "attempts": len(game['accusations']), 
+        "ok": decision['ok']
+    }
+
+
+def investigation_phase(game, parts, llm):
+
+    while True:
+        decision = decide(game, parts, llm)
+
+        if decision['action']['action'] == 'accuse':
+            return decision
+
+        play_interrogation(game, decision, parts, llm)
+
+def default_parts():
+    '''The real module functions; tests pass fakes via parts= instead.'''
+    return {'memory': build_memory, 'decide': detective_decide, 'interpret': interpret,
+            'respond': suspect_respond, 'match': match_delivery, 'extract': extract_ledger}
+
+
+
+def run_game(case_path, config, seed, condition, llm, log_dir = 'runs', parts = None):
+    started = time.monotonic()
+    if parts is None:
+        parts = default_parts()
+    case = load_case(case_path)
+    game_id = f"{config.get('run_id', 'local')}_{condition}_{seed}" #unique per game
+
+    path = Path(log_dir) / f"{game_id}.jsonl"
+    log = EventLog(Path(log_dir) / f"{game_id}.jsonl", game_id); llm.log = log
+    log.game_start(run_id = config.get('run_id', 'local'), case_id = case['case_id'],
+               case_sha256 = config.get('case_sha256'), condition = condition, k = MEMORY_K,
+               turn_budget = TURN_BUDGET, accusation_budget = ACCUSATION_BUDGET, seed = seed,
+               model_id = llm.model_id, decoding = llm.decoding,
+               prompt_versions = config.get('prompt_versions'), pricing = llm.pricing)
+
+
+    game = new_game(case, condition, seed, log)
+
+    try: 
+        decision = investigation_phase(game, parts, llm)
+        result = accusation_phase(game, decision, parts, llm)
+        if len(game['accusations']) == 1 and result['correct']:
+            outcome = 'solved_first' 
+        elif len(game['accusations']) > 1 and result['correct']:
+            outcome = 'solved_retry'
+        else:
+            outcome = 'unsolved'
+
+    except (FailedRun, LLMCallError):
+        outcome = 'failed_run'
+
+    first = game['accusations'][0] if game['accusations'] else None
+    solution = case['solution']
+    answer = (solution['culprit'], solution['weapon'], solution['location'])
+    first_correct = first == answer
+
+    component_correct = ({'culprit': first[0] == answer[0], 'weapon': first[1] == answer[1],
+                      'location': first[2] == answer[2]} if first else None)
+
+    log.game_end(outcome = outcome, attempts_used = len(game['accusations']),
+             first_accusation_correct = first_correct, component_correct = component_correct,
+             interrogations_used = game['interrogations_used'], exchanges_total = game['exchange_index'],
+             checkpoints_reached= 0, conversations= {}, invitations = {},     # filled in by checkpoints (Thu)
+             cost= summarise_cost(log.events), duration_s= time.monotonic() - started)
+    
+    log.close()
+
+    return {
+        'game_id': game_id, 
+        "log_path": str(path),
+        "outcome": outcome,
+        "first_accusations_correct": first_correct
+    }
