@@ -69,14 +69,10 @@ def run_checkpoint(game, checkpoint_index, after_interrogation, rng):
     raise NotImplementedError("Harish, thur 22")
     
 
-def interpret(question, suspect, cites, public, delivered, llm, game_id):
-    '''
-    Maps one free-form detective question to one of Josh's 5 intents. Cites are exchange IDs from the detective
-    delivered: {exchange_id: {suspect, text, matched_claim_ids}} for every exchange the detective has seen
-    
-    returns: {intent, cited_claim_ids, call_id}
-    '''
-    raise NotImplementedError("Harish, tue 20")
+# Question interpreter (owned by Harish), implemented in controller/interpreter.py:
+# interpret(question, suspect, cites, public, delivered, llm, game_id) -> {intent, cited_claim_ids, call_id}
+#     maps one free-form question to one of Josh's 5 intents, using public info and delivered dialogue only
+from controller.interpreter import interpret
 
 # Suspect pipeline (owned by Harish), implemented in controller/suspect.py:
 # suspect_respond(case, suspect, question, intent, state, history, llm, game_id, cited_claim_ids=())
