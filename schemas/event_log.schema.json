@@ -142,11 +142,25 @@
               "annotator"
             ]
           },
+          "agent_id": {
+            "enum": [
+              "detective",
+              "suspect_1",
+              "suspect_2",
+              "suspect_3",
+              "suspect_4",
+              "suspect_5",
+              "interpreter",
+              "extractor",
+              "annotator"
+            ],
+            "description": "Stable persona across games (decisions.md D3): suspects are numbered in the case's public suspect order"
+          },
           "purpose": {
             "enum": [
+              "detective_decision",
               "question",
               "accusation",
-              "contradiction_report",
               "interrogation_response",
               "invitation",
               "acceptance",
@@ -210,6 +224,7 @@
         "required": [
           "call_id",
           "role",
+          "agent_id",
           "purpose",
           "phase",
           "model_id",
@@ -246,11 +261,11 @@
           },
           "decision_type": {
             "enum": [
+              "decision",
               "question",
               "accusation",
               "acceptance",
-              "conversation_reply",
-              "contradiction_report"
+              "conversation_reply"
             ]
           },
           "window_exchange_ids": {
@@ -568,6 +583,10 @@
       },
       "then": {
         "properties": {
+          "call_id": {
+            "type": "string",
+            "description": "The first accusation call that carried the report (proposal 5.3)"
+          },
           "reported_pairs_raw": {
             "type": "array",
             "items": {
@@ -591,7 +610,7 @@
                 "right"
               ]
             },
-            "description": "Natural-language citations as produced in play; claim IDs are resolved only after play in the annotation overlay"
+            "description": "Aravindh's contradiction_report field from the first accusation output, as produced in play; claim IDs are resolved only after play in the annotation overlay"
           }
         },
         "required": [

@@ -44,8 +44,9 @@ python examples/infra_example.py
 ```
 
 Casework uses Python's standard library; the detective action schema also requires
-Pydantic, listed in [requirements.txt](requirements.txt). Add third-party dependencies
-there when new modules actually need them.
+Pydantic, and the live LLM backend (`infra.GeminiBackend`) requires google-genai, both
+listed in [requirements.txt](requirements.txt). Tests, mocks and the offline examples need
+neither. Add third-party dependencies there when new modules actually need them.
 Do not copy an entire individual-assignment environment into the requirements.
 Select the same interpreter in your IDE and terminal (`python -c "import sys; print(sys.executable)"` checks the terminal interpreter).
 

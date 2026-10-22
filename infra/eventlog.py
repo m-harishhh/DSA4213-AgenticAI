@@ -11,12 +11,12 @@ import datetime
 import json
 from pathlib import Path
 
-from .llm import ROLES, PURPOSES, PHASES, ATTEMPT_KINDS, ATTEMPT_STATUSES, CALL_STATUSES
+from .llm import ROLES, PURPOSES, PHASES, ATTEMPT_KINDS, ATTEMPT_STATUSES, CALL_STATUSES, AGENT_IDS
 
 SCHEMA_VERSION = "1.0"
 ENVELOPE_KEYS = ("seq", "ts", "game_id", "kind")
 CONDITIONS = ("none", "raw", "ledger")
-DECISION_TYPES = ("question", "accusation", "acceptance", "conversation_reply", "contradiction_report")
+DECISION_TYPES = ("decision", "question", "accusation", "acceptance", "conversation_reply")
 INVITATION_DECISIONS = ("accepted", "rejected", "no_slot")
 VISIBILITIES = ("private", "detective")
 EXTRACTION_STATUSES = ("ok", "repaired", "failed")
@@ -28,7 +28,7 @@ REQUIRED_KEYS = {
     "game_start": ("schema_version", "run_id", "case_id", "case_sha256", "condition", "k", "turn_budget",
                    "accusation_budget", "seed", "model_id", "decoding", "prompt_versions", "pricing",
                    "manifest_sha256", "code_version"),
-    "llm_call": ("call_id", "role", "purpose", "phase", "model_id", "decoding", "response_schema",
+    "llm_call": ("call_id", "role", "agent_id", "purpose", "phase", "model_id", "decoding", "response_schema",
                  "max_output_tokens", "messages", "text", "parsed", "usage", "cost_usd", "finish_reason",
                  "latency_ms", "attempts", "repair_used", "status", "tags"),
     "memory_view": ("decision_index", "decision_type", "window_exchange_ids", "memory_payload", "call_id"),
@@ -243,6 +243,8 @@ def validate_events(events):
         if kind == "llm_call":
             if event["role"] not in ROLES or event["purpose"] not in PURPOSES or event["phase"] not in PHASES:
                 errors.append(f"Event {event['seq']}: role/purpose/phase outside the vocabulary")
+            if event["agent_id"] not in AGENT_IDS:
+                errors.append(f"Event {event['seq']}: agent_id {event['agent_id']!r} is outside the decisions.md D3 vocabulary")
             if event["status"] not in CALL_STATUSES:
                 errors.append(f"Event {event['seq']}: status {event['status']!r} unknown")
             for attempt in event["attempts"]:
@@ -360,21 +362,26 @@ def _bucket():
 
 
 def summarise_cost(events):
-    """Token and USD totals by role, purpose, phase and attempt kind, from llm_call events."""
+    """Token and USD totals by role, agent, purpose, phase and attempt kind, from llm_call events."""
     calls = [event for event in events if event["kind"] == "llm_call"]
-    summary = {"calls": len(calls), "by_role": {}, "by_purpose": {}, "by_phase": {}, "by_attempt_kind": {},
+    summary = {"calls": len(calls), "by_role": {}, "by_agent": {}, "by_purpose": {}, "by_phase": {},
+               "by_attempt_kind": {}, "controller_repair_calls": {"calls": 0, "total_tokens": 0},
                "total_tokens": 0, "cost_usd": None, "calls_without_pricing": 0}
     priced_total = 0.0
     any_priced = False
     for call in calls:
         usage = call["usage"]
-        for group, key in (("by_role", call["role"]), ("by_purpose", call["purpose"]), ("by_phase", call["phase"])):
+        for group, key in (("by_role", call["role"]), ("by_agent", call["agent_id"]),
+                           ("by_purpose", call["purpose"]), ("by_phase", call["phase"])):
             bucket = summary[group].setdefault(key, _bucket())
             bucket["calls"] += 1
             for name in ("input_tokens", "output_tokens", "reasoning_tokens", "total_tokens"):
                 bucket[name] += usage[name]
             bucket["cost_usd"] += call["cost_usd"] or 0.0
         summary["total_tokens"] += usage["total_tokens"]
+        if (call.get("tags") or {}).get("repair_of"):  # decisions.md D1: controller-side detective repair
+            summary["controller_repair_calls"]["calls"] += 1
+            summary["controller_repair_calls"]["total_tokens"] += usage["total_tokens"]
         if call["cost_usd"] is None:
             summary["calls_without_pricing"] += 1
         else:
