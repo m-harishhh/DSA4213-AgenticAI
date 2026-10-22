@@ -78,26 +78,11 @@ def interpret(question, suspect, cites, public, delivered, llm, game_id):
     '''
     raise NotImplementedError("Harish, tue 20")
 
-def suspect_respond(case, suspect, question, intent, state, history, llm, game_id, cited_claim_ids=()): 
-    """
-    This function aids the suspect repsonse generation
-    Rules: 
-    1) The suspect picks among the allowed branches (the controller never forces the false one)
-    2) Text is delivered unchanged 
-
-    returns {text, allowed_branches, call_id} 
-    """
-    raise NotImplementedError("Harish, wed 21")
-
-def match_delivery(case, suspect, text, allowed_branches):
-    """
-    This functions feeds Josh's record_delivery which known claims, 
-    leads and retractions the delivered text actually contain
-
-    returns; {claim_ids, lead_ids, retraction_ids}
-    """
-    
-    raise NotImplementedError("Harish, wed 21")
+# Suspect pipeline (owned by Harish), implemented in controller/suspect.py:
+# suspect_respond(case, suspect, question, intent, state, history, llm, game_id, cited_claim_ids=())
+#     -> {text, allowed_branches, instructions, call_id}; the suspect picks the branch, text delivered unchanged
+# match_delivery(case, suspect, text, allowed_branches) -> {claim_ids, lead_ids, retraction_ids}
+from controller.suspect import suspect_respond, match_delivery
 
 
 def agent_ids_for(case): 
