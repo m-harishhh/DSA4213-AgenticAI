@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from casework import load_case, initial_state, allowed_content
-from infra import LLMClient, MockBackend, read_events, validate_events
+from infra import LLMClient, MockBackend, TransportError, read_events, validate_events
 from controller.game import run_game, default_parts
 from controller.suspect import match_delivery
 
@@ -152,6 +152,28 @@ class Failures(GameTest):
         self.assertEqual(result["outcome"], "solved_first")
         tags = [e["tags"] for e in events if e["kind"] == "llm_call" and e["role"] == "detective"]
         self.assertIn("repair_of", tags[1])
+
+    def test_llm_call_failure_is_logged_and_a_failed_run(self):
+        # Every attempt fails in transport, so the wrapper's bounded retries run out.
+        errors = [TransportError("503") for _ in range(10)]
+        llm = LLMClient(MockBackend(errors), "mock-model", {"temperature": 0}, sleep=lambda seconds: None)
+        result = run_game(CASE_PATH, {"run_id": "test"}, 99, "raw", llm, self.tmp.name, parts())
+        events = read_events(result["log_path"])
+        self.assertTrue(validate_events(events)["passed"])
+        self.assertEqual(result["outcome"], "failed_run")
+        failure = next(e for e in events if e["kind"] == "failure")
+        self.assertEqual((failure["stage"], failure["reason"]), ("llm_call", "transport_failure"))
+
+    def test_software_crash_is_logged_and_reraised(self):
+        def broken_respond(*args, **kwargs):
+            raise ZeroDivisionError("bug in the suspect pipeline")
+        llm = LLMClient(MockBackend([question()]), "mock-model", {"temperature": 0})
+        with self.assertRaises(ZeroDivisionError):
+            run_game(CASE_PATH, {"run_id": "test"}, 98, "raw", llm, self.tmp.name, parts(respond=broken_respond))
+        events = read_events(Path(self.tmp.name) / "test_raw_98.jsonl")
+        self.assertEqual((events[-1]["kind"], events[-1]["stage"]), ("failure", "software_crash"))
+        self.assertFalse(any(e["kind"] == "game_end" for e in events))  # a crash is not a game result
+        self.assertTrue(llm.log._handle.closed)
 
     def test_failed_extraction_is_explicit_in_ledger(self):
         _, events = self.play(script(1, ["Alex"]), "ledger", parts(extract=failing_extract))

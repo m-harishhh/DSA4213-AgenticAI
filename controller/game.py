@@ -270,44 +270,61 @@ def run_game(case_path, config, seed, condition, llm, log_dir = 'runs', parts = 
     game_id = f"{config.get('run_id', 'local')}_{condition}_{seed}" #unique per game
 
     path = Path(log_dir) / f"{game_id}.jsonl"
-    log = EventLog(Path(log_dir) / f"{game_id}.jsonl", game_id); llm.log = log
-    log.game_start(run_id = config.get('run_id', 'local'), case_id = case['case_id'],
-               case_sha256 = config.get('case_sha256'), condition = condition, k = MEMORY_K,
-               turn_budget = TURN_BUDGET, accusation_budget = ACCUSATION_BUDGET, seed = seed,
-               model_id = llm.model_id, decoding = llm.decoding,
-               prompt_versions = config.get('prompt_versions'), pricing = llm.pricing)
+    log = EventLog(path, game_id); llm.log = log
 
+    # Three kinds of failure, kept apart for accounting:
+    #   FailedRun      model output still invalid after the repair -> failure logged in decide, failed_run
+    #   LLMCallError   an LLM call failed for good (retries used up) -> failure logged here, failed_run
+    #   anything else  a software bug -> failure 'software_crash' logged, then re-raised with no game_end,
+    #                  so the orchestrator records the game as crashed, not as a model failure
+    # The log is closed in every case.
+    try:
+        log.game_start(run_id = config.get('run_id', 'local'), case_id = case['case_id'],
+                   case_sha256 = config.get('case_sha256'), condition = condition, k = MEMORY_K,
+                   turn_budget = TURN_BUDGET, accusation_budget = ACCUSATION_BUDGET, seed = seed,
+                   model_id = llm.model_id, decoding = llm.decoding,
+                   prompt_versions = config.get('prompt_versions'), pricing = llm.pricing)
 
-    game = new_game(case, condition, seed, log)
+        game = new_game(case, condition, seed, log)
 
-    try: 
-        decision = investigation_phase(game, parts, llm)
-        result = accusation_phase(game, decision, parts, llm)
-        if len(game['accusations']) == 1 and result['correct']:
-            outcome = 'solved_first' 
-        elif len(game['accusations']) > 1 and result['correct']:
-            outcome = 'solved_retry'
-        else:
-            outcome = 'unsolved'
+        try:
+            decision = investigation_phase(game, parts, llm)
+            result = accusation_phase(game, decision, parts, llm)
+            if len(game['accusations']) == 1 and result['correct']:
+                outcome = 'solved_first'
+            elif len(game['accusations']) > 1 and result['correct']:
+                outcome = 'solved_retry'
+            else:
+                outcome = 'unsolved'
 
-    except (FailedRun, LLMCallError):
-        outcome = 'failed_run'
+        except FailedRun:
+            outcome = 'failed_run'
 
-    first = game['accusations'][0] if game['accusations'] else None
-    solution = case['solution']
-    answer = (solution['culprit'], solution['weapon'], solution['location'])
-    first_correct = first == answer
+        except LLMCallError as exc:
+            log.failure(stage = 'llm_call', reason = exc.record['status'], call_id = exc.record['call_id'],
+                        detail = f"{exc.record['role']}/{exc.record['purpose']}")
+            outcome = 'failed_run'
 
-    component_correct = ({'culprit': first[0] == answer[0], 'weapon': first[1] == answer[1],
-                      'location': first[2] == answer[2]} if first else None)
+        first = game['accusations'][0] if game['accusations'] else None
+        solution = case['solution']
+        answer = (solution['culprit'], solution['weapon'], solution['location'])
+        first_correct = first == answer
 
-    log.game_end(outcome = outcome, attempts_used = len(game['accusations']),
-             first_accusation_correct = first_correct, component_correct = component_correct,
-             interrogations_used = game['interrogations_used'], exchanges_total = game['exchange_index'],
-             checkpoints_reached= 0, conversations= {}, invitations = {},     # filled in by checkpoints (Thu)
-             cost= summarise_cost(log.events), duration_s= time.monotonic() - started)
-    
-    log.close()
+        component_correct = ({'culprit': first[0] == answer[0], 'weapon': first[1] == answer[1],
+                          'location': first[2] == answer[2]} if first else None)
+
+        log.game_end(outcome = outcome, attempts_used = len(game['accusations']),
+                 first_accusation_correct = first_correct, component_correct = component_correct,
+                 interrogations_used = game['interrogations_used'], exchanges_total = game['exchange_index'],
+                 checkpoints_reached= 0, conversations= {}, invitations = {},     # filled in by checkpoints (Thu)
+                 cost= summarise_cost(log.events), duration_s= time.monotonic() - started)
+
+    except Exception as exc:
+        log.failure(stage = 'software_crash', reason = type(exc).__name__, detail = str(exc)[:500])
+        raise
+
+    finally:
+        log.close()
 
     return {
         'game_id': game_id, 
