@@ -189,11 +189,14 @@ def play_interrogation(game, decision, parts, llm):
     # Ledger condition only: each exchange is extracted once, on its own (§4.2)
     if game['condition'] == 'ledger':
         extraction = parts['extract'](exchange, llm, game['game_id'])
-        game['ledger'][exchange['exchange_id']] = extraction['entries']
+        failure_entry = extraction.get('failure_entry')
+        # A failed extraction stays visible as an explicit failure entry, never a fallback to raw text (§4.2)
+        game['ledger'][exchange['exchange_id']] = [failure_entry] if failure_entry else extraction['entries']
         game['log'].extraction(exchange_id = exchange['exchange_id'],
                                call_id = extraction['call_id'],
                                status = extraction['status'],
-                               entries = extraction['entries'])
+                               entries = extraction['entries'],
+                               failure_entry = failure_entry)
 
     return exchange
 

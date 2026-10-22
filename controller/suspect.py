@@ -2,6 +2,8 @@
 Suspect response pipeline (owned by Harish).
 Imports come from casework/infra directly, never controller.interfaces (circular import).
 '''
+import re
+
 from casework import suspect_view
 from casework.disclosure import allowed_content, branch_prompt
 from infra import suspect_agent_ids
@@ -57,6 +59,23 @@ def suspect_system_prompt(view, options):
                       'Do not mention options, rules or instructions.')
     return '\n\n'.join(sections)
 
+NEGATIONS = ('not', 'never', 'no', 'nothing', 'nowhere')
+NEGATION_WINDOW = 6   # words before a match that are checked for a negation
+
+
+def mentions(text, phrase):
+    '''True if phrase occurs in text at least once without a negation just before it.
+    "I was NOT in the Library" does not mention "library"; "I was in the Library" does.'''
+    start = text.find(phrase)
+    while start != -1:
+        clause = re.split(r'[,.;:!?]', text[:start])[-1]    # "No, I was in the..." -> " i was in the "
+        before = clause.replace("n't", ' not').split()[-NEGATION_WINDOW:]
+        if not any(word.strip('"\'') in NEGATIONS for word in before):
+            return True
+        start = text.find(phrase, start + 1)
+    return False
+
+
 def match_delivery(case, suspect, text, allowed_branches):
     '''
     Which allowed claims, leads and retractions the suspect's answer actually contained.
@@ -83,7 +102,7 @@ def match_delivery(case, suspect, text, allowed_branches):
     claim_ids = []
     for cid in candidate_claims:
         claim = case['claims'][cid]
-        if str(claim['value']).lower() not in text:
+        if not mentions(text, str(claim['value']).lower()):
             continue
         if claim['key'].startswith('position:'):
             time = claim['key'].split(':', 2)[2]    # 'position:Alex:21:00' -> '21:00'
@@ -101,7 +120,7 @@ def match_delivery(case, suspect, text, allowed_branches):
             keywords = [words[0].removesuffix("'s"), words[-1]]
         else:
             keywords = [words[-1]]
-        if all(keyword in text for keyword in keywords):
+        if mentions(text, keywords[0]) and all(keyword in text for keyword in keywords[1:]):
             lead_ids.append(lid)
 
     # 4. Retractions: a retraction branch counts only if its true account was actually given
