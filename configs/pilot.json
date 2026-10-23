@@ -5,5 +5,5 @@
   "turn_budget": 20,
   "runs_per_condition": 1,
   "budget_usd": 1.0,
-  "prompt_versions": {"detective": "detective-v2", "suspect": "suspect-v2", "interpreter": "interpreter-v1", "extractor": "extractor-v2"}
+  "prompt_versions": {"detective": "detective-v2", "suspect": "suspect-v2", "interpreter": "interpreter-v2", "extractor": "extractor-v2"}
 }
