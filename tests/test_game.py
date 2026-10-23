@@ -147,6 +147,13 @@ class Failures(GameTest):
         self.assertIsNone(self.end(events)["component_correct"])
         self.assertTrue(any(e["kind"] == "failure" for e in events))
 
+    def test_fenced_json_is_accepted(self):
+        # pilot_04c: gemini-3.5-flash-lite wraps valid actions in ```json fences; that is not a format failure
+        fenced = "```json\n" + json.dumps(accuse("Alex", first=True)) + "\n```"
+        result, events = self.play([fenced])
+        self.assertEqual(result["outcome"], "solved_first")
+        self.assertFalse(any(e["kind"] == "failure" for e in events))
+
     def test_repair_is_tagged_with_the_call_it_repairs(self):
         result, events = self.play(["not json"] + script(0, ["Alex"]))
         self.assertEqual(result["outcome"], "solved_first")
@@ -246,6 +253,53 @@ class DefaultParts(GameTest):
                 expected = {"detective", "interpreter", "suspect"} | ({"extractor"} if condition == "ledger" else set())
                 self.assertEqual(roles, expected)
 
+    def test_challenge_targets_the_claim_on_the_evidence_topic(self):
+        # pilot_02 bug: Alex's overview delivered BOTH the true 20:30 account and the 21:00 cover story;
+        # the challenge picked the 20:30 claim, so Alex could never retract the lie.
+        script = (self.turn("raw", "Alex", "Tell me about your evening.", interpretation("overview"),
+                            "I was in the Study at 20:30 and still in the Study at 21:00.")
+                  + self.turn("raw", "Drew", "Did you see Alex at 21:00?",
+                              interpretation("corroborate", subject="Alex", time="21:00"),
+                              "The timestamped recording shows Alex in the Library at 21:00.")
+                  + self.turn("raw", "Alex", "Drew's recording puts you in the Library at 21:00. Explain.",
+                              interpretation("challenge", challenged="e1", evidence=["e2"]),
+                              "I insist I was in the Study at 21:00.")
+                  # the detective now points at the previous challenge answer, which matched nothing
+                  + self.turn("raw", "Alex", "You keep saying the Study. Drew's recording disagrees.",
+                              interpretation("challenge", challenged="e3", evidence=["e2"]),
+                              "Fine, I was in the Library at 21:00.")
+                  + [accuse("Alex", first=True)])
+        _, events = self.play(script, "raw", default_parts())
+        turns = [e for e in events if e["kind"] == "interrogation"]
+        self.assertEqual(sorted(turns[0]["controller_matched"]["claim_ids"]),
+                         ["claim_cover_Alex", "claim_self_Alex_20:30"])
+        for challenge in turns[2:]:
+            self.assertEqual(challenge["intent"]["claim_id"], "claim_cover_Alex")
+        self.assertEqual(turns[3]["controller_matched"]["retraction_ids"], ["claim_cover_Alex"])
+
+    def test_suspect_prompt_rules(self):
+        _, events = self.play(self.turn("raw", "Alex", "Where were you at 21:00?",
+                                        interpretation("whereabouts", time="21:00"), "In the Study at 21:00.")
+                              + [accuse("Alex", first=True)], "raw", default_parts())
+        system = next(e for e in events if e["kind"] == "llm_call" and e["role"] == "suspect")["messages"][0]["content"]
+        self.assertIn("Do not invent additional facts", system)
+        self.assertNotIn("At checkpoints", system)   # checkpoint rule only at checkpoints (pilot_02)
+
+    def test_volunteered_evidence_unlocks_retraction(self):
+        # pilot_03 end to end: Drew volunteers the sighting; the challenge citing it makes Alex retract.
+        script = (self.turn("raw", "Alex", "Where were you at 21:00?", interpretation("whereabouts", time="21:00"),
+                            "I was in the Study at 21:00.")
+                  + self.turn("raw", "Drew", "Where were you at 21:00?", interpretation("whereabouts", time="21:00"),
+                              "I was in the Library at 21:00. I happened to see Alex there.")
+                  + self.turn("raw", "Alex", "Drew saw you in the Library at 21:00. Which is true?",
+                              interpretation("challenge", challenged="e1", evidence=["e2"]),
+                              "Alright, I was in the Library at 21:00.")
+                  + [accuse("Alex", first=True)])
+        _, events = self.play(script, "raw", default_parts())
+        challenge = [e for e in events if e["kind"] == "interrogation"][2]
+        self.assertEqual(challenge["allowed_branches"][0]["branch_id"], "retract_account_not_confess")
+        self.assertEqual(challenge["controller_matched"]["retraction_ids"], ["claim_cover_Alex"])
+
     def test_memory_window_holds_the_latest_k_exchanges(self):
         script = []
         for _ in range(10):
@@ -255,6 +309,18 @@ class DefaultParts(GameTest):
         windows = [e["window_exchange_ids"] for e in events if e["kind"] == "memory_view"]
         self.assertEqual(windows[0], [])                                   # empty before the first question
         self.assertEqual(windows[-1], [f"e{i}" for i in range(3, 11)])     # k = 8 at the accusation
+
+    def test_challenge_without_evidence_is_an_ordinary_question(self):
+        # pilot_03b: "What weapon were you carrying at 21:00?" came back as a challenge with no evidence,
+        # which only allows maintain/decline. It is answered as an ordinary question instead.
+        script = (self.turn("raw", "Alex", "What weapon were you carrying at 21:00?",
+                            interpretation("challenge", time="21:00", challenged="e1"), "None at all.")
+                  + self.turn("raw", "Drew", "What was the weapon material?",
+                              interpretation("challenge"), "It was steel.")
+                  + [accuse("Alex", first=True)])
+        _, events = self.play(script, "raw", default_parts())
+        intents = [e["intent"] for e in events if e["kind"] == "interrogation"]
+        self.assertEqual(intents, [{"kind": "whereabouts", "time": "21:00"}, {"kind": "overview"}])
 
     def test_interpreter_ignores_topics_never_mentioned(self):
         script = self.turn("raw", "Blair", "What about the injury pattern?",
@@ -275,7 +341,10 @@ class MatchDelivery(unittest.TestCase):
         self.assertEqual(self.match("Alex", intent, "No, I was in the Library at 21:00.")["claim_ids"],
                          ["claim_self_Alex_21:00"])
         self.assertEqual(self.match("Alex", intent, "I'd rather not say.")["claim_ids"], [])
-        self.assertEqual(self.match("Alex", intent, "I was in the Study at 20:30.")["claim_ids"], [])
+        # asked about 21:00, but volunteering the true 20:30 whereabouts still counts (§3.3)
+        self.assertEqual(self.match("Alex", intent, "I was in the Study at 20:30.")["claim_ids"],
+                         ["claim_self_Alex_20:30"])
+        self.assertEqual(self.match("Alex", intent, "I was in the Gallery at 20:30.")["claim_ids"], [])
 
     def test_negation_is_not_delivery(self):
         intent = {"kind": "whereabouts", "time": "21:00"}
@@ -283,6 +352,35 @@ class MatchDelivery(unittest.TestCase):
         self.assertEqual(self.match("Alex", intent, "I was never in the Study at 21:00.")["claim_ids"], [])
         self.assertEqual(self.match("Alex", intent, "I wasn't in the Study at 21:00, I was in the Library at 21:00.")
                          ["claim_ids"], ["claim_self_Alex_21:00"])
+
+    def test_volunteered_truthful_claims_count(self):
+        # pilot_03: asked about his own whereabouts, Drew volunteered seeing Alex in the Library.
+        # That is the counter-evidence to Alex's cover story, so it must count as delivered.
+        whereabouts = {"kind": "whereabouts", "time": "21:00"}
+        said = self.match("Drew", whereabouts, "I was in the Library at 21:00. I happened to see Alex there.")
+        self.assertEqual(said["claim_ids"], ["claim_self_Drew_21:00", "claim_witness_Alex"])
+        self.assertEqual(self.match("Drew", whereabouts, "I was in the Library at 21:00.")["claim_ids"],
+                         ["claim_self_Drew_21:00"])                       # no name, no witness claim
+        self.assertEqual(self.match("Alex", whereabouts, "The walls were green.")["claim_ids"], [])  # not Alex's clue
+
+    def test_room_and_time_must_share_a_sentence(self):
+        # pilot_03b answers, verbatim
+        whereabouts = {"kind": "whereabouts", "time": "21:00"}
+        cases = [
+            ("Alex", "I was in the Study at 21:00. I had been working there throughout the evening, "
+                     "though I stopped by the Library briefly earlier on.", ["claim_cover_Alex"]),
+            ("Alex", "Actually, I need to correct my earlier statement; I was in the Library at 21:00.",
+             ["claim_self_Alex_21:00"]),
+            ("Drew", "I was in the Library at 21:00. Alex was also there at that time.",
+             ["claim_self_Drew_21:00", "claim_witness_Alex"]),      # "there" borrows the room from the sentence before
+            ("Drew", "I was in the Library at 21:00. Alex was in the Study.", ["claim_self_Drew_21:00"]),
+        ]
+        for suspect, text, expected in cases:
+            with self.subTest(text=text):
+                self.assertEqual(self.match(suspect, whereabouts, text)["claim_ids"], expected)
+
+    def test_whole_words_only(self):
+        self.assertEqual(self.match("Blair", {"kind": "overview"}, "I walked around the gallery.")["claim_ids"], [])
 
     def test_leads(self):
         overview = {"kind": "overview"}
