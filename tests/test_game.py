@@ -278,6 +278,21 @@ class DefaultParts(GameTest):
         self.assertIn("Do not invent additional facts", system)
         self.assertNotIn("At checkpoints", system)   # checkpoint rule only at checkpoints (pilot_02)
 
+    def test_volunteered_evidence_unlocks_retraction(self):
+        # pilot_03 end to end: Drew volunteers the sighting; the challenge citing it makes Alex retract.
+        script = (self.turn("raw", "Alex", "Where were you at 21:00?", interpretation("whereabouts", time="21:00"),
+                            "I was in the Study at 21:00.")
+                  + self.turn("raw", "Drew", "Where were you at 21:00?", interpretation("whereabouts", time="21:00"),
+                              "I was in the Library at 21:00. I happened to see Alex there.")
+                  + self.turn("raw", "Alex", "Drew saw you in the Library at 21:00. Which is true?",
+                              interpretation("challenge", challenged="e1", evidence=["e2"]),
+                              "Alright, I was in the Library at 21:00.")
+                  + [accuse("Alex", first=True)])
+        _, events = self.play(script, "raw", default_parts())
+        challenge = [e for e in events if e["kind"] == "interrogation"][2]
+        self.assertEqual(challenge["allowed_branches"][0]["branch_id"], "retract_account_not_confess")
+        self.assertEqual(challenge["controller_matched"]["retraction_ids"], ["claim_cover_Alex"])
+
     def test_memory_window_holds_the_latest_k_exchanges(self):
         script = []
         for _ in range(10):
@@ -307,7 +322,10 @@ class MatchDelivery(unittest.TestCase):
         self.assertEqual(self.match("Alex", intent, "No, I was in the Library at 21:00.")["claim_ids"],
                          ["claim_self_Alex_21:00"])
         self.assertEqual(self.match("Alex", intent, "I'd rather not say.")["claim_ids"], [])
-        self.assertEqual(self.match("Alex", intent, "I was in the Study at 20:30.")["claim_ids"], [])
+        # asked about 21:00, but volunteering the true 20:30 whereabouts still counts (§3.3)
+        self.assertEqual(self.match("Alex", intent, "I was in the Study at 20:30.")["claim_ids"],
+                         ["claim_self_Alex_20:30"])
+        self.assertEqual(self.match("Alex", intent, "I was in the Gallery at 20:30.")["claim_ids"], [])
 
     def test_negation_is_not_delivery(self):
         intent = {"kind": "whereabouts", "time": "21:00"}
@@ -315,6 +333,19 @@ class MatchDelivery(unittest.TestCase):
         self.assertEqual(self.match("Alex", intent, "I was never in the Study at 21:00.")["claim_ids"], [])
         self.assertEqual(self.match("Alex", intent, "I wasn't in the Study at 21:00, I was in the Library at 21:00.")
                          ["claim_ids"], ["claim_self_Alex_21:00"])
+
+    def test_volunteered_truthful_claims_count(self):
+        # pilot_03: asked about his own whereabouts, Drew volunteered seeing Alex in the Library.
+        # That is the counter-evidence to Alex's cover story, so it must count as delivered.
+        whereabouts = {"kind": "whereabouts", "time": "21:00"}
+        said = self.match("Drew", whereabouts, "I was in the Library at 21:00. I happened to see Alex there.")
+        self.assertEqual(said["claim_ids"], ["claim_self_Drew_21:00", "claim_witness_Alex"])
+        self.assertEqual(self.match("Drew", whereabouts, "I was in the Library at 21:00.")["claim_ids"],
+                         ["claim_self_Drew_21:00"])                       # no name, no witness claim
+        self.assertEqual(self.match("Alex", whereabouts, "The walls were green.")["claim_ids"], [])  # not Alex's clue
+
+    def test_whole_words_only(self):
+        self.assertEqual(self.match("Blair", {"kind": "overview"}, "I walked around the gallery.")["claim_ids"], [])
 
     def test_leads(self):
         overview = {"kind": "overview"}

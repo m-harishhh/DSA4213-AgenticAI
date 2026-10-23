@@ -71,21 +71,43 @@ NEGATION_WINDOW = 6   # words before a match that are checked for a negation
 def mentions(text, phrase):
     '''True if phrase occurs in text at least once without a negation just before it.
     "I was NOT in the Library" does not mention "library"; "I was in the Library" does.'''
-    start = text.find(phrase)
-    while start != -1:
-        clause = re.split(r'[,.;:!?]', text[:start])[-1]    # "No, I was in the..." -> " i was in the "
+    # Whole words only: the badge value "round" must not match inside "around"
+    for match in re.finditer(r'\b' + re.escape(phrase) + r'\b', text):
+        clause = re.split(r'[,.;!?]', text[:match.start()])[-1]    # "No, I was in the..." -> " i was in the "
         before = clause.replace("n't", ' not').split()[-NEGATION_WINDOW:]
         if not any(word.strip('"\'') in NEGATIONS for word in before):
             return True
-        start = text.find(phrase, start + 1)
     return False
+
+
+def names(text, word):
+    '''True if word starts a word in text: "wall" matches "walls", "alex" matches "alex's".'''
+    return re.search(r'\b' + re.escape(word), text) is not None
+
+
+def claim_said(claim, suspect, text, volunteered):
+    '''Whether the text states this claim. Position claims need the room and the time, plus the
+    person's name when it is about someone else. A volunteered clue (not asked for) also needs
+    the attribute word ("badge", "wall"), since a bare value like "green" is too common.'''
+    if not mentions(text, str(claim['value']).lower()):
+        return False
+    if claim['key'].startswith('position:'):
+        _, subject, time = claim['key'].split(':', 2)    # 'position:Alex:21:00' -> 'Alex', '21:00'
+        if time not in text:
+            return False
+        return subject == suspect or names(text, subject.lower())
+    attribute = claim['key'].split(':')[1]               # 'scene:wall' -> 'wall'
+    return not volunteered or names(text, attribute)
 
 
 def match_delivery(case, suspect, text, allowed_branches):
     '''
-    Which allowed claims, leads and retractions the suspect's answer actually contained.
-    Heuristic for online bookkeeping only: testimony is never changed, and the real
-    measurement is the post-game annotation.
+    Which known claims, leads and retractions the suspect's answer actually contained.
+    Evidence counts from what was actually said, not only what was asked for (proposal §3.3):
+    besides the allowed branches, any truthful claim this suspect holds counts when volunteered
+    (pilot_03: Drew volunteered seeing Alex in the Library while asked about his own whereabouts).
+    Approved lies only count when offered by a branch. Heuristic for online bookkeeping only:
+    testimony is never changed, and the real measurement is the post-game annotation.
 
     returns: {claim_ids, lead_ids, retraction_ids}
     '''
@@ -101,19 +123,13 @@ def match_delivery(case, suspect, text, allowed_branches):
         for lid in branch['lead_ids']:
             if lid not in candidate_leads:
                 candidate_leads.append(lid)
+    in_branches = set(candidate_claims)
+    candidate_claims += [cid for cid, claim in case['claims'].items()
+                         if claim['speaker'] == suspect and claim['kind'] == 'truthful' and cid not in in_branches]
 
-    # 2. Claims: delivered if the claim's value is in the text.
-    # Position claims also need their time, since a room alone could refer to another time.
-    claim_ids = []
-    for cid in candidate_claims:
-        claim = case['claims'][cid]
-        if not mentions(text, str(claim['value']).lower()):
-            continue
-        if claim['key'].startswith('position:'):
-            time = claim['key'].split(':', 2)[2]    # 'position:Alex:21:00' -> '21:00'
-            if time not in text:
-                continue
-        claim_ids.append(cid)
+    # 2. Claims: delivered if the text states them (see claim_said)
+    claim_ids = [cid for cid in candidate_claims
+                 if claim_said(case['claims'][cid], suspect, text, volunteered=cid not in in_branches)]
 
     # 3. Leads: delivered if the lead's keywords are in the text
     #    "the attacker's badge"        -> 'badge'
