@@ -246,6 +246,38 @@ class DefaultParts(GameTest):
                 expected = {"detective", "interpreter", "suspect"} | ({"extractor"} if condition == "ledger" else set())
                 self.assertEqual(roles, expected)
 
+    def test_challenge_targets_the_claim_on_the_evidence_topic(self):
+        # pilot_02 bug: Alex's overview delivered BOTH the true 20:30 account and the 21:00 cover story;
+        # the challenge picked the 20:30 claim, so Alex could never retract the lie.
+        script = (self.turn("raw", "Alex", "Tell me about your evening.", interpretation("overview"),
+                            "I was in the Study at 20:30 and still in the Study at 21:00.")
+                  + self.turn("raw", "Drew", "Did you see Alex at 21:00?",
+                              interpretation("corroborate", subject="Alex", time="21:00"),
+                              "The timestamped recording shows Alex in the Library at 21:00.")
+                  + self.turn("raw", "Alex", "Drew's recording puts you in the Library at 21:00. Explain.",
+                              interpretation("challenge", challenged="e1", evidence=["e2"]),
+                              "I insist I was in the Study at 21:00.")
+                  # the detective now points at the previous challenge answer, which matched nothing
+                  + self.turn("raw", "Alex", "You keep saying the Study. Drew's recording disagrees.",
+                              interpretation("challenge", challenged="e3", evidence=["e2"]),
+                              "Fine, I was in the Library at 21:00.")
+                  + [accuse("Alex", first=True)])
+        _, events = self.play(script, "raw", default_parts())
+        turns = [e for e in events if e["kind"] == "interrogation"]
+        self.assertEqual(sorted(turns[0]["controller_matched"]["claim_ids"]),
+                         ["claim_cover_Alex", "claim_self_Alex_20:30"])
+        for challenge in turns[2:]:
+            self.assertEqual(challenge["intent"]["claim_id"], "claim_cover_Alex")
+        self.assertEqual(turns[3]["controller_matched"]["retraction_ids"], ["claim_cover_Alex"])
+
+    def test_suspect_prompt_rules(self):
+        _, events = self.play(self.turn("raw", "Alex", "Where were you at 21:00?",
+                                        interpretation("whereabouts", time="21:00"), "In the Study at 21:00.")
+                              + [accuse("Alex", first=True)], "raw", default_parts())
+        system = next(e for e in events if e["kind"] == "llm_call" and e["role"] == "suspect")["messages"][0]["content"]
+        self.assertIn("Do not invent additional facts", system)
+        self.assertNotIn("At checkpoints", system)   # checkpoint rule only at checkpoints (pilot_02)
+
     def test_memory_window_holds_the_latest_k_exchanges(self):
         script = []
         for _ in range(10):

@@ -8,7 +8,7 @@ from casework import suspect_view
 from casework.disclosure import allowed_content, branch_prompt
 from infra import suspect_agent_ids
 
-SUSPECT_PROMPT_VERSION = 'suspect-v1'
+SUSPECT_PROMPT_VERSION = 'suspect-v2'   # v2: no checkpoint rule in interrogations; no-invention rule (pilot_02)
 SUSPECT_MAX_OUTPUT_TOKENS = 200   # bounded answers (proposal §3.5); revisit after the pilot
 
 ROLE_TEXT = {
@@ -52,7 +52,12 @@ def suspect_system_prompt(view, options):
     if view['approved_false_accounts']:
         sections.append('The only false account you may give:\n'
                         + '\n'.join(f'- {claim}' for claim in view['approved_false_accounts']))
-    sections.append('Rules:\n' + '\n'.join(f'- {rule}' for rule in view['instructions']))
+    # The checkpoint rule only applies at checkpoints; shown here, suspects offered invitations mid-interrogation (pilot_02)
+    rules = [rule for rule in view['instructions'] if not rule.startswith('At checkpoints')]
+    # Josh's branch instruction ("Do not invent additional facts...") is the same for every option; state it once
+    rules += sorted({option['instruction'] for option in options})
+    rules.append('If asked about something not in what you know, say you do not know rather than describing it.')
+    sections.append('Rules:\n' + '\n'.join(f'- {rule}' for rule in rules))
     sections.append('For this question, choose exactly ONE of these options yourself, based on your role and motive:\n'
                     + render_options(options)
                     + '\nReply in character, in first person, in at most three sentences. '

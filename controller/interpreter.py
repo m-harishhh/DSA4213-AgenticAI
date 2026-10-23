@@ -82,23 +82,47 @@ def build_intent(parsed, suspect, cites, public, delivered):
         topic = parsed['topic'] if parsed['topic'] in heard_topics(delivered) else None
         intent = {'kind': kind, 'topic': topic}
     elif kind == 'challenge':
-        challenged = delivered.get(parsed['challenged'] or '')
-        claim_id = None
-        if challenged and challenged.get('speaker') == suspect and challenged.get('matched_claim_ids'):
-            claim_id = challenged['matched_claim_ids'][-1]
-        intent = {'kind': kind, 'claim_id': claim_id}
+        intent = {'kind': kind,
+                  'claim_id': challenged_claim(parsed['challenged'], suspect, cites, parsed['evidence'], delivered)}
     else:
         intent = {'kind': 'overview'}
 
-    # Counter-evidence: exchanges the detective cited plus those the question refers to, but only
-    # ones actually delivered to the detective, and never the challenged statement itself.
-    evidence_ids = [eid for eid in list(cites) + list(parsed['evidence']) if eid in delivered]
-    cited_claim_ids = []
-    for eid in evidence_ids:
-        for cid in delivered[eid].get('matched_claim_ids', []):
-            if cid != intent.get('claim_id') and cid not in cited_claim_ids:
-                cited_claim_ids.append(cid)
+    # Counter-evidence: claims from the cited and referenced exchanges, never the challenged claim itself
+    cited_claim_ids = [cid for cid in evidence_claims(cites, parsed['evidence'], delivered)
+                       if cid != intent.get('claim_id')]
     return intent, cited_claim_ids
+
+
+def evidence_claims(cites, evidence, delivered):
+    '''{claim_id: key} from the exchanges the detective cited plus those the question refers to,
+    only ones actually delivered to the detective.'''
+    claims = {}
+    for eid in list(cites) + list(evidence):
+        if eid in delivered:
+            claims.update(delivered[eid].get('claim_keys', {}))
+    return claims
+
+
+def challenged_claim(challenged_id, suspect, cites, evidence, delivered):
+    '''The suspect's own earlier claim the challenge is about.
+
+    Prefer a claim on the same topic as the evidence (same key, e.g. position:Alex:21:00), so
+    "Drew saw you in the Library at 21:00" targets Alex's 21:00 account, not their 20:30 one.
+    Search the challenged exchange first, then the suspect's other answers (newest first), because
+    the detective often points at a later answer that repeated the statement without matching it.
+    Falls back to the challenged exchange's last claim; None if the suspect made no matched claim.'''
+    own = [e for e in delivered.values() if e.get('speaker') == suspect and e.get('claim_keys')]
+    first = [e for e in own if e['exchange_id'] == challenged_id]
+    candidates = first + [e for e in reversed(own) if e['exchange_id'] != challenged_id]
+    evidence_keys = set(evidence_claims(cites, evidence, delivered).values())
+
+    for exchange in candidates:
+        for cid, key in exchange['claim_keys'].items():
+            if key in evidence_keys:
+                return cid
+    if first:
+        return list(first[0]['claim_keys'])[-1]
+    return None
 
 
 def interpret(question, suspect, cites, public, delivered, llm, game_id):
