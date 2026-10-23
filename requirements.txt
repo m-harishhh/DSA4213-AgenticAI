@@ -10,3 +10,9 @@
 # Add tested external dependencies here when future modules introduce them.
 
 pydantic==2.13.5
+# infra (Aniroodh): only GeminiBackend imports google-genai; tests and mocks do not need it.
+google-genai==2.31.0
+
+# infra CLI and smoke test: load GEMINI_API_KEY from a git-ignored .env
+python-dotenv==1.2.4
+

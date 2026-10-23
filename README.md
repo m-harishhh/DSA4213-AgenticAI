@@ -26,7 +26,10 @@ per-game event log plus its validator and export to Josh's annotation format
 (`infra/eventlog.py`), the log's JSON schema (`schemas/event_log.schema.json`) and an
 offline example (`examples/infra_example.py`). Its handoff is in
 [infra/README.md](infra/README.md). Live runs write one log per game under `runs/`,
-which is git-ignored because logs contain private case information.
+which is git-ignored because logs contain private case information. `python -m infra run`
+plays seeded, resumable, parallel runs (the offline mock game by default, or Harish's
+controller with the live backend) and writes a transcript and an annotation export next
+to each log; `python -m infra replay` prints a game.
 
 Use Python **3.10 or newer** (casework was done on **3.12**) with your existing 
 compatible Python environment. Open a terminal at the repository root, 
@@ -41,11 +44,13 @@ python -m casework validate cases/pilot.json
 python -m casework validate cases/evaluation.json
 python examples/integration_example.py
 python examples/infra_example.py
+python -m infra run --config configs/experiment_config.example.json --case cases/pilot.json --run-dir runs/mock_demo --games-per-condition 2 --workers 2
 ```
 
 Casework uses Python's standard library; the detective action schema also requires
-Pydantic, listed in [requirements.txt](requirements.txt). Add third-party dependencies
-there when new modules actually need them.
+Pydantic, and the live LLM backend (`infra.GeminiBackend`) requires google-genai, both
+listed in [requirements.txt](requirements.txt). Tests, mocks and the offline examples need
+neither. Add third-party dependencies there when new modules actually need them.
 Do not copy an entire individual-assignment environment into the requirements.
 Select the same interpreter in your IDE and terminal (`python -c "import sys; print(sys.executable)"` checks the terminal interpreter).
 

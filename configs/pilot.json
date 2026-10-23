@@ -1,0 +1,9 @@
+{
+  "model_id": "gemini-3.1-flash-lite",
+  "decoding_settings": {"temperature": 0.7, "top_p": 0.95, "max_output_tokens": 800, "thinking_level": "minimal"},
+  "k": 8,
+  "turn_budget": 20,
+  "runs_per_condition": 1,
+  "budget_usd": 1.0,
+  "prompt_versions": {"detective": "detective-v1", "suspect": "suspect-v1", "interpreter": "interpreter-v1", "extractor": "extractor-v1"}
+}
