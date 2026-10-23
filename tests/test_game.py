@@ -147,6 +147,13 @@ class Failures(GameTest):
         self.assertIsNone(self.end(events)["component_correct"])
         self.assertTrue(any(e["kind"] == "failure" for e in events))
 
+    def test_fenced_json_is_accepted(self):
+        # pilot_04c: gemini-3.5-flash-lite wraps valid actions in ```json fences; that is not a format failure
+        fenced = "```json\n" + json.dumps(accuse("Alex", first=True)) + "\n```"
+        result, events = self.play([fenced])
+        self.assertEqual(result["outcome"], "solved_first")
+        self.assertFalse(any(e["kind"] == "failure" for e in events))
+
     def test_repair_is_tagged_with_the_call_it_repairs(self):
         result, events = self.play(["not json"] + script(0, ["Alex"]))
         self.assertEqual(result["outcome"], "solved_first")
