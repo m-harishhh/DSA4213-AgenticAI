@@ -89,7 +89,7 @@ class ConditionInvarianceTests(unittest.TestCase):
         self.assertEqual(len(set(users)), 1)
 
     def test_one_target_rule_v2(self):
-        self.assertEqual(PROMPT_VERSION, "detective-v2")
+        self.assertEqual(PROMPT_VERSION, "detective-v3")
         sentence = ("Each question should ask about one thing only, such as one person's whereabouts at one time, "
                     "or one clue. Suspects answer only one part of a multi-part question.")
         for payload in PAYLOADS.values():

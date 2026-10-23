@@ -228,7 +228,7 @@ class ExtractionTests(unittest.TestCase):
         self.assertIn("ask: Alex | topic: the floor", payload)
 
     def test_extraction_prompt_v2(self):
-        self.assertEqual(EXTRACTOR_VERSION, "extractor-v2")
+        self.assertEqual(EXTRACTOR_VERSION, "extractor-v3")
         self.assertIn('Lines starting with "Detective:" are the detective\'s own words.', EXTRACTION_PROMPT)
         self.assertIn('with speaker exactly "Detective"', EXTRACTION_PROMPT)
         self.assertIn("The detective's questions are never unresolved leads.", EXTRACTION_PROMPT)

@@ -49,6 +49,10 @@ SCHEMA_CONFIG: dict[str, Any] = {
     # vs a 600 cap, with one truncation + repair; pilot_02 lost exchange e19 to a failed extraction.
     # Revisit after the pilot.
     "max_extraction_tokens": 1200,
+    # Output token cap for checkpoint accept/reject calls; placeholder until the pilot.
+    "max_acceptance_tokens": 800,
+    # Output token cap for checkpoint conversation replies; placeholder until the pilot.
+    "max_reply_tokens": 800,
 }
 
 
