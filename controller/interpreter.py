@@ -10,7 +10,7 @@ Imports come from casework/infra directly, never controller.interfaces (circular
 '''
 from casework.model import INTENTS
 
-INTERPRETER_PROMPT_VERSION = 'interpreter-v1'
+INTERPRETER_PROMPT_VERSION = 'interpreter-v2'   # v2: narrower "challenge" (pilot_03b labelled plain questions as challenges)
 INTERPRETER_MAX_OUTPUT_TOKENS = 200
 
 INTERPRETER_SYSTEM = '''You classify one question that a detective asks a suspect into exactly one intent.
@@ -18,9 +18,13 @@ INTERPRETER_SYSTEM = '''You classify one question that a detective asks a suspec
 Intents:
 - "overview": a broad question about the suspect's evening, what they saw or what they know.
 - "ask_lead": a follow-up on a topic someone mentioned they have information about. Set "topic" to one of the listed topic keys.
-- "whereabouts": where the suspect themselves was at a time. Set "time".
+- "whereabouts": where the suspect themselves was at a time, including yes/no checks such as "Were you in the Library at 21:00?". Set "time".
 - "corroborate": whether the suspect saw or knows where ANOTHER person was at a time. Set "subject" and "time".
-- "challenge": confronting the suspect with evidence that an earlier statement of theirs is false. Set "challenged" to the exchange ID of their earlier statement, and "evidence" to the exchange IDs of the contradicting statements.
+- "challenge": ONLY when the question confronts the suspect with a statement from an earlier exchange that contradicts something the suspect said before. Set "challenged" to the exchange ID of the suspect's earlier statement, and "evidence" to the exchange IDs of the contradicting statements (at least one).
+
+A question that simply asks for information is never a challenge, even if it is pointed or follows a contradiction.
+Not challenges: "What weapon were you carrying at 21:00?", "What was the weapon material?", "Were you in the Library at 21:00?".
+Challenges: "Drew saw you in the Library at 21:00, but you said the Study. Which is true?", "Your account contradicts Ellis's recording."
 
 If a question covers several targets, choose the main one. Use null for fields that do not apply. Use only the times, names, topic keys and exchange IDs listed below; never invent one.
 Reply with exactly one JSON object and nothing else.'''
@@ -72,6 +76,12 @@ def build_intent(parsed, suspect, cites, public, delivered):
     instead of crashing; they stay visible in the log for the interpretation audit.'''
     kind = parsed['kind']
     time = parsed['time'] if parsed['time'] in public['times'] else None
+
+    # A challenge with no delivered evidence can never unlock a retraction (Josh's rule needs cited
+    # counter-evidence) and limits the suspect to maintaining or declining, so a plain question would
+    # go unanswered (pilot_03b). Treat it as an ordinary question; the model's label stays in the log.
+    if kind == 'challenge' and not evidence_claims(cites, parsed['evidence'], delivered):
+        kind = 'whereabouts' if time else 'overview'
 
     if kind == 'whereabouts':
         intent = {'kind': kind, 'time': time}

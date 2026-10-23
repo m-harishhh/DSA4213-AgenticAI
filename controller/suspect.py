@@ -85,17 +85,30 @@ def names(text, word):
     return re.search(r'\b' + re.escape(word), text) is not None
 
 
-def claim_said(claim, suspect, text, volunteered):
-    '''Whether the text states this claim. Position claims need the room and the time, plus the
-    person's name when it is about someone else. A volunteered clue (not asked for) also needs
-    the attribute word ("badge", "wall"), since a bare value like "green" is too common.'''
-    if not mentions(text, str(claim['value']).lower()):
-        return False
+def claim_said(claim, suspect, text, volunteered, rooms):
+    '''Whether the text states this claim. A volunteered clue (not asked for) also needs the
+    attribute word ("badge", "wall"), since a bare value like "green" is too common.
+
+    Position claims need the room and the time in one sentence (pilot_03b: "I was in the Study
+    at 21:00. ... I stopped by the Library earlier" must not match Library at 21:00). A claim about
+    someone else also needs their name; that sentence may take the room and time from the sentence
+    before it ("I was in the Library at 21:00. Alex was also there."), unless it names another room.'''
+    value = str(claim['value']).lower()
     if claim['key'].startswith('position:'):
         _, subject, time = claim['key'].split(':', 2)    # 'position:Alex:21:00' -> 'Alex', '21:00'
-        if time not in text:
-            return False
-        return subject == suspect or names(text, subject.lower())
+        sentences = re.split(r'(?<=[.!?])\s+', text)
+        for i, sentence in enumerate(sentences):
+            if subject == suspect:
+                if mentions(sentence, value) and time in sentence:
+                    return True
+            elif names(sentence, subject.lower()):
+                other_rooms = [room for room in rooms if room != value and names(sentence, room)]
+                window = sentence if (i == 0 or other_rooms) else sentences[i - 1] + ' ' + sentence
+                if mentions(window, value) and time in window:
+                    return True
+        return False
+    if not mentions(text, value):
+        return False
     attribute = claim['key'].split(':')[1]               # 'scene:wall' -> 'wall'
     return not volunteered or names(text, attribute)
 
@@ -128,8 +141,9 @@ def match_delivery(case, suspect, text, allowed_branches):
                          if claim['speaker'] == suspect and claim['kind'] == 'truthful' and cid not in in_branches]
 
     # 2. Claims: delivered if the text states them (see claim_said)
+    rooms = [room.lower() for room in case['public']['locations']]
     claim_ids = [cid for cid in candidate_claims
-                 if claim_said(case['claims'][cid], suspect, text, volunteered=cid not in in_branches)]
+                 if claim_said(case['claims'][cid], suspect, text, volunteered=cid not in in_branches, rooms=rooms)]
 
     # 3. Leads: delivered if the lead's keywords are in the text
     #    "the attacker's badge"        -> 'badge'

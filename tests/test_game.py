@@ -303,6 +303,18 @@ class DefaultParts(GameTest):
         self.assertEqual(windows[0], [])                                   # empty before the first question
         self.assertEqual(windows[-1], [f"e{i}" for i in range(3, 11)])     # k = 8 at the accusation
 
+    def test_challenge_without_evidence_is_an_ordinary_question(self):
+        # pilot_03b: "What weapon were you carrying at 21:00?" came back as a challenge with no evidence,
+        # which only allows maintain/decline. It is answered as an ordinary question instead.
+        script = (self.turn("raw", "Alex", "What weapon were you carrying at 21:00?",
+                            interpretation("challenge", time="21:00", challenged="e1"), "None at all.")
+                  + self.turn("raw", "Drew", "What was the weapon material?",
+                              interpretation("challenge"), "It was steel.")
+                  + [accuse("Alex", first=True)])
+        _, events = self.play(script, "raw", default_parts())
+        intents = [e["intent"] for e in events if e["kind"] == "interrogation"]
+        self.assertEqual(intents, [{"kind": "whereabouts", "time": "21:00"}, {"kind": "overview"}])
+
     def test_interpreter_ignores_topics_never_mentioned(self):
         script = self.turn("raw", "Blair", "What about the injury pattern?",
                            interpretation("ask_lead", topic="weapon_edge"), "I'd rather not say.")
@@ -343,6 +355,22 @@ class MatchDelivery(unittest.TestCase):
         self.assertEqual(self.match("Drew", whereabouts, "I was in the Library at 21:00.")["claim_ids"],
                          ["claim_self_Drew_21:00"])                       # no name, no witness claim
         self.assertEqual(self.match("Alex", whereabouts, "The walls were green.")["claim_ids"], [])  # not Alex's clue
+
+    def test_room_and_time_must_share_a_sentence(self):
+        # pilot_03b answers, verbatim
+        whereabouts = {"kind": "whereabouts", "time": "21:00"}
+        cases = [
+            ("Alex", "I was in the Study at 21:00. I had been working there throughout the evening, "
+                     "though I stopped by the Library briefly earlier on.", ["claim_cover_Alex"]),
+            ("Alex", "Actually, I need to correct my earlier statement; I was in the Library at 21:00.",
+             ["claim_self_Alex_21:00"]),
+            ("Drew", "I was in the Library at 21:00. Alex was also there at that time.",
+             ["claim_self_Drew_21:00", "claim_witness_Alex"]),      # "there" borrows the room from the sentence before
+            ("Drew", "I was in the Library at 21:00. Alex was in the Study.", ["claim_self_Drew_21:00"]),
+        ]
+        for suspect, text, expected in cases:
+            with self.subTest(text=text):
+                self.assertEqual(self.match(suspect, whereabouts, text)["claim_ids"], expected)
 
     def test_whole_words_only(self):
         self.assertEqual(self.match("Blair", {"kind": "overview"}, "I walked around the gallery.")["claim_ids"], [])
