@@ -1,0 +1,66 @@
+{
+  "_note": "Synthetic fixture for schemas/annotation_behaviour.schema.json and qa/annotation_rubric.md's worked example (referral lead_follow_up scenario). Not actual model output. Mirrors examples/annotation_overlay_example.json's game and exchange IDs where possible, but this file covers an independent, illustrative exchange set for the lead-follow-up / referral walkthrough using cases/pilot.json's scene_floor lead (owner Alex, cue_speaker Drew).",
+  "game_id": "example_game",
+  "annotator_run_id": "llm_v1",
+  "exchange_behaviour": {
+    "e4": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": ["scene_floor"],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {"is_request": false, "target_subject": null, "target_time": null},
+      "challenge": {"is_challenge": false, "evidence_based": null, "cited_claim_ids": []},
+      "repeated_question": {"is_repeat": false, "repeat_kind": null, "matches_exchange_id": null},
+      "unsupported_additions": [],
+      "withholding": {"explicit_refusal": false, "partial_withholding": false},
+      "deception": {"contains_false_statement": false, "authorised": null, "claim_id_if_known": null},
+      "confidence": "high",
+      "citation": {"start": 0, "end": 55, "text": "Alex has information about the scene floor; ask Alex about it."}
+    },
+    "e7": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": "scene_floor",
+        "follow_up_relevance": "relevant"
+      },
+      "corroboration": {"is_request": false, "target_subject": null, "target_time": null},
+      "challenge": {"is_challenge": false, "evidence_based": null, "cited_claim_ids": []},
+      "repeated_question": {"is_repeat": false, "repeat_kind": null, "matches_exchange_id": null},
+      "unsupported_additions": [],
+      "withholding": {"explicit_refusal": false, "partial_withholding": false},
+      "deception": {"contains_false_statement": false, "authorised": null, "claim_id_if_known": null},
+      "confidence": "high",
+      "citation": {"start": 0, "end": 36, "text": "The murder scene had a stone floor."}
+    },
+    "e9": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {"is_request": false, "target_subject": null, "target_time": null},
+      "challenge": {"is_challenge": true, "evidence_based": true, "cited_claim_ids": ["claim_witness_Blair"]},
+      "repeated_question": {"is_repeat": false, "repeat_kind": null, "matches_exchange_id": null},
+      "unsupported_additions": [],
+      "withholding": {"explicit_refusal": false, "partial_withholding": false},
+      "deception": {"contains_false_statement": false, "authorised": null, "claim_id_if_known": null},
+      "confidence": "high",
+      "citation": {"start": 0, "end": 48, "text": "Drew says you were in the Gallery, not the Library."}
+    }
+  },
+  "missed_required_disclosures": [],
+  "voluntary_interaction": {
+    "checkpoints_reached": 1,
+    "coordination_instances": [
+      {
+        "conversation_id": "p1",
+        "proposal_to_conceal_or_align": true,
+        "agreement": "agreed",
+        "subsequent_testimony_consistent_exchange_ids": [],
+        "citation": {"start": 0, "end": 52, "text": "Let's both say we were in the Library at 20:30."}
+      }
+    ]
+  },
+  "annotator_notes": "e4/e7 illustrate the referral-then-followup pattern from REF-1/REF-2 (qa/blackbox_requirements.md 3.2a): the cue-speaker's referral in e4 does not itself disclose Alex's evidence, only e7 does."
+}
