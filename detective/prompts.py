@@ -4,11 +4,12 @@ Only the memory labels may differ between memory conditions (§4.3); everything 
 identical across conditions and turns. Case rendering reads public_view fields only.
 """
 
-PROMPT_VERSION = "detective-v1"
+# v2: one-target rule plus Detective labels in the ledger view.
+PROMPT_VERSION = "detective-v2"
 
 SYSTEM_PROMPT = """You are a celebrated private detective with a gentleman's manners and a patient ear, called to the scene to find who did it, with what, and where.
 
-Each turn you either interrogate one suspect with a single question, or accuse a culprit, weapon and room. Use names exactly as listed in the case. Every accusation must be a combination you have not accused before. When no interrogation turns are left, you must accuse.
+Each turn you either interrogate one suspect with a single question, or accuse a culprit, weapon and room. Each question should ask about one thing only, such as one person's whereabouts at one time, or one clue. Suspects answer only one part of a multi-part question. Use names exactly as listed in the case. Every accusation must be a combination you have not accused before. When no interrogation turns are left, you must accuse.
 
 Follow up on leads people mention, and compare accounts against each other.
 
@@ -81,8 +82,16 @@ def render_raw_block(exchange):
     return f"[{exchange['exchange_id']}]\n{exchange['text']}"
 
 
-def render_ledger_entry(entry):
-    speaker = f"speaker: {_known(entry.get('speaker'))}"
+DETECTIVE_SPEAKER_LABELS = {"interrogation": "Detective (your question)",
+                            "detective_conversation": "Detective (your reply)"}
+
+
+def render_ledger_entry(entry, kind=None):
+    speaker_name = entry.get("speaker")
+    # The detective's own words are labelled so they are not mistaken for testimony.
+    if (speaker_name or "").strip().casefold() == "detective" and kind in DETECTIVE_SPEAKER_LABELS:
+        speaker_name = DETECTIVE_SPEAKER_LABELS[kind]
+    speaker = f"speaker: {_known(speaker_name)}"
     quote = f'"{entry.get("source_span", "")}"'
     if entry["type"] == "unresolved_lead":
         fields = ["unresolved lead", speaker, f"ask: {_known(entry.get('target'))}",
@@ -104,7 +113,7 @@ def render_ledger_block(exchange, entries):
     elif not entries:
         lines = ["(no notes)"]
     else:
-        lines = [render_ledger_entry(entry) for entry in entries]
+        lines = [render_ledger_entry(entry, exchange.get("kind")) for entry in entries]
     return header + "\n" + "\n".join(lines)
 
 
@@ -117,17 +126,20 @@ def render_memory_payload(label, blocks):
 # ---------------------------------------------------------------------------
 # Ledger extraction (§4.2). The extractor sees one exchange only: no case data, no other exchanges.
 # ---------------------------------------------------------------------------
-EXTRACTOR_VERSION = "extractor-v1"
+# v2: detective-line handling; questions are not leads.
+EXTRACTOR_VERSION = "extractor-v2"
 
 EXTRACTION_PROMPT = """You take notes on one exchange from an investigation. You see only this exchange.
 
 Extract every explicit claim, observation, refusal and unresolved lead in the exchange, one entry each, and attribute each entry to the person who said it.
+Lines starting with "Detective:" are the detective's own words. Explicit statements in them are still extracted, with speaker exactly "Detective"; they are the detective's words, not testimony.
 - type: "claim", "observation", "refusal" or "unresolved_lead".
 - speaker: who said it.
 - statement: what was said, briefly.
 - entities: the people, objects and places named in it, only if stated; otherwise [].
 - time: the time it refers to, only if stated; otherwise null.
 - A lead pointing to another person is an "unresolved_lead": target is that person and topic is what to ask them. Otherwise target and topic are null.
+- The detective's questions are never unresolved leads. Only record an "unresolved_lead" when a speaker points to a person or thing to ask about, e.g. "ask Ellis about Blair's whereabouts".
 - A retraction of something said earlier is a "claim" with retracts true; otherwise retracts is false.
 - source_span: the exact words copied from the exchange text.
 Do not infer truth, guilt or links to other exchanges. Leave references you cannot resolve unresolved rather than guessing.
