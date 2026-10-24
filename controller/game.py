@@ -455,8 +455,10 @@ def prompt_versions():
     from detective.prompts import PROMPT_VERSION, EXTRACTOR_VERSION
     from controller.interpreter import INTERPRETER_PROMPT_VERSION
     from controller.suspect import SUSPECT_PROMPT_VERSION
+    from controller.checkpoint import CHECKPOINT_PROMPT_VERSION
     return {'detective': PROMPT_VERSION, 'suspect': SUSPECT_PROMPT_VERSION,
-            'interpreter': INTERPRETER_PROMPT_VERSION, 'extractor': EXTRACTOR_VERSION}
+            'interpreter': INTERPRETER_PROMPT_VERSION, 'extractor': EXTRACTOR_VERSION,
+            'checkpoint': CHECKPOINT_PROMPT_VERSION}
 
 
 def run_game(case_path, config, seed, condition, llm, log_dir = 'runs', parts = None):

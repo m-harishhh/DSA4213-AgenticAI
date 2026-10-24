@@ -157,7 +157,7 @@ class Failures(GameTest):
         _, events = self.play(script(0, ["Alex"]))
         logged = events[0]["prompt_versions"]
         self.assertEqual(logged["detective"], PROMPT_VERSION)
-        self.assertEqual(set(logged), {"detective", "suspect", "interpreter", "extractor"})
+        self.assertEqual(set(logged), {"detective", "suspect", "interpreter", "extractor", "checkpoint"})
 
     def test_fenced_json_is_accepted(self):
         # pilot_04c: gemini-3.5-flash-lite wraps valid actions in ```json fences; that is not a format failure
