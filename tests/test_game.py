@@ -307,6 +307,23 @@ class DefaultParts(GameTest):
         self.assertEqual(challenge["allowed_branches"][0]["branch_id"], "retract_account_not_confess")
         self.assertEqual(challenge["controller_matched"]["retraction_ids"], ["claim_cover_Alex"])
 
+    def test_motive_has_no_checkpoint_sentence_in_interrogations(self):
+        # every suspect in both cases: the motive core stays, "You may approach the detective..." does not
+        from casework import suspect_view
+        from casework.disclosure import branch_prompt
+        from controller.suspect import suspect_system_prompt
+        for path in ("pilot.json", "evaluation.json"):
+            case = load_case(str(ROOT / "cases" / path))
+            for suspect in case["suspects"]:
+                with self.subTest(case=path, suspect=suspect):
+                    state = initial_state(case, suspect)
+                    branches = allowed_content(case, suspect, {"kind": "overview"}, state)
+                    prompt = suspect_system_prompt(suspect_view(case, suspect, state),
+                                                   [branch_prompt(case, b) for b in branches])
+                    self.assertNotIn("approach the detective", prompt)
+                    core = case["suspects"][suspect]["motive"].split(". ")[0]
+                    self.assertIn("Your motive: " + core, prompt)
+
     def test_memory_window_holds_the_latest_k_exchanges(self):
         script = []
         for _ in range(10):
