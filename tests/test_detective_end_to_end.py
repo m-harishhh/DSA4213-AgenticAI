@@ -4,10 +4,9 @@ Plays one game per condition (none, raw, ledger) through controller.game.run_gam
 same seed and default_parts(): the real detective, memory, extraction, interpreter and suspect pipeline.
 Only the LLM is scripted (MockBackend callable); each request's role is identified from its system message.
 
-Not testable end to end yet (checkpoints are not in the game loop): CKPT-7 (a detective conversation enters
-memory as one exchange and can evict the oldest) and CKPT-8 (suspect-only conversations never enter memory).
-Covered for now by tests/test_detective_memory.py (WindowTests: detective_conversation is eligible and counts
-toward k; suspect_conversation and invitation are excluded) and tests/test_detective_checkpoint.py.
+CKPT-7 (a detective conversation enters memory as one exchange and can evict the oldest) and CKPT-8
+(suspect-only conversations never reach the detective) are covered end to end by CheckpointEndToEnd: the real
+detective checkpoint calls and memory, with fake suspect-side checkpoint parts (invite, accept, message, reply).
 """
 
 import json
@@ -47,6 +46,17 @@ RETRY = {"action": "accuse", "culprit": "Alex", "weapon": "Knife", "location": "
 INTERPRETATION = {"kind": "whereabouts", "time": "21:00", "subject": None, "topic": None, "challenged": None,
                   "evidence": []}
 
+# Checkpoint games: 11 questions, so checkpoints run after interrogations 5 and 10 (not 15).
+CHECKPOINT_QUESTIONS = (QUESTIONS * 3)[:11]
+DETECTIVE_MARKER = "the lantern flickered at 20:45"
+PRIVATE_MARKER = "the violet umbrella"
+DETECTIVE_REPLY = "Thank you, noted."
+# (suspect, nth time asked to invite) -> recipient. A suspect who completes a conversation is not asked again
+# at the same checkpoint, so Blair's 2nd ask is checkpoint 2.
+INVITES = {("Blair", 1): "Detective", ("Casey", 1): "Drew", ("Blair", 2): "Detective"}
+MESSAGES = {("Blair", "Detective"): f"I wanted you to know that {DETECTIVE_MARKER} near the Gallery.",
+            ("Casey", "Drew"): f"Keep this between us: I left {PRIVATE_MARKER} in the Study."}
+
 
 def entry(type_, speaker, span, target=None, topic=None):
     return {"type": type_, "speaker": speaker, "statement": span, "entities": [], "time": None, "target": target,
@@ -54,22 +64,28 @@ def entry(type_, speaker, span, target=None, topic=None):
 
 
 def extraction_reply(user):
-    """One Detective entry and one suspect entry per exchange, plus a referral when the answer gives one."""
-    question_line, answer_line = user.split("\n")[1:3]
-    speaker, answer = answer_line.split(": ", 1)
-    entries = [entry("claim", "Detective", question_line.removeprefix("Detective: ")), entry("claim", speaker, answer)]
-    if "Ask Alex about the floor." in answer:
-        entries.append(entry("unresolved_lead", speaker, "Ask Alex about the floor.", "Alex", "the floor"))
+    """One entry per "Speaker: text" line of the exchange (so a Detective entry and a suspect entry),
+    plus a referral when the answer gives one."""
+    entries = []
+    for line in user.split("\n")[1:]:
+        speaker, text = line.split(": ", 1)
+        entries.append(entry("claim", speaker, text))
+        if "Ask Alex about the floor." in text:
+            entries.append(entry("unresolved_lead", speaker, "Ask Alex about the floor.", "Alex", "the floor"))
     return {"entries": entries}
 
 
-def scripted_llm():
-    decisions = [{"action": "interrogate", "suspect": s, "question": q} for s, q in QUESTIONS]
+def scripted_llm(questions=QUESTIONS):
+    decisions = [{"action": "interrogate", "suspect": s, "question": q} for s, q in questions]
     decisions += [FIRST_ACCUSATION, RETRY]
 
     def respond(request):
         system, user = request["messages"][0]["content"], request["messages"][-1]["content"]
         if system.startswith("You are a celebrated private detective"):
+            if '{"accept": true}' in user:        # checkpoint invitation: accept every one
+                return {"accept": True}
+            if '{"message":' in user:             # checkpoint conversation: one bounded reply
+                return {"message": DETECTIVE_REPLY}
             return decisions.pop(0)
         if system.startswith("You classify one question"):
             return INTERPRETATION
@@ -79,6 +95,28 @@ def scripted_llm():
         return ANSWERS[name]
 
     return LLMClient(MockBackend(respond), "mock-model", {"temperature": 0})
+
+
+def checkpoint_parts():
+    """Fake suspect-side checkpoint parts (tests/test_game.py pattern); the detective side stays real.
+    options=[] so no message is matched to a catalogued claim."""
+    asked = {}
+
+    def invite(case, suspect, state, history, available, llm, game_id):
+        asked[suspect] = asked.get(suspect, 0) + 1
+        choice = INVITES.get((suspect, asked[suspect]))
+        return {"invite": choice if choice in available else None, "call_id": None}
+
+    def accept(case, suspect, inviter, state, history, llm, game_id):
+        return {"accept": True, "call_id": None}
+
+    def message(case, suspect, recipient, state, history, llm, game_id):
+        return {"text": MESSAGES[(suspect, recipient)], "options": [], "call_id": None}
+
+    def reply(case, suspect, inviter, text, state, history, llm, game_id):
+        return {"text": "Understood.", "options": [], "call_id": None}
+
+    return {**default_parts(), "invite": invite, "accept": accept, "message": message, "reply": reply}
 
 
 def private_strings():
@@ -192,6 +230,114 @@ class DetectiveEndToEnd(unittest.TestCase):
                     self.assertNotIn(json.dumps(report[0]["reported_pairs_raw"]), user)
                 for view in self.kind(condition, "memory_view"):
                     self.assertNotIn(MARKER_LEFT, view["memory_payload"])
+
+
+class CheckpointEndToEnd(unittest.TestCase):
+    """Checkpoint 1: Blair invites the detective, Casey invites Drew (private). Checkpoint 2: Blair invites the
+    detective again with a full window. Exchanges: e1-e5, e6 (conversation), e7-e11, e12 (conversation), e13."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory()
+        cls.results, cls.events = {}, {}
+        for condition in CONDITIONS:
+            result = run_game(CASE_PATH, {"run_id": "e2e_ckpt"}, SEED, condition,
+                              scripted_llm(CHECKPOINT_QUESTIONS), cls.tmp.name, checkpoint_parts())
+            cls.results[condition] = result
+            cls.events[condition] = read_events(result["log_path"])
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def kind(self, condition, kind):
+        return [e for e in self.events[condition] if e["kind"] == kind]
+
+    def conversations(self, condition, visibility):
+        return [e for e in self.kind(condition, "conversation") if e["visibility"] == visibility]
+
+    def views_after(self, condition, seq, decision_types=("question", "accusation")):
+        return [e for e in self.kind(condition, "memory_view") if e["seq"] > seq and e["decision_type"] in decision_types]
+
+    def test_checkpoint_games_complete(self):
+        for condition in CONDITIONS:
+            with self.subTest(condition=condition):
+                validation = validate_events(self.events[condition])
+                self.assertTrue(validation["passed"], validation["errors"][:3])
+                self.assertEqual(self.results[condition]["outcome"], "solved_retry")
+                end = self.kind(condition, "game_end")[0]
+                self.assertEqual(end["checkpoints_reached"], 2)
+                self.assertEqual(end["conversations"], {"detective": 2, "private": 1})
+                self.assertEqual([c["exchange_id"] for c in self.conversations(condition, "detective")], ["e6", "e12"])
+
+    def test_ckpt7_conversation_enters_memory(self):
+        # CKPT-7: one exchange in memory straight away; CKPT-9: no interrogation turn used.
+        for condition in CONDITIONS:
+            with self.subTest(condition=condition):
+                conversation = self.conversations(condition, "detective")[0]
+                window = self.views_after(condition, conversation["seq"])[0]["window_exchange_ids"]
+                self.assertIn("e6", window)
+                if condition == "none":
+                    self.assertEqual(window, ["e6"])
+                after = [e for e in self.kind(condition, "interrogation") if e["seq"] > conversation["seq"]][0]
+                self.assertEqual((after["interrogation_index"], after["exchange_index"]), (6, 7))
+                end = self.kind(condition, "game_end")[0]
+                self.assertEqual((end["interrogations_used"], end["exchanges_total"]), (len(CHECKPOINT_QUESTIONS), 13))
+
+    def test_ckpt7_raw_and_ledger_show_the_conversation(self):
+        # CKPT-7: the conversation is shown like any exchange: verbatim (raw) or as notes (ledger).
+        seq = self.conversations("raw", "detective")[0]["seq"]
+        raw = self.views_after("raw", seq)[0]["memory_payload"]
+        self.assertRegex(raw, rf"\[e6\]\nBlair: [^\n]*{re.escape(DETECTIVE_MARKER)}[^\n]*\nDetective: ")
+        seq = self.conversations("ledger", "detective")[0]["seq"]
+        ledger = self.views_after("ledger", seq)[0]["memory_payload"]
+        block = ledger.split("[e6] Blair\n", 1)[1].split("\n\n", 1)[0]
+        self.assertIn("speaker: Detective (your reply)", block)
+        self.assertIn(DETECTIVE_MARKER, block)
+
+    def test_ckpt7_conversation_evicts_oldest_when_full(self):
+        # CKPT-7: with the window already at k = 8, the conversation pushes the oldest exchange out.
+        for condition in ("raw", "ledger"):
+            with self.subTest(condition=condition):
+                conversation = self.conversations(condition, "detective")[1]
+                before = [e for e in self.kind(condition, "memory_view") if e["seq"] < conversation["seq"]][-1]
+                self.assertEqual(before["decision_type"], "conversation_reply")
+                self.assertEqual(len(before["window_exchange_ids"]), 8)
+                after = self.views_after(condition, conversation["seq"])[0]["window_exchange_ids"]
+                self.assertEqual(after, before["window_exchange_ids"][1:] + ["e12"])
+                self.assertNotIn(before["window_exchange_ids"][0], after)
+
+    def test_matched_horizon_with_conversations(self):
+        # SYS-5 with CKPT-7: raw and ledger see the same windows, checkpoint calls and conversations included.
+        raw = [(e["decision_type"], e["window_exchange_ids"]) for e in self.kind("raw", "memory_view")]
+        ledger = [(e["decision_type"], e["window_exchange_ids"]) for e in self.kind("ledger", "memory_view")]
+        self.assertEqual(raw, ledger)
+        self.assertTrue(any("e12" in window for _, window in raw))
+
+    def test_ckpt8_private_chat_never_reaches_detective(self):
+        # CKPT-8 / ENV-4: a suspect-only conversation stays out of every detective and extractor prompt.
+        for condition in CONDITIONS:
+            with self.subTest(condition=condition):
+                private = self.conversations(condition, "private")
+                self.assertEqual([(c["inviter"], c["recipient"], c["exchange_id"]) for c in private],
+                                 [("Casey", "Drew", None)])
+                self.assertIn(PRIVATE_MARKER, private[0]["message"])          # the marker really was said
+                for call in self.kind(condition, "llm_call"):
+                    if call["role"] in ("detective", "extractor"):
+                        prompt = "\n".join(message["content"] for message in call["messages"])
+                        self.assertNotIn(PRIVATE_MARKER, prompt, call["call_id"])
+                visible = ({e["exchange_id"] for e in self.kind(condition, "interrogation")}
+                           | {c["exchange_id"] for c in self.conversations(condition, "detective")})
+                for view in self.kind(condition, "memory_view"):
+                    self.assertNotIn(PRIVATE_MARKER, view["memory_payload"])
+                    self.assertLessEqual(set(view["window_exchange_ids"]), visible)
+
+    def test_ckpt8_sanity_detective_marker_visible(self):
+        # CKPT-8 sanity: the test can see conversations, so the private check above is meaningful.
+        for condition in CONDITIONS:
+            with self.subTest(condition=condition):
+                self.assertTrue(any(DETECTIVE_MARKER in view["memory_payload"]
+                                    for view in self.kind(condition, "memory_view")))
 
 
 if __name__ == "__main__":
