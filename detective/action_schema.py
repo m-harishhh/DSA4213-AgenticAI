@@ -26,6 +26,8 @@ from typing import Annotated, Any, Literal, Union
 from pydantic import (BaseModel, ConfigDict, Field, TypeAdapter, ValidationError,
                       ValidationInfo, field_validator, model_validator)
 
+from infra.llm import strip_code_fences
+
 # ---------------------------------------------------------------------------
 # Validation configuration.
 # Initial character caps are starting baselines to keep prompts and outputs bounded;
@@ -49,6 +51,10 @@ SCHEMA_CONFIG: dict[str, Any] = {
     # vs a 600 cap, with one truncation + repair; pilot_02 lost exchange e19 to a failed extraction.
     # Revisit after the pilot.
     "max_extraction_tokens": 1200,
+    # Output token cap for checkpoint accept/reject calls; placeholder until the pilot.
+    "max_acceptance_tokens": 800,
+    # Output token cap for checkpoint conversation replies; placeholder until the pilot.
+    "max_reply_tokens": 800,
 }
 
 
@@ -289,10 +295,15 @@ def _run(validate, raw: Any, ctx: DecisionContext) -> dict:
     context = {"ctx": ctx, "warnings": warnings}
     try:
         if isinstance(raw, (str, bytes)):
-            raw = json.loads(raw)
+            text = raw.decode("utf-8") if isinstance(raw, bytes) else raw
+            # Formatting only, not a repair: gemini-3.5-flash-lite wraps valid JSON in ```json fences (pilot_04c).
+            stripped = strip_code_fences(text)
+            if stripped != text.strip():
+                warnings.append("output: code fences stripped")
+            raw = json.loads(stripped)
         model = validate(raw, context)
     except json.JSONDecodeError as exc:
-        return {"ok": False, "action": None, "errors": [f"output is not valid JSON: {exc}"], "warnings": []}
+        return {"ok": False, "action": None, "errors": [f"output is not valid JSON: {exc}"], "warnings": warnings}
     except ValidationError as exc:
         errors = []
         for err in exc.errors():

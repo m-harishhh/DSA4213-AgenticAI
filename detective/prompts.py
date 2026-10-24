@@ -5,21 +5,38 @@ identical across conditions and turns. Case rendering reads public_view fields o
 """
 
 # v2: one-target rule plus Detective labels in the ledger view.
-PROMPT_VERSION = "detective-v2"
+# v3: private-matters line (§3.1) and contradiction guidance (§5.3); checkpoint prompts (§3.4).
+PROMPT_VERSION = "detective-v3"
 
-SYSTEM_PROMPT = """You are a celebrated private detective with a gentleman's manners and a patient ear, called to the scene to find who did it, with what, and where.
+# Shared by the decision and checkpoint system prompts.
+PERSONA = ("You are a celebrated private detective with a gentleman's manners and a patient ear, "
+           "called to the scene to find who did it, with what, and where.")
 
-Each turn you either interrogate one suspect with a single question, or accuse a culprit, weapon and room. Each question should ask about one thing only, such as one person's whereabouts at one time, or one clue. Suspects answer only one part of a multi-part question. Use names exactly as listed in the case. Every accusation must be a combination you have not accused before. When no interrogation turns are left, you must accuse.
+TURN_RULES = ("Each turn you either interrogate one suspect with a single question, or accuse a culprit, weapon "
+              "and room. Each question should ask about one thing only, such as one person's whereabouts at one "
+              "time, or one clue. Suspects answer only one part of a multi-part question. Use names exactly as "
+              "listed in the case. Every accusation must be a combination you have not accused before. When no "
+              "interrogation turns are left, you must accuse.")
 
-Follow up on leads people mention, and compare accounts against each other.
+PRIVATE_MATTERS = ("Suspects may hide private matters unrelated to the murder; reluctance or a secret does not "
+                   "by itself imply guilt.")
 
-Reply with exactly one JSON object and nothing else, in one of these two forms.
+HINT = "Follow up on leads people mention, and compare accounts against each other."
+
+DECISION_FORMAT = """Reply with exactly one JSON object and nothing else, in one of these two forms.
 
 To interrogate ("cites" is optional: exchange IDs from your memory that your question relies on):
 {"action": "interrogate", "suspect": "<suspect name>", "question": "<your question>", "cites": ["<exchange_id>"]}
 
 To accuse ("contradiction_report" is required on your first accusation: pairs of exact quotes from exchanges in your memory that contradict each other; use [] if you found none):
-{"action": "accuse", "culprit": "<suspect name>", "weapon": "<weapon>", "location": "<room>", "contradiction_report": [{"left": {"exchange_id": "<exchange_id>", "quote": "<exact words>"}, "right": {"exchange_id": "<exchange_id>", "quote": "<exact words>"}}]}"""
+{"action": "accuse", "culprit": "<suspect name>", "weapon": "<weapon>", "location": "<room>", "contradiction_report": [{"left": {"exchange_id": "<exchange_id>", "quote": "<exact words>"}, "right": {"exchange_id": "<exchange_id>", "quote": "<exact words>"}}]}
+Quote what suspects said, not your own questions. A contradiction is two statements about the same person or thing at the same time; different times, missing details or refusals are not contradictions."""
+
+SYSTEM_PROMPT = "\n\n".join([PERSONA, TURN_RULES, PRIVATE_MATTERS, HINT, DECISION_FORMAT])
+
+# Checkpoint calls (§3.4): same persona and rules; the call's block in the user message gives the format.
+CHECKPOINT_SYSTEM_PROMPT = "\n\n".join([PERSONA, TURN_RULES, PRIVATE_MATTERS, HINT,
+                                        "Reply with exactly one JSON object, in the form given in the message."])
 
 # Filled in by build_memory; {k} is the memory horizon.
 MEMORY_LABELS = {
@@ -32,6 +49,17 @@ EMPTY_MEMORY = "(No exchanges yet.)"
 NEXT_STEP = "Decide your next action. Reply with exactly one JSON object and nothing else."
 
 REPAIR_TEMPLATE = "Your previous reply was invalid: {errors}. Reply again with exactly one valid JSON object."
+
+CHECKPOINT_PROTOCOL = ("This conversation costs no interrogation turn. It is one message from the suspect and one "
+                       "reply from you. Afterwards it becomes one exchange in your memory. The suspect will not "
+                       "answer your reply; to get an answer, ask in a later interrogation.")
+
+ACCEPT_TEMPLATE = ('{inviter} invites you to a private conversation. '
+                   'Reply with exactly {{"accept": true}} or {{"accept": false}}.')
+
+REPLY_TEMPLATE = ('{inviter} says: "{message}"\n'
+                  'Reply with one message of at most {max_chars} characters; you may acknowledge what was said '
+                  'or ask something. Reply with exactly {{"message": "<your reply>"}}.')
 
 
 def _profile_lines(names, profiles):
@@ -69,6 +97,13 @@ def render_status(context):
                      '{"left": {"exchange_id", "quote"}, "right": {"exchange_id", "quote"}} pairs '
                      "(may be empty), citing only exchange IDs shown in your memory.")
     return "STATUS\n" + "\n".join(lines)
+
+
+def render_checkpoint_status(context):
+    """Checkpoint status: no contradiction-report or must-accuse lines."""
+    return ("STATUS\n"
+            f"- Interrogation turns left: {context.turns_left}\n"
+            f"- Accusations used: {len(context.previous_accusations)} of {context.config['max_accusations']}")
 
 
 # ---------------------------------------------------------------------------
@@ -127,7 +162,8 @@ def render_memory_payload(label, blocks):
 # Ledger extraction (§4.2). The extractor sees one exchange only: no case data, no other exchanges.
 # ---------------------------------------------------------------------------
 # v2: detective-line handling; questions are not leads.
-EXTRACTOR_VERSION = "extractor-v2"
+# v3: keep expressed uncertainty in statement and source_span (§4.2).
+EXTRACTOR_VERSION = "extractor-v3"
 
 EXTRACTION_PROMPT = """You take notes on one exchange from an investigation. You see only this exchange.
 
@@ -142,6 +178,7 @@ Lines starting with "Detective:" are the detective's own words. Explicit stateme
 - The detective's questions are never unresolved leads. Only record an "unresolved_lead" when a speaker points to a person or thing to ask about, e.g. "ask Ellis about Blair's whereabouts".
 - A retraction of something said earlier is a "claim" with retracts true; otherwise retracts is false.
 - source_span: the exact words copied from the exchange text.
+- Keep any uncertainty the speaker expresses (e.g. "I think", "maybe", "I'm not sure") in both statement and source_span.
 Do not infer truth, guilt or links to other exchanges. Leave references you cannot resolve unresolved rather than guessing.
 
 Reply with exactly one JSON object and nothing else, in this form:
