@@ -5,7 +5,7 @@
   "turn_budget": 20,
   "runs_per_condition": 100,
   "budget_usd": 15.0,
-  "annotation_sample_size": null,
+  "annotation_sample_size": 300,
   "prompt_versions": {"detective": "detective-v4", "suspect": "suspect-v3", "interpreter": "interpreter-v2", "extractor": "extractor-v3", "checkpoint": "checkpoint-v2"},
-  "notes": "Main runs: decisions.md D6 (k=8, 20 turns), D8 (model), D9 (detective v4), D10 (checkpoints). budget_usd: 300 games cost about $11 at pilot_07 prices (~$0.036/game incl. checkpoints); 15 leaves room for retries and agreed by the group before running. annotation_sample_size: Elena to set (Josh's manifest refuses null). prompt_versions are informational; game logs record the versions read from the code."
+  "notes": "Main runs: decisions.md D6 (k=8, 20 turns), D8 (model), D9 (detective v4), D10 (checkpoints). budget_usd: 300 games cost about $11 at pilot_07 prices (~$0.036/game incl. checkpoints); 15 leaves room for retries and agreed by the group before running. annotation_sample_size: all 300 games, the proposal's stated target (§5.4); annotation is one call per game, roughly $1-3 in total. If it must shrink, reduce equally per condition and record it in decisions.md. prompt_versions are informational; game logs record the versions read from the code."
 }
