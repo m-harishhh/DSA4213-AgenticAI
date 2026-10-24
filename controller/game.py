@@ -7,6 +7,11 @@ from controller.interfaces import MEMORY_K, TURN_BUDGET, ACCUSATION_BUDGET
 from controller.interfaces import DecisionContext, parse_decision, record_delivery, load_case
 from controller.interfaces import LLMCallError, summarise_cost
 from controller.interfaces import build_memory, detective_decide, interpret, suspect_respond, match_delivery, extract_ledger
+from controller.interfaces import CHECKPOINTS_AFTER_INTERROGATION, INVITATION_PASSES, MAX_CONVERSATIONS_PER_CHECKPOINT
+from controller.interfaces import share_information
+from controller.checkpoint import (DETECTIVE, communicated, suspect_invite, suspect_accept, suspect_message,
+                                   suspect_reply)
+from detective import detective_invitation_response, detective_conversation_reply
 from infra.llm import strip_code_fences
 import random
 from pathlib import Path
@@ -67,7 +72,23 @@ def new_game(case, condition, seed, log):
         'seed': seed,
         'states': states,
         'game_id': log.game_id if log else None,
+        # checkpoint statistics for game_end (§5.2 voluntary interaction)
+        'checkpoint_stats': {'checkpoints_reached': 0,
+                             'conversations': {'detective': 0, 'private': 0},
+                             'invitations': {'sent': 0, 'accepted': 0, 'rejected': 0}},
     }
+
+def detective_view(game, parts):
+    '''What the detective sees for its next call: this condition's memory view plus the validation
+    context built from public information only. Used by decisions and checkpoint calls alike.'''
+    memory = parts["memory"](game["condition"], game["exchanges"], game['ledger'], MEMORY_K)
+    ctx = DecisionContext.from_public(game['public'],
+                                      visible_exchanges = memory["visible_exchanges"],
+                                      previous_accusations = game['accusations'],
+                                      turns_left = 0 if game.get('testimony_frozen') else TURN_BUDGET - game['interrogations_used']
+                                      )
+    return memory, ctx
+
 
 def decide(game, parts, llm):
     '''
@@ -80,14 +101,8 @@ def decide(game, parts, llm):
     ok=False after the repair means a failed run (§3.5); run_game ends the game.
     '''
     game['decision_index'] += 1
-    
-    memory = parts["memory"](game["condition"], game["exchanges"], game['ledger'], MEMORY_K)
 
-    ctx = DecisionContext.from_public(game['public'],
-                                      visible_exchanges = memory["visible_exchanges"],
-                                      previous_accusations = game['accusations'],
-                                      turns_left = 0 if game.get('testimony_frozen') else TURN_BUDGET - game['interrogations_used']
-                                      )
+    memory, ctx = detective_view(game, parts)
 
     raw = parts["decide"](memory, ctx, llm, game['game_id'])
 
@@ -180,14 +195,24 @@ def play_interrogation(game, decision, parts, llm):
                                       response_call_id = answer['call_id'],
                                       controller_matched = matched)
 
+    return add_exchange(game, event['exchange_id'], 'interrogation', suspect,
+                        f"Detective: {question}\n{suspect}: {answer['text']}",
+                        matched['claim_ids'], matched['lead_ids'], parts, llm)
+
+
+def add_exchange(game, exchange_id, kind, speaker, text, claim_ids, lead_ids, parts, llm):
+    '''Add one detective-visible exchange (an interrogation or a detective conversation) to the
+    detective's history, and extract it in the ledger condition.
+    returns: the exchange'''
+    case = game['case']
     exchange = {
-        'exchange_id': event['exchange_id'],
-        'kind': 'interrogation',
-        'claim_keys': {cid: case['claims'][cid]['key'] for cid in matched['claim_ids']},   # what each claim is about (interpreter)
-        'lead_labels': {lid: case['leads'][lid]['label'] for lid in matched['lead_ids']},   # topics now heard (interpreter)
-        'matched_claim_ids': matched['claim_ids'],
-        'speaker': suspect,
-        'text': f"Detective: {question}\n{suspect}: {answer['text']}",
+        'exchange_id': exchange_id,
+        'kind': kind,                     # build_memory only counts interrogation / detective_conversation
+        'claim_keys': {cid: case['claims'][cid]['key'] for cid in claim_ids},   # what each claim is about (interpreter)
+        'lead_labels': {lid: case['leads'][lid]['label'] for lid in lead_ids},   # topics now heard (interpreter)
+        'matched_claim_ids': list(claim_ids),
+        'speaker': speaker,
+        'text': text,
     }
     game['exchanges'].append(exchange)
 
@@ -250,6 +275,155 @@ def accusation_phase(game, decision, parts, llm):
     }
 
 
+def detective_checkpoint_call(game, parts, llm, decision_type, call):
+    '''One detective checkpoint call (accept or reply) from its current memory view.
+    Aravindh's functions do the one repair; ok=False afterwards is a failed run (§3.5).'''
+    game['decision_index'] += 1
+    memory, ctx = detective_view(game, parts)
+    result = call(memory, ctx)
+    game['log'].memory_view(decision_index = game['decision_index'], decision_type = decision_type,
+                            window_exchange_ids = memory['window_exchange_ids'],
+                            memory_payload = memory['payload'], call_id = result['call_id'])
+    if not result['ok']:
+        game['log'].failure(stage = f'checkpoint_{decision_type}', reason = 'format_failure',
+                            call_id = result['call_id'], detail = result['errors'])
+        raise FailedRun(f'checkpoint {decision_type} format failure')
+    return result
+
+
+def run_checkpoint(game, checkpoint_index, after_interrogation, parts, llm):
+    '''
+    Voluntary conversations after interrogation 5, 10 or 15 (proposal §3.4).
+
+    Suspects are offered the chance to invite in a seeded random order, for up to INVITATION_PASSES
+    passes. Each still-free suspect may invite one free participant (another suspect or the detective)
+    or nobody. Invitations and decisions carry identity only. A rejection uses nobody's slot; an
+    accepted conversation is one message and one reply and uses both participants' slots. At most
+    MAX_CONVERSATIONS_PER_CHECKPOINT conversations, so at most one with the detective.
+
+    Suspect-only conversations stay private: only claims actually said pass to the listener
+    (share_information). A detective conversation becomes one detective-visible exchange that costs no
+    interrogation turn but enters memory, so it can push the oldest exchange out of the window.
+    '''
+    case, log, game_id = game['case'], game['log'], game['game_id']
+    suspects = list(game['public']['suspects'])
+    stats = game['checkpoint_stats']
+    stats['checkpoints_reached'] += 1
+
+    order = list(suspects)
+    game['rng'].shuffle(order)
+    log.checkpoint_start(checkpoint_index = checkpoint_index, after_interrogation = after_interrogation,
+                         proposal_order = order, seed_used = game['seed'])
+
+    busy = set()            # participants who completed a conversation at this checkpoint
+    sent = accepted = rejected = completed = 0
+
+    for pass_no in range(1, INVITATION_PASSES + 1):
+        for inviter in order:
+            if completed >= MAX_CONVERSATIONS_PER_CHECKPOINT:
+                break
+            if inviter in busy:
+                continue
+            available = [s for s in suspects if s != inviter and s not in busy]
+            if DETECTIVE not in busy:
+                available.append(DETECTIVE)
+            if not available:
+                continue
+
+            invite = parts['invite'](case, inviter, game['states'][inviter], game['histories'][inviter],
+                                     available, llm, game_id)
+            recipient = invite['invite']
+            if recipient is None:
+                continue                      # chose to stay silent this pass
+
+            sent += 1
+            stats['invitations']['sent'] += 1
+            if recipient == DETECTIVE:
+                decision = detective_checkpoint_call(game, parts, llm, 'acceptance',
+                    lambda memory, ctx: parts['detective_accept'](inviter, memory, ctx, llm, game_id))
+            else:
+                decision = parts['accept'](case, recipient, inviter, game['states'][recipient],
+                                           game['histories'][recipient], llm, game_id)
+            log.invitation(invitation_id = f"inv{stats['invitations']['sent']}", checkpoint_index = checkpoint_index,
+                           pass_no = pass_no, sender = inviter, recipient = recipient,
+                           decision = 'accepted' if decision['accept'] else 'rejected',
+                           invitation_call_id = invite['call_id'], decision_call_id = decision['call_id'])
+            if not decision['accept']:
+                rejected += 1
+                stats['invitations']['rejected'] += 1
+                continue
+
+            accepted += 1
+            stats['invitations']['accepted'] += 1
+            busy |= {inviter, recipient}
+            completed += 1
+            if recipient == DETECTIVE:
+                detective_conversation(game, checkpoint_index, inviter, parts, llm)
+            else:
+                private_conversation(game, checkpoint_index, inviter, recipient, parts, llm)
+
+    log.checkpoint_end(checkpoint_index = checkpoint_index, invitations_sent = sent, accepted = accepted,
+                       rejected = rejected, conversations_completed = completed)
+
+
+def private_conversation(game, checkpoint_index, inviter, recipient, parts, llm):
+    '''Suspect to suspect: one message, one reply. Never enters the detective's memory.'''
+    case, states, histories, game_id = game['case'], game['states'], game['histories'], game['game_id']
+    message = parts['message'](case, inviter, recipient, states[inviter], histories[inviter], llm, game_id)
+    said = communicated(case, inviter, message['text'], message['options'])
+    states[recipient] = share_information(case, states[recipient], said['claim_ids'])
+
+    reply = parts['reply'](case, recipient, inviter, message['text'], states[recipient], histories[recipient],
+                           llm, game_id)
+    replied = communicated(case, recipient, reply['text'], reply['options'])
+    states[inviter] = share_information(case, states[inviter], replied['claim_ids'])
+
+    # Both remember the conversation; each line is attributed, since a fellow suspect is not the detective
+    for name in (inviter, recipient):
+        histories[name].append({'speaker': inviter, 'text': f"(private conversation) {inviter}: {message['text']}"})
+        histories[name].append({'speaker': recipient, 'text': f"(private conversation) {recipient}: {reply['text']}"})
+
+    game['checkpoint_stats']['conversations']['private'] += 1
+    game['log'].conversation(conversation_id = f"p{game['checkpoint_stats']['conversations']['private']}",
+                             checkpoint_index = checkpoint_index, visibility = 'private',
+                             inviter = inviter, recipient = recipient,
+                             message = message['text'], reply = reply['text'],
+                             message_call_id = message['call_id'], reply_call_id = reply['call_id'],
+                             controller_matched = {'message_claim_ids': said['claim_ids'],
+                                                   'reply_claim_ids': replied['claim_ids'],
+                                                   'proposal_claim_ids': said['proposal_claim_ids']})
+
+
+def detective_conversation(game, checkpoint_index, inviter, parts, llm):
+    '''Suspect to detective: the suspect's message, the detective's bounded reply (no answer to it).
+    Becomes one detective-visible exchange: no interrogation turn, but it enters memory (§3.4).'''
+    case, game_id = game['case'], game['game_id']
+    message = parts['message'](case, inviter, DETECTIVE, game['states'][inviter], game['histories'][inviter],
+                               llm, game_id)
+    reply = detective_checkpoint_call(game, parts, llm, 'conversation_reply',
+        lambda memory, ctx: parts['detective_reply'](inviter, message['text'], memory, ctx, llm, game_id))
+
+    # What the suspect said is delivered testimony, recorded like an interrogation answer
+    said = communicated(case, inviter, message['text'], message['options'])
+    game['states'][inviter] = record_delivery(case, inviter, game['states'][inviter],
+                                              actual_claim_ids = said['own_claim_ids'])
+    game['histories'][inviter].append({'speaker': inviter, 'text': message['text']})
+    game['histories'][inviter].append({'speaker': DETECTIVE, 'text': reply['message']})
+
+    game['exchange_index'] += 1
+    game['checkpoint_stats']['conversations']['detective'] += 1
+    event = game['log'].conversation(conversation_id = f"d{game['checkpoint_stats']['conversations']['detective']}",
+                                     checkpoint_index = checkpoint_index, visibility = 'detective',
+                                     exchange_index = game['exchange_index'], inviter = inviter,
+                                     recipient = DETECTIVE, message = message['text'], reply = reply['message'],
+                                     message_call_id = message['call_id'], reply_call_id = reply['call_id'],
+                                     controller_matched = {'message_claim_ids': said['claim_ids'],
+                                                           'proposal_claim_ids': said['proposal_claim_ids']})
+    add_exchange(game, event['exchange_id'], 'detective_conversation', inviter,
+                 f"{inviter}: {message['text']}\nDetective: {reply['message']}",
+                 said['own_claim_ids'], [], parts, llm)
+
+
 def investigation_phase(game, parts, llm):
 
     while True:
@@ -260,10 +434,18 @@ def investigation_phase(game, parts, llm):
 
         play_interrogation(game, decision, parts, llm)
 
+        # Checkpoints after interrogation 5, 10 and 15, only while further questioning remains possible (§3.4)
+        used = game['interrogations_used']
+        if used in CHECKPOINTS_AFTER_INTERROGATION and used < TURN_BUDGET:
+            run_checkpoint(game, CHECKPOINTS_AFTER_INTERROGATION.index(used) + 1, used, parts, llm)
+
 def default_parts():
     '''The real module functions; tests pass fakes via parts= instead.'''
     return {'memory': build_memory, 'decide': detective_decide, 'interpret': interpret,
-            'respond': suspect_respond, 'match': match_delivery, 'extract': extract_ledger}
+            'respond': suspect_respond, 'match': match_delivery, 'extract': extract_ledger,
+            # checkpoints (§3.4): suspect side in controller/checkpoint.py, detective side is Aravindh's
+            'invite': suspect_invite, 'accept': suspect_accept, 'message': suspect_message, 'reply': suspect_reply,
+            'detective_accept': detective_invitation_response, 'detective_reply': detective_conversation_reply}
 
 
 
@@ -273,8 +455,10 @@ def prompt_versions():
     from detective.prompts import PROMPT_VERSION, EXTRACTOR_VERSION
     from controller.interpreter import INTERPRETER_PROMPT_VERSION
     from controller.suspect import SUSPECT_PROMPT_VERSION
+    from controller.checkpoint import CHECKPOINT_PROMPT_VERSION
     return {'detective': PROMPT_VERSION, 'suspect': SUSPECT_PROMPT_VERSION,
-            'interpreter': INTERPRETER_PROMPT_VERSION, 'extractor': EXTRACTOR_VERSION}
+            'interpreter': INTERPRETER_PROMPT_VERSION, 'extractor': EXTRACTOR_VERSION,
+            'checkpoint': CHECKPOINT_PROMPT_VERSION}
 
 
 def run_game(case_path, config, seed, condition, llm, log_dir = 'runs', parts = None):
@@ -331,7 +515,9 @@ def run_game(case_path, config, seed, condition, llm, log_dir = 'runs', parts = 
         log.game_end(outcome = outcome, attempts_used = len(game['accusations']),
                  first_accusation_correct = first_correct, component_correct = component_correct,
                  interrogations_used = game['interrogations_used'], exchanges_total = game['exchange_index'],
-                 checkpoints_reached= 0, conversations= {}, invitations = {},     # filled in by checkpoints (Thu)
+                 checkpoints_reached = game['checkpoint_stats']['checkpoints_reached'],
+                 conversations = game['checkpoint_stats']['conversations'],
+                 invitations = game['checkpoint_stats']['invitations'],
                  cost= summarise_cost(log.events), duration_s= time.monotonic() - started)
 
     except Exception as exc:

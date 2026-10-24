@@ -59,14 +59,15 @@ def run_game(case_path, config, seed, condition, llm, log_dir = 'runs'):
     return _run_game(case_path, config, seed, condition, llm, log_dir, parts = None)
 
 
-def run_checkpoint(game, checkpoint_index, after_interrogation, rng):
+def run_checkpoint(game, checkpoint_index, after_interrogation, parts, llm):
     """
-    Allows for the agents to interact at checkpoints
-
-    returns: {converstions[list]}, where conversation is a list of completed conversations
+    Voluntary conversations after interrogation 5, 10 or 15 (proposal §3.4): seeded invitation order,
+    identity-only invitations and decisions, one message + one reply per accepted conversation.
+    Implemented in controller/game.py; suspect calls in controller/checkpoint.py; detective calls are
+    detective.detective_invitation_response / detective_conversation_reply.
     """
-
-    raise NotImplementedError("Harish, thur 22")
+    from controller.game import run_checkpoint as _run_checkpoint   # imported here: game.py imports this module
+    return _run_checkpoint(game, checkpoint_index, after_interrogation, parts, llm)
     
 
 # Question interpreter (owned by Harish), implemented in controller/interpreter.py:

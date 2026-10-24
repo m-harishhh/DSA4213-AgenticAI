@@ -93,6 +93,11 @@ def mentions(text, phrase):
     return False
 
 
+# "Drew, you told me ... you were in the Library at 21:00" quotes Drew; it is not the speaker's own claim
+QUOTED = re.compile(r"\b(told me|told us|told you|you said|you say|you claim|said that|says that|"
+                    r"according to|claims? that|claimed that)\b")
+
+
 def names(text, word):
     '''True if word starts a word in text: "wall" matches "walls", "alex" matches "alex's".'''
     return re.search(r'\b' + re.escape(word), text) is not None
@@ -111,6 +116,11 @@ def claim_said(claim, suspect, text, volunteered, rooms):
         _, subject, time = claim['key'].split(':', 2)    # 'position:Alex:21:00' -> 'Alex', '21:00'
         sentences = re.split(r'(?<=[.!?])\s+', text)
         for i, sentence in enumerate(sentences):
+            if QUOTED.search(sentence) and claim['speaker'] == suspect:
+                # Repeating what someone else said is not the speaker's own claim (pilot_07): drop the quoted
+                # clauses, keep the rest ("..., you told me X, but I was in the Study" keeps "but I was in the Study").
+                # For other people's claims the quote is kept: that is how a relay looks.
+                sentence = ' '.join(c for c in re.split(r'[,;]', sentence) if not QUOTED.search(c))
             if subject == suspect:
                 # own whereabouts: the sentence must be about the speaker ("Alex was in the Library" from Drew is not Drew's)
                 about_speaker = re.search(r"\b(i|i'm|me|my|we|us)\b", sentence) or names(sentence, suspect.lower())

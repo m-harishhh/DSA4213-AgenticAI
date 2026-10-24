@@ -1,0 +1,11 @@
+{
+  "model_id": "gemini-3.1-flash-lite",
+  "decoding_settings": {"temperature": 0.7, "top_p": 0.95, "max_output_tokens": 800, "thinking_level": "minimal"},
+  "k": 8,
+  "turn_budget": 20,
+  "runs_per_condition": 100,
+  "budget_usd": 15.0,
+  "annotation_sample_size": null,
+  "prompt_versions": {"detective": "detective-v4", "suspect": "suspect-v3", "interpreter": "interpreter-v2", "extractor": "extractor-v3", "checkpoint": "checkpoint-v2"},
+  "notes": "Main runs: decisions.md D6 (k=8, 20 turns), D8 (model), D9 (detective v4), D10 (checkpoints). budget_usd: 300 games cost about $11 at pilot_07 prices (~$0.036/game incl. checkpoints); 15 leaves room for retries and agreed by the group before running. annotation_sample_size: Elena to set (Josh's manifest refuses null). prompt_versions are informational; game logs record the versions read from the code."
+}
