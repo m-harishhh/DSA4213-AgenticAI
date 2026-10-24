@@ -1,5 +1,4 @@
 {
-  "_note": "Synthetic fixture for schemas/annotation_behaviour.schema.json and qa/annotation_rubric.md's worked example (referral lead_follow_up scenario). Not actual model output. Mirrors examples/annotation_overlay_example.json's game and exchange IDs where possible, but this file covers an independent, illustrative exchange set for the lead-follow-up / referral walkthrough using cases/pilot.json's scene_floor lead (owner Alex, cue_speaker Drew).",
   "game_id": "example_game",
   "annotator_run_id": "llm_v1",
   "exchange_behaviour": {

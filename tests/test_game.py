@@ -147,6 +147,13 @@ class Failures(GameTest):
         self.assertIsNone(self.end(events)["component_correct"])
         self.assertTrue(any(e["kind"] == "failure" for e in events))
 
+    def test_prompt_versions_come_from_the_code(self):
+        from detective.prompts import PROMPT_VERSION
+        _, events = self.play(script(0, ["Alex"]))
+        logged = events[0]["prompt_versions"]
+        self.assertEqual(logged["detective"], PROMPT_VERSION)
+        self.assertEqual(set(logged), {"detective", "suspect", "interpreter", "extractor"})
+
     def test_fenced_json_is_accepted(self):
         # pilot_04c: gemini-3.5-flash-lite wraps valid actions in ```json fences; that is not a format failure
         fenced = "```json\n" + json.dumps(accuse("Alex", first=True)) + "\n```"
@@ -378,6 +385,14 @@ class MatchDelivery(unittest.TestCase):
         for suspect, text, expected in cases:
             with self.subTest(text=text):
                 self.assertEqual(self.match(suspect, whereabouts, text)["claim_ids"], expected)
+
+    def test_negated_sighting_is_not_a_witness_claim(self):
+        # Aravindh's review of #21
+        whereabouts = {"kind": "whereabouts", "time": "21:00"}
+        self.assertEqual(self.match("Drew", whereabouts, "At 21:00 I was in the Library; Alex wasn't there.")["claim_ids"],
+                         ["claim_self_Drew_21:00"])
+        self.assertEqual(self.match("Drew", whereabouts, "No, Alex was in the Library at 21:00.")["claim_ids"],
+                         ["claim_witness_Alex"])
 
     def test_whole_words_only(self):
         self.assertEqual(self.match("Blair", {"kind": "overview"}, "I walked around the gallery.")["claim_ids"], [])

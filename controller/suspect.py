@@ -99,9 +99,15 @@ def claim_said(claim, suspect, text, volunteered, rooms):
         sentences = re.split(r'(?<=[.!?])\s+', text)
         for i, sentence in enumerate(sentences):
             if subject == suspect:
-                if mentions(sentence, value) and time in sentence:
+                # own whereabouts: the sentence must be about the speaker ("Alex was in the Library" from Drew is not Drew's)
+                about_speaker = re.search(r"\b(i|i'm|me|my|we|us)\b", sentence) or names(sentence, suspect.lower())
+                if about_speaker and mentions(sentence, value) and time in sentence:
                     return True
             elif names(sentence, subject.lower()):
+                # "...; Alex wasn't there" denies the sighting: a negation in the clause naming the person
+                name_clauses = [c for c in re.split(r'[,;]', sentence) if names(c, subject.lower())]
+                if any(word.strip('"\'') in NEGATIONS for c in name_clauses for word in c.replace("n't", ' not').split()):
+                    continue
                 other_rooms = [room for room in rooms if room != value and names(sentence, room)]
                 window = sentence if (i == 0 or other_rooms) else sentences[i - 1] + ' ' + sentence
                 if mentions(window, value) and time in window:
