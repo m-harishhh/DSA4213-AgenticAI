@@ -17,7 +17,7 @@ from casework.disclosure import communication_options
 from infra import suspect_agent_ids
 from controller.suspect import match_delivery
 
-CHECKPOINT_PROMPT_VERSION = 'checkpoint-v1'
+CHECKPOINT_PROMPT_VERSION = 'checkpoint-v2'   # v2: no cover proposals to the detective (pilot_07)
 CHECKPOINT_MAX_OUTPUT_TOKENS = 200
 DETECTIVE = 'Detective'
 
@@ -109,8 +109,14 @@ def suspect_message(case, suspect, recipient, state, history, llm, game_id):
     '''The inviter's one message.
     returns: {text, options, call_id}'''
     options = communication_options(case, suspect, state)
+    note = ''
+    if recipient == DETECTIVE:
+        # pilot_07: offered the cover-proposal option, suspects asked the detective to help maintain their lie
+        options = [option for option in options if option['kind'] != 'propose_cover']
+        note = 'The detective is investigating the murder; never ask the detective to cover for you.\n'
     task = (f'{recipient} accepted your invitation. Write your one message to {recipient}.\n'
-            'You may say things like these (rephrase freely; only share what you know or were told, '
+            + note
+            + 'You may say things like these (rephrase freely; only share what you know or were told, '
             'and attribute what others told you):\n'
             + render_communication_options(options)
             + '\nReply in character, in first person, in at most three sentences.')

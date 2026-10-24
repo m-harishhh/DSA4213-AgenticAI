@@ -520,6 +520,28 @@ class Checkpoints(GameTest):
                 self.assertTrue({"invitation", "acceptance", "conversation_message", "conversation_reply"} <= purposes)
 
 
+class CheckpointPrompts(unittest.TestCase):
+    def test_no_cover_proposals_to_the_detective(self):
+        # pilot_07: Blair asked the detective "help in maintaining that account"
+        from controller.checkpoint import suspect_message
+        llm = LLMClient(MockBackend(["Hello."] * 2), "mock-model", {"temperature": 0})
+        state = initial_state(CASE, "Blair")
+        to_detective = suspect_message(CASE, "Blair", "Detective", state, [], llm, "g")
+        to_suspect = suspect_message(CASE, "Blair", "Ellis", state, [], llm, "g")
+        self.assertNotIn("propose_cover", {o["kind"] for o in to_detective["options"]})
+        self.assertIn("propose_cover", {o["kind"] for o in to_suspect["options"]})       # still allowed between suspects
+
+    def test_quoting_someone_is_not_your_own_claim(self):
+        # pilot_07: "Drew, you told me ... you were in the Library at 21:00" was recorded as Alex's own true claim
+        from controller.checkpoint import communicated
+        from casework.disclosure import communication_options
+        state = initial_state(CASE, "Alex")
+        text = "Drew, you told me that you were in the Library at 21:00, but I was in the Study at 21:00."
+        said = communicated(CASE, "Alex", text, communication_options(CASE, "Alex", state))
+        self.assertNotIn("claim_self_Alex_21:00", said["claim_ids"])
+        self.assertIn("claim_cover_Alex", said["claim_ids"])
+
+
 class MatchDelivery(unittest.TestCase):
     def match(self, suspect, intent, text):
         branches = allowed_content(CASE, suspect, intent, initial_state(CASE, suspect))
