@@ -10,7 +10,7 @@ Imports come from casework/infra directly, never controller.interfaces (circular
 '''
 from casework.model import INTENTS
 
-INTERPRETER_PROMPT_VERSION = 'interpreter-v1'
+INTERPRETER_PROMPT_VERSION = 'interpreter-v2'   # v2: narrower "challenge" (pilot_03b labelled plain questions as challenges)
 INTERPRETER_MAX_OUTPUT_TOKENS = 200
 
 INTERPRETER_SYSTEM = '''You classify one question that a detective asks a suspect into exactly one intent.
@@ -18,9 +18,13 @@ INTERPRETER_SYSTEM = '''You classify one question that a detective asks a suspec
 Intents:
 - "overview": a broad question about the suspect's evening, what they saw or what they know.
 - "ask_lead": a follow-up on a topic someone mentioned they have information about. Set "topic" to one of the listed topic keys.
-- "whereabouts": where the suspect themselves was at a time. Set "time".
+- "whereabouts": where the suspect themselves was at a time, including yes/no checks such as "Were you in the Library at 21:00?". Set "time".
 - "corroborate": whether the suspect saw or knows where ANOTHER person was at a time. Set "subject" and "time".
-- "challenge": confronting the suspect with evidence that an earlier statement of theirs is false. Set "challenged" to the exchange ID of their earlier statement, and "evidence" to the exchange IDs of the contradicting statements.
+- "challenge": ONLY when the question confronts the suspect with a statement from an earlier exchange that contradicts something the suspect said before. Set "challenged" to the exchange ID of the suspect's earlier statement, and "evidence" to the exchange IDs of the contradicting statements (at least one).
+
+A question that simply asks for information is never a challenge, even if it is pointed or follows a contradiction.
+Not challenges: "What weapon were you carrying at 21:00?", "What was the weapon material?", "Were you in the Library at 21:00?".
+Challenges: "Drew saw you in the Library at 21:00, but you said the Study. Which is true?", "Your account contradicts Ellis's recording."
 
 If a question covers several targets, choose the main one. Use null for fields that do not apply. Use only the times, names, topic keys and exchange IDs listed below; never invent one.
 Reply with exactly one JSON object and nothing else.'''
@@ -73,6 +77,12 @@ def build_intent(parsed, suspect, cites, public, delivered):
     kind = parsed['kind']
     time = parsed['time'] if parsed['time'] in public['times'] else None
 
+    # A challenge with no delivered evidence can never unlock a retraction (Josh's rule needs cited
+    # counter-evidence) and limits the suspect to maintaining or declining, so a plain question would
+    # go unanswered (pilot_03b). Treat it as an ordinary question; the model's label stays in the log.
+    if kind == 'challenge' and not evidence_claims(cites, parsed['evidence'], delivered):
+        kind = 'whereabouts' if time else 'overview'
+
     if kind == 'whereabouts':
         intent = {'kind': kind, 'time': time}
     elif kind == 'corroborate':
@@ -82,23 +92,47 @@ def build_intent(parsed, suspect, cites, public, delivered):
         topic = parsed['topic'] if parsed['topic'] in heard_topics(delivered) else None
         intent = {'kind': kind, 'topic': topic}
     elif kind == 'challenge':
-        challenged = delivered.get(parsed['challenged'] or '')
-        claim_id = None
-        if challenged and challenged.get('speaker') == suspect and challenged.get('matched_claim_ids'):
-            claim_id = challenged['matched_claim_ids'][-1]
-        intent = {'kind': kind, 'claim_id': claim_id}
+        intent = {'kind': kind,
+                  'claim_id': challenged_claim(parsed['challenged'], suspect, cites, parsed['evidence'], delivered)}
     else:
         intent = {'kind': 'overview'}
 
-    # Counter-evidence: exchanges the detective cited plus those the question refers to, but only
-    # ones actually delivered to the detective, and never the challenged statement itself.
-    evidence_ids = [eid for eid in list(cites) + list(parsed['evidence']) if eid in delivered]
-    cited_claim_ids = []
-    for eid in evidence_ids:
-        for cid in delivered[eid].get('matched_claim_ids', []):
-            if cid != intent.get('claim_id') and cid not in cited_claim_ids:
-                cited_claim_ids.append(cid)
+    # Counter-evidence: claims from the cited and referenced exchanges, never the challenged claim itself
+    cited_claim_ids = [cid for cid in evidence_claims(cites, parsed['evidence'], delivered)
+                       if cid != intent.get('claim_id')]
     return intent, cited_claim_ids
+
+
+def evidence_claims(cites, evidence, delivered):
+    '''{claim_id: key} from the exchanges the detective cited plus those the question refers to,
+    only ones actually delivered to the detective.'''
+    claims = {}
+    for eid in list(cites) + list(evidence):
+        if eid in delivered:
+            claims.update(delivered[eid].get('claim_keys', {}))
+    return claims
+
+
+def challenged_claim(challenged_id, suspect, cites, evidence, delivered):
+    '''The suspect's own earlier claim the challenge is about.
+
+    Prefer a claim on the same topic as the evidence (same key, e.g. position:Alex:21:00), so
+    "Drew saw you in the Library at 21:00" targets Alex's 21:00 account, not their 20:30 one.
+    Search the challenged exchange first, then the suspect's other answers (newest first), because
+    the detective often points at a later answer that repeated the statement without matching it.
+    Falls back to the challenged exchange's last claim; None if the suspect made no matched claim.'''
+    own = [e for e in delivered.values() if e.get('speaker') == suspect and e.get('claim_keys')]
+    first = [e for e in own if e['exchange_id'] == challenged_id]
+    candidates = first + [e for e in reversed(own) if e['exchange_id'] != challenged_id]
+    evidence_keys = set(evidence_claims(cites, evidence, delivered).values())
+
+    for exchange in candidates:
+        for cid, key in exchange['claim_keys'].items():
+            if key in evidence_keys:
+                return cid
+    if first:
+        return list(first[0]['claim_keys'])[-1]
+    return None
 
 
 def interpret(question, suspect, cites, public, delivered, llm, game_id):

@@ -8,7 +8,7 @@ from casework import suspect_view
 from casework.disclosure import allowed_content, branch_prompt
 from infra import suspect_agent_ids
 
-SUSPECT_PROMPT_VERSION = 'suspect-v1'
+SUSPECT_PROMPT_VERSION = 'suspect-v2'   # v2: no checkpoint rule in interrogations; no-invention rule (pilot_02)
 SUSPECT_MAX_OUTPUT_TOKENS = 200   # bounded answers (proposal §3.5); revisit after the pilot
 
 ROLE_TEXT = {
@@ -52,7 +52,12 @@ def suspect_system_prompt(view, options):
     if view['approved_false_accounts']:
         sections.append('The only false account you may give:\n'
                         + '\n'.join(f'- {claim}' for claim in view['approved_false_accounts']))
-    sections.append('Rules:\n' + '\n'.join(f'- {rule}' for rule in view['instructions']))
+    # The checkpoint rule only applies at checkpoints; shown here, suspects offered invitations mid-interrogation (pilot_02)
+    rules = [rule for rule in view['instructions'] if not rule.startswith('At checkpoints')]
+    # Josh's branch instruction ("Do not invent additional facts...") is the same for every option; state it once
+    rules += sorted({option['instruction'] for option in options})
+    rules.append('If asked about something not in what you know, say you do not know rather than describing it.')
+    sections.append('Rules:\n' + '\n'.join(f'- {rule}' for rule in rules))
     sections.append('For this question, choose exactly ONE of these options yourself, based on your role and motive:\n'
                     + render_options(options)
                     + '\nReply in character, in first person, in at most three sentences. '
@@ -66,21 +71,56 @@ NEGATION_WINDOW = 6   # words before a match that are checked for a negation
 def mentions(text, phrase):
     '''True if phrase occurs in text at least once without a negation just before it.
     "I was NOT in the Library" does not mention "library"; "I was in the Library" does.'''
-    start = text.find(phrase)
-    while start != -1:
-        clause = re.split(r'[,.;:!?]', text[:start])[-1]    # "No, I was in the..." -> " i was in the "
+    # Whole words only: the badge value "round" must not match inside "around"
+    for match in re.finditer(r'\b' + re.escape(phrase) + r'\b', text):
+        clause = re.split(r'[,.;!?]', text[:match.start()])[-1]    # "No, I was in the..." -> " i was in the "
         before = clause.replace("n't", ' not').split()[-NEGATION_WINDOW:]
         if not any(word.strip('"\'') in NEGATIONS for word in before):
             return True
-        start = text.find(phrase, start + 1)
     return False
+
+
+def names(text, word):
+    '''True if word starts a word in text: "wall" matches "walls", "alex" matches "alex's".'''
+    return re.search(r'\b' + re.escape(word), text) is not None
+
+
+def claim_said(claim, suspect, text, volunteered, rooms):
+    '''Whether the text states this claim. A volunteered clue (not asked for) also needs the
+    attribute word ("badge", "wall"), since a bare value like "green" is too common.
+
+    Position claims need the room and the time in one sentence (pilot_03b: "I was in the Study
+    at 21:00. ... I stopped by the Library earlier" must not match Library at 21:00). A claim about
+    someone else also needs their name; that sentence may take the room and time from the sentence
+    before it ("I was in the Library at 21:00. Alex was also there."), unless it names another room.'''
+    value = str(claim['value']).lower()
+    if claim['key'].startswith('position:'):
+        _, subject, time = claim['key'].split(':', 2)    # 'position:Alex:21:00' -> 'Alex', '21:00'
+        sentences = re.split(r'(?<=[.!?])\s+', text)
+        for i, sentence in enumerate(sentences):
+            if subject == suspect:
+                if mentions(sentence, value) and time in sentence:
+                    return True
+            elif names(sentence, subject.lower()):
+                other_rooms = [room for room in rooms if room != value and names(sentence, room)]
+                window = sentence if (i == 0 or other_rooms) else sentences[i - 1] + ' ' + sentence
+                if mentions(window, value) and time in window:
+                    return True
+        return False
+    if not mentions(text, value):
+        return False
+    attribute = claim['key'].split(':')[1]               # 'scene:wall' -> 'wall'
+    return not volunteered or names(text, attribute)
 
 
 def match_delivery(case, suspect, text, allowed_branches):
     '''
-    Which allowed claims, leads and retractions the suspect's answer actually contained.
-    Heuristic for online bookkeeping only: testimony is never changed, and the real
-    measurement is the post-game annotation.
+    Which known claims, leads and retractions the suspect's answer actually contained.
+    Evidence counts from what was actually said, not only what was asked for (proposal §3.3):
+    besides the allowed branches, any truthful claim this suspect holds counts when volunteered
+    (pilot_03: Drew volunteered seeing Alex in the Library while asked about his own whereabouts).
+    Approved lies only count when offered by a branch. Heuristic for online bookkeeping only:
+    testimony is never changed, and the real measurement is the post-game annotation.
 
     returns: {claim_ids, lead_ids, retraction_ids}
     '''
@@ -96,19 +136,14 @@ def match_delivery(case, suspect, text, allowed_branches):
         for lid in branch['lead_ids']:
             if lid not in candidate_leads:
                 candidate_leads.append(lid)
+    in_branches = set(candidate_claims)
+    candidate_claims += [cid for cid, claim in case['claims'].items()
+                         if claim['speaker'] == suspect and claim['kind'] == 'truthful' and cid not in in_branches]
 
-    # 2. Claims: delivered if the claim's value is in the text.
-    # Position claims also need their time, since a room alone could refer to another time.
-    claim_ids = []
-    for cid in candidate_claims:
-        claim = case['claims'][cid]
-        if not mentions(text, str(claim['value']).lower()):
-            continue
-        if claim['key'].startswith('position:'):
-            time = claim['key'].split(':', 2)[2]    # 'position:Alex:21:00' -> '21:00'
-            if time not in text:
-                continue
-        claim_ids.append(cid)
+    # 2. Claims: delivered if the text states them (see claim_said)
+    rooms = [room.lower() for room in case['public']['locations']]
+    claim_ids = [cid for cid in candidate_claims
+                 if claim_said(case['claims'][cid], suspect, text, volunteered=cid not in in_branches, rooms=rooms)]
 
     # 3. Leads: delivered if the lead's keywords are in the text
     #    "the attacker's badge"        -> 'badge'

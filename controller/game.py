@@ -7,6 +7,7 @@ from controller.interfaces import MEMORY_K, TURN_BUDGET, ACCUSATION_BUDGET
 from controller.interfaces import DecisionContext, parse_decision, record_delivery, load_case
 from controller.interfaces import LLMCallError, summarise_cost
 from controller.interfaces import build_memory, detective_decide, interpret, suspect_respond, match_delivery, extract_ledger
+from infra.llm import strip_code_fences
 import random
 from pathlib import Path
 import time
@@ -90,14 +91,16 @@ def decide(game, parts, llm):
 
     raw = parts["decide"](memory, ctx, llm, game['game_id'])
 
-    result = parse_decision(raw['text'], ctx)
+    # Formatting only: gemini-3.5-flash-lite wraps valid JSON in ```json fences (pilot_04c).
+    # The logged llm_call keeps the original text.
+    result = parse_decision(strip_code_fences(raw['text']), ctx)
 
     if not result['ok']:
         repair_errors = result['errors']
-        raw = parts['decide'](memory, ctx, llm, game['game_id'], 
+        raw = parts['decide'](memory, ctx, llm, game['game_id'],
                               repair_errors = repair_errors, repair_of = raw['call_id'])
 
-        result = parse_decision(raw['text'], ctx)
+        result = parse_decision(strip_code_fences(raw['text']), ctx)
 
     
     if result['ok'] and result['action']['action'] == 'accuse':
@@ -180,6 +183,7 @@ def play_interrogation(game, decision, parts, llm):
     exchange = {
         'exchange_id': event['exchange_id'],
         'kind': 'interrogation',
+        'claim_keys': {cid: case['claims'][cid]['key'] for cid in matched['claim_ids']},   # what each claim is about (interpreter)
         'lead_labels': {lid: case['leads'][lid]['label'] for lid in matched['lead_ids']},   # topics now heard (interpreter)
         'matched_claim_ids': matched['claim_ids'],
         'speaker': suspect,
