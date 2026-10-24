@@ -8,7 +8,8 @@ from casework import suspect_view
 from casework.disclosure import allowed_content, branch_prompt
 from infra import suspect_agent_ids
 
-SUSPECT_PROMPT_VERSION = 'suspect-v2'   # v2: no checkpoint rule in interrogations; no-invention rule (pilot_02)
+SUSPECT_PROMPT_VERSION = 'suspect-v3'   # v2: no checkpoint rule in interrogations; no-invention rule (pilot_02)
+                                         # v3: checkpoint sentence of the motive left out of interrogations
 SUSPECT_MAX_OUTPUT_TOKENS = 200   # bounded answers (proposal §3.5); revisit after the pilot
 
 ROLE_TEXT = {
@@ -37,12 +38,24 @@ def render_options(options):
     return '\n'.join(lines)
 
 
+CHECKPOINT_MOTIVE_START = 'you may approach the detective'
+
+
+def interrogation_motive(motive):
+    '''The motive without its checkpoint sentence.
+    Every case motive is "<motive>. You may approach the detective to ...". That second sentence is
+    checkpoint guidance; shown in interrogations it can prompt mid-interrogation invitations (Aravindh's
+    review of #21/#23). Checkpoint prompts use the full motive.'''
+    sentences = re.split(r'(?<=[.!?])\s+', motive.strip())
+    return ' '.join(s for s in sentences if not s.lower().startswith(CHECKPOINT_MOTIVE_START))
+
+
 def suspect_system_prompt(view, options):
     '''Role, private knowledge, rules and this turn's allowed answers for one suspect.'''
     sections = [
         f"You are {view['name']}, a staff member being questioned by a detective about a murder at the museum.",
         ROLE_TEXT[view['role']],
-        f"Your motive: {view['motive']}",
+        f"Your motive: {interrogation_motive(view['motive'])}",
         f"Your secret: {view['secret']}",
         'What you know:\n' + '\n'.join(f'- {fact}' for fact in view['known_facts']),
     ]
@@ -80,6 +93,11 @@ def mentions(text, phrase):
     return False
 
 
+# "Drew, you told me ... you were in the Library at 21:00" quotes Drew; it is not the speaker's own claim
+QUOTED = re.compile(r"\b(told me|told us|told you|you said|you say|you claim|said that|says that|"
+                    r"according to|claims? that|claimed that)\b")
+
+
 def names(text, word):
     '''True if word starts a word in text: "wall" matches "walls", "alex" matches "alex's".'''
     return re.search(r'\b' + re.escape(word), text) is not None
@@ -98,6 +116,11 @@ def claim_said(claim, suspect, text, volunteered, rooms):
         _, subject, time = claim['key'].split(':', 2)    # 'position:Alex:21:00' -> 'Alex', '21:00'
         sentences = re.split(r'(?<=[.!?])\s+', text)
         for i, sentence in enumerate(sentences):
+            if QUOTED.search(sentence) and claim['speaker'] == suspect:
+                # Repeating what someone else said is not the speaker's own claim (pilot_07): drop the quoted
+                # clauses, keep the rest ("..., you told me X, but I was in the Study" keeps "but I was in the Study").
+                # For other people's claims the quote is kept: that is how a relay looks.
+                sentence = ' '.join(c for c in re.split(r'[,;]', sentence) if not QUOTED.search(c))
             if subject == suspect:
                 # own whereabouts: the sentence must be about the speaker ("Alex was in the Library" from Drew is not Drew's)
                 about_speaker = re.search(r"\b(i|i'm|me|my|we|us)\b", sentence) or names(sentence, suspect.lower())
