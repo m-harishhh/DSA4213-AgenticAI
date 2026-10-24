@@ -267,6 +267,16 @@ def default_parts():
 
 
 
+def prompt_versions():
+    '''The prompt versions actually running, read from the code so the log cannot drift from it
+    (a hand-written config value could; Aravindh's review of #21).'''
+    from detective.prompts import PROMPT_VERSION, EXTRACTOR_VERSION
+    from controller.interpreter import INTERPRETER_PROMPT_VERSION
+    from controller.suspect import SUSPECT_PROMPT_VERSION
+    return {'detective': PROMPT_VERSION, 'suspect': SUSPECT_PROMPT_VERSION,
+            'interpreter': INTERPRETER_PROMPT_VERSION, 'extractor': EXTRACTOR_VERSION}
+
+
 def run_game(case_path, config, seed, condition, llm, log_dir = 'runs', parts = None):
     started = time.monotonic()
     if parts is None:
@@ -288,7 +298,7 @@ def run_game(case_path, config, seed, condition, llm, log_dir = 'runs', parts = 
                    case_sha256 = config.get('case_sha256'), condition = condition, k = MEMORY_K,
                    turn_budget = TURN_BUDGET, accusation_budget = ACCUSATION_BUDGET, seed = seed,
                    model_id = llm.model_id, decoding = llm.decoding,
-                   prompt_versions = config.get('prompt_versions'), pricing = llm.pricing)
+                   prompt_versions = prompt_versions(), pricing = llm.pricing)
 
         game = new_game(case, condition, seed, log)
 

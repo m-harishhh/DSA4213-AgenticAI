@@ -151,6 +151,10 @@ expected output is:
 See `examples/annotation_behaviour_example.json` for the full, schema-validated version
 of this (plus a challenge and a coordination-instance example) — validated against
 `schemas/annotation_behaviour.schema.json` with `jsonschema.validate`.
+That file is a synthetic fixture, not actual model output: an illustrative exchange set for the
+lead-follow-up / referral walkthrough using `cases/pilot.json`'s `scene_floor` lead (owner Alex,
+cue_speaker Drew). Its explanatory note lives here rather than in the JSON, because the schema
+does not allow extra keys.
 
 ## What's still open
 
