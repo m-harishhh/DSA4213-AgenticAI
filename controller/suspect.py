@@ -8,7 +8,8 @@ from casework import suspect_view
 from casework.disclosure import allowed_content, branch_prompt
 from infra import suspect_agent_ids
 
-SUSPECT_PROMPT_VERSION = 'suspect-v2'   # v2: no checkpoint rule in interrogations; no-invention rule (pilot_02)
+SUSPECT_PROMPT_VERSION = 'suspect-v3'   # v2: no checkpoint rule in interrogations; no-invention rule (pilot_02)
+                                         # v3: checkpoint sentence of the motive left out of interrogations
 SUSPECT_MAX_OUTPUT_TOKENS = 200   # bounded answers (proposal §3.5); revisit after the pilot
 
 ROLE_TEXT = {
@@ -37,12 +38,24 @@ def render_options(options):
     return '\n'.join(lines)
 
 
+CHECKPOINT_MOTIVE_START = 'you may approach the detective'
+
+
+def interrogation_motive(motive):
+    '''The motive without its checkpoint sentence.
+    Every case motive is "<motive>. You may approach the detective to ...". That second sentence is
+    checkpoint guidance; shown in interrogations it can prompt mid-interrogation invitations (Aravindh's
+    review of #21/#23). Checkpoint prompts use the full motive.'''
+    sentences = re.split(r'(?<=[.!?])\s+', motive.strip())
+    return ' '.join(s for s in sentences if not s.lower().startswith(CHECKPOINT_MOTIVE_START))
+
+
 def suspect_system_prompt(view, options):
     '''Role, private knowledge, rules and this turn's allowed answers for one suspect.'''
     sections = [
         f"You are {view['name']}, a staff member being questioned by a detective about a murder at the museum.",
         ROLE_TEXT[view['role']],
-        f"Your motive: {view['motive']}",
+        f"Your motive: {interrogation_motive(view['motive'])}",
         f"Your secret: {view['secret']}",
         'What you know:\n' + '\n'.join(f'- {fact}' for fact in view['known_facts']),
     ]
