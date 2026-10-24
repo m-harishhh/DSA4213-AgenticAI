@@ -1,6 +1,7 @@
 """Tests for detective/agent.py and detective/prompts.py. Run from repo root:
     python -m unittest tests.test_detective_agent -v
-Offline (MockBackend). The full pilot case is loaded only to check that private fields never leak.
+Offline (MockBackend). The full pilot case is loaded only to check that private fields never leak;
+the evaluation case is read only for its public names (example-name collision check).
 """
 
 import json
@@ -13,7 +14,7 @@ sys.path.insert(0, str(ROOT))
 
 from casework import load_case, public_view
 from detective import PROMPT_VERSION, DecisionContext, detective_decide, parse_decision
-from detective.prompts import EMPTY_MEMORY, MEMORY_LABELS
+from detective.prompts import APPROACH, EMPTY_MEMORY, EXAMPLE, MEMORY_LABELS, SYSTEM_PROMPT
 from infra import LLMClient, MockBackend
 
 CASE = load_case(ROOT / "cases" / "pilot.json")
@@ -89,12 +90,28 @@ class ConditionInvarianceTests(unittest.TestCase):
         self.assertEqual(len(set(users)), 1)
 
     def test_one_target_rule_v2(self):
-        self.assertEqual(PROMPT_VERSION, "detective-v3")
-        sentence = ("Each question should ask about one thing only, such as one person's whereabouts at one time, "
-                    "or one clue. Suspects answer only one part of a multi-part question.")
+        self.assertEqual(PROMPT_VERSION, "detective-v4")
+        sentence = ("Each question should ask about one thing only, such as an overview of their evening, one lead "
+                    "they mentioned, or where someone was at one time. Suspects answer only one part of a "
+                    "multi-part question.")
         for payload in PAYLOADS.values():
             _, backend, _ = decide(ctx(), payload=payload)
             self.assertIn(sentence, backend.requests[0]["messages"][0]["content"])
+
+    def test_approach_and_example_v4(self):
+        self.assertIn(APPROACH, SYSTEM_PROMPT)
+        self.assertIn(EXAMPLE, SYSTEM_PROMPT)
+        self.assertTrue(APPROACH.startswith("How to investigate:\n1. Start by asking each suspect for an overview"))
+        self.assertNotIn("such as one person's whereabouts at one time, or one clue", SYSTEM_PROMPT)
+        self.assertNotIn("Follow up on leads people mention, and compare accounts against each other.", SYSTEM_PROMPT)
+
+    def test_example_names_do_not_collide_with_cases(self):
+        for case_file in ("pilot.json", "evaluation.json"):
+            public = public_view(load_case(ROOT / "cases" / case_file))
+            names = [name.casefold() for name in public["suspects"] + public["weapons"] + public["locations"]]
+            for word in ("Mara", "Tom", "cellar", "key"):
+                self.assertIn(word, EXAMPLE)
+                self.assertFalse(any(word.casefold() in name for name in names), f"{word} in {case_file}")
 
 
 class RoundTripTests(unittest.TestCase):

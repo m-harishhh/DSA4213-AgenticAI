@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT))
 from casework import load_case, public_view
 from detective import (PROMPT_VERSION, DecisionContext, SCHEMA_CONFIG, detective_conversation_reply,
                        detective_invitation_response, parse_decision)
-from detective.prompts import CHECKPOINT_PROTOCOL, CHECKPOINT_SYSTEM_PROMPT, MEMORY_LABELS
+from detective.prompts import APPROACH, CHECKPOINT_PROTOCOL, CHECKPOINT_SYSTEM_PROMPT, EXAMPLE, MEMORY_LABELS
 from infra import LLMCallError, LLMClient, MockBackend, TransportError
 
 CASE = load_case(ROOT / "cases" / "pilot.json")
@@ -154,6 +154,13 @@ class LoggingTests(unittest.TestCase):
             detective_conversation_reply("Drew", MESSAGE, {"payload": payload}, ctx(), llm, "g1")
             systems.update(request["messages"][0]["content"] for request in backend.requests)
         self.assertEqual(systems, {CHECKPOINT_SYSTEM_PROMPT})
+
+    def test_checkpoint_prompt_has_approach_but_no_example(self):
+        self.assertIn(APPROACH, CHECKPOINT_SYSTEM_PROMPT)
+        self.assertNotIn(EXAMPLE, CHECKPOINT_SYSTEM_PROMPT)
+        self.assertNotIn("Mara", CHECKPOINT_SYSTEM_PROMPT)
+        self.assertNotIn("Follow up on leads people mention, and compare accounts against each other.",
+                         CHECKPOINT_SYSTEM_PROMPT)
 
     def test_llm_call_error_propagates(self):
         llm, _, _ = client([TransportError("down")] * 4)
