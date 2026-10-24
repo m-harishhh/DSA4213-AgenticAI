@@ -6,22 +6,37 @@ identical across conditions and turns. Case rendering reads public_view fields o
 
 # v2: one-target rule plus Detective labels in the ledger view.
 # v3: private-matters line (§3.1) and contradiction guidance (§5.3); checkpoint prompts (§3.4).
-PROMPT_VERSION = "detective-v3"
+# v4: investigation steps + fictional one-shot example + balanced one-target examples (pilot_05b: whereabouts-only
+#     questioning, clues never surfaced; same in all conditions)
+PROMPT_VERSION = "detective-v4"
 
 # Shared by the decision and checkpoint system prompts.
 PERSONA = ("You are a celebrated private detective with a gentleman's manners and a patient ear, "
            "called to the scene to find who did it, with what, and where.")
 
 TURN_RULES = ("Each turn you either interrogate one suspect with a single question, or accuse a culprit, weapon "
-              "and room. Each question should ask about one thing only, such as one person's whereabouts at one "
-              "time, or one clue. Suspects answer only one part of a multi-part question. Use names exactly as "
+              "and room. Each question should ask about one thing only, such as an overview of their evening, one "
+              "lead they mentioned, or where someone was at one time. Suspects answer only one part of a "
+              "multi-part question. Use names exactly as "
               "listed in the case. Every accusation must be a combination you have not accused before. When no "
               "interrogation turns are left, you must accuse.")
 
 PRIVATE_MATTERS = ("Suspects may hide private matters unrelated to the murder; reluctance or a secret does not "
                    "by itself imply guilt.")
 
-HINT = "Follow up on leads people mention, and compare accounts against each other."
+APPROACH = """How to investigate:
+1. Start by asking each suspect for an overview of their evening.
+2. Follow up on every lead someone mentions: ask the person it points to about that topic.
+3. When two accounts conflict, confront one suspect with the other's statement.
+4. Unless you run out of interrogation turns, accuse only when you can account for the attacker, the weapon and the room."""
+
+# Decision prompt only. Fictional names and items, checked against both cases in the tests.
+EXAMPLE = """Example investigation (a different case; its names and items do not exist here):
+1. Ask Mara for an overview of her evening. -> She mentions "ask Tom about the cellar key".
+2. Ask Tom about the cellar key. -> He says the key was missing at 22:00.
+3. Ask each remaining suspect for an overview.
+4. Tom and Mara place Mara in different rooms at 22:00 -> confront Mara with Tom's statement.
+5. Accuse once you can account for the attacker, the weapon and the room."""
 
 DECISION_FORMAT = """Reply with exactly one JSON object and nothing else, in one of these two forms.
 
@@ -32,10 +47,11 @@ To accuse ("contradiction_report" is required on your first accusation: pairs of
 {"action": "accuse", "culprit": "<suspect name>", "weapon": "<weapon>", "location": "<room>", "contradiction_report": [{"left": {"exchange_id": "<exchange_id>", "quote": "<exact words>"}, "right": {"exchange_id": "<exchange_id>", "quote": "<exact words>"}}]}
 Quote what suspects said, not your own questions. A contradiction is two statements about the same person or thing at the same time; different times, missing details or refusals are not contradictions."""
 
-SYSTEM_PROMPT = "\n\n".join([PERSONA, TURN_RULES, PRIVATE_MATTERS, HINT, DECISION_FORMAT])
+SYSTEM_PROMPT = "\n\n".join([PERSONA, TURN_RULES, PRIVATE_MATTERS, APPROACH, EXAMPLE, DECISION_FORMAT])
 
-# Checkpoint calls (§3.4): same persona and rules; the call's block in the user message gives the format.
-CHECKPOINT_SYSTEM_PROMPT = "\n\n".join([PERSONA, TURN_RULES, PRIVATE_MATTERS, HINT,
+# Checkpoint calls (§3.4): same persona, rules and approach (no example); the call's block in the user message
+# gives the format.
+CHECKPOINT_SYSTEM_PROMPT = "\n\n".join([PERSONA, TURN_RULES, PRIVATE_MATTERS, APPROACH,
                                         "Reply with exactly one JSON object, in the form given in the message."])
 
 # Filled in by build_memory; {k} is the memory horizon.
