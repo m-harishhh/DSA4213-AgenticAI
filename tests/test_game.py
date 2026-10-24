@@ -48,10 +48,15 @@ def failing_extract(exchange, llm, game_id):
                               "reason": "schema failure after one repair"}}
 
 
+def no_invite(case, suspect, state, history, available, llm, game_id):
+    return {"invite": None, "call_id": None}
+
+
 def parts(**overrides):
-    """Real detective and suspect pipeline; fake memory, interpreter and extraction."""
+    """Real detective and suspect pipeline; fake memory, interpreter and extraction.
+    Nobody invites at checkpoints unless a test overrides "invite" (checkpoints get their own tests)."""
     return {**default_parts(), "memory": fake_memory, "interpret": fake_interpret, "extract": fake_extract,
-            **overrides}
+            "invite": no_invite, **overrides}
 
 
 def question(suspect="Alex"):
@@ -312,7 +317,7 @@ class DefaultParts(GameTest):
         for _ in range(10):
             script += self.turn("raw", "Alex", "Where were you at 21:00?",
                                 interpretation("whereabouts", time="21:00"), "I was in the Study at 21:00.")
-        _, events = self.play(script + [accuse("Alex", first=True)], "raw", default_parts())
+        _, events = self.play(script + [accuse("Alex", first=True)], "raw", {**default_parts(), "invite": no_invite})
         windows = [e["window_exchange_ids"] for e in events if e["kind"] == "memory_view"]
         self.assertEqual(windows[0], [])                                   # empty before the first question
         self.assertEqual(windows[-1], [f"e{i}" for i in range(3, 11)])     # k = 8 at the accusation
@@ -335,6 +340,167 @@ class DefaultParts(GameTest):
         _, events = self.play(script + [accuse("Alex", first=True)], "raw", default_parts())
         turn = next(e for e in events if e["kind"] == "interrogation")
         self.assertEqual(turn["intent"], {"kind": "ask_lead", "topic": None})
+
+
+def checkpoint_parts(invite_policy, suspect_accepts=lambda suspect, inviter: True, detective_accepts=True,
+                     detective_ok=True):
+    """Fake checkpoint agents. invite_policy(suspect, available) -> name, "Detective" or None.
+    Messages state the speaker's first shareable claim, so sharing can be checked."""
+    from casework.disclosure import communication_options
+
+    def invite(case, suspect, state, history, available, llm, game_id):
+        return {"invite": invite_policy(suspect, available), "call_id": None}
+
+    def accept(case, suspect, inviter, state, history, llm, game_id):
+        return {"accept": suspect_accepts(suspect, inviter), "call_id": None}
+
+    def say(case, suspect, state):
+        options = communication_options(case, suspect, state)
+        shareable = [o for o in options if o["kind"] == "share_claim"]
+        return {"text": shareable[0]["text"] if shareable else "Nothing to add.", "options": options, "call_id": None}
+
+    def message(case, suspect, recipient, state, history, llm, game_id):
+        return say(case, suspect, state)
+
+    def reply(case, suspect, inviter, text, state, history, llm, game_id):
+        return say(case, suspect, state)
+
+    def detective_accept(inviter, memory, ctx, llm, game_id):
+        return {"accept": detective_accepts if detective_ok else None, "ok": detective_ok,
+                "errors": [] if detective_ok else ["bad"], "call_id": None}
+
+    def detective_reply(inviter, text, memory, ctx, llm, game_id):
+        return {"message": "Thank you, noted.", "ok": True, "errors": [], "call_id": None}
+
+    return parts(invite=invite, accept=accept, message=message, reply=reply,
+                 detective_accept=detective_accept, detective_reply=detective_reply)
+
+
+def first_available(suspect, available):
+    return available[0]
+
+
+def prefer_detective(suspect, available):
+    return "Detective" if "Detective" in available else available[0]
+
+
+class Checkpoints(GameTest):
+    def kinds(self, events, kind):
+        return [e for e in events if e["kind"] == kind]
+
+    def test_fire_after_interrogations_5_10_15(self):
+        _, events = self.play(script(16, ["Alex"]), game_parts=checkpoint_parts(first_available))
+        starts = self.kinds(events, "checkpoint_start")
+        self.assertEqual([s["after_interrogation"] for s in starts], [5, 10, 15])
+        self.assertEqual(self.end(events)["checkpoints_reached"], 3)
+
+    def test_no_checkpoint_before_the_fifth_question(self):
+        _, events = self.play(script(4, ["Alex"]), game_parts=checkpoint_parts(first_available))
+        self.assertEqual(self.kinds(events, "checkpoint_start"), [])
+        self.assertEqual(self.end(events)["checkpoints_reached"], 0)
+
+    def test_slot_limits(self):
+        # Everyone invites and everyone accepts: at most 3 conversations, at most 1 with the detective,
+        # and nobody in two conversations at the same checkpoint (CKPT-2)
+        _, events = self.play(script(5, ["Alex"]), game_parts=checkpoint_parts(prefer_detective))
+        conversations = self.kinds(events, "conversation")
+        self.assertLessEqual(len(conversations), 3)
+        self.assertEqual(sum(c["visibility"] == "detective" for c in conversations), 1)
+        people = [p for c in conversations for p in (c["inviter"], c["recipient"])]
+        self.assertEqual(len(people), len(set(people)))
+
+    def test_rejection_keeps_both_slots(self):
+        # Every suspect rejects every suspect invitation; the detective rejects too (CKPT-3)
+        _, events = self.play(script(5, ["Alex"]), game_parts=checkpoint_parts(
+            first_available, suspect_accepts=lambda s, i: False, detective_accepts=False))
+        invitations = self.kinds(events, "invitation")
+        self.assertEqual({i["decision"] for i in invitations}, {"rejected"})
+        self.assertEqual({i["pass_no"] for i in invitations}, {1, 2})      # still free, so invited again
+        self.assertEqual(self.kinds(events, "conversation"), [])
+        self.assertEqual(self.end(events)["invitations"], {"sent": len(invitations), "accepted": 0,
+                                                           "rejected": len(invitations)})
+
+    def test_detective_conversation_enters_memory_without_a_turn(self):
+        detective_only = lambda s, available: "Detective" if "Detective" in available else None
+        _, events = self.play(script(6, ["Alex"]), game_parts=checkpoint_parts(detective_only))
+        conversation = self.kinds(events, "conversation")[0]
+        self.assertEqual((conversation["visibility"], conversation["exchange_id"]), ("detective", "e6"))
+        self.assertEqual(self.kinds(events, "interrogation")[-1]["exchange_id"], "e7")   # numbering continues
+        self.assertEqual(self.end(events)["interrogations_used"], 6)                     # no turn used (CKPT-9)
+        self.assertEqual(self.end(events)["exchanges_total"], 7)
+        windows = [e["window_exchange_ids"] for e in self.kinds(events, "memory_view")]
+        self.assertTrue(any("e6" in w for w in windows))                                  # CKPT-7
+
+    def test_private_conversation_never_reaches_the_detective(self):
+        suspects_only = lambda s, available: next((a for a in available if a != "Detective"), None)
+        _, events = self.play(script(6, ["Alex"]), game_parts=checkpoint_parts(suspects_only))
+        conversations = self.kinds(events, "conversation")
+        self.assertTrue(conversations)
+        self.assertEqual({c["visibility"] for c in conversations}, {"private"})
+        self.assertTrue(all(c["exchange_id"] is None for c in conversations))            # CKPT-8
+        windows = [x for e in self.kinds(events, "memory_view") for x in e["window_exchange_ids"]]
+        self.assertEqual(sorted(set(windows)), sorted({f"e{i}" for i in range(1, 7)}))  # interrogations only
+        shared = conversations[0]["controller_matched"]["message_claim_ids"]
+        self.assertTrue(shared)                                                           # what was said is passed on
+
+    def test_proposal_order_is_seeded(self):
+        orders = []
+        for _ in range(2):
+            self.seed = 41                                          # play() adds 1: same seed both times
+            _, events = self.play(script(5, ["Alex"]), game_parts=checkpoint_parts(first_available))
+            orders.append(self.kinds(events, "checkpoint_start")[0]["proposal_order"])
+            Path(self.tmp.name, "test_raw_42.jsonl").unlink()
+        self.assertEqual(orders[0], orders[1])                     # CKPT-11
+
+    def test_detective_checkpoint_failure_is_a_failed_run(self):
+        detective_only = lambda s, available: "Detective" if "Detective" in available else None
+        result, events = self.play(script(5, ["Alex"]), game_parts=checkpoint_parts(detective_only, detective_ok=False))
+        self.assertEqual(result["outcome"], "failed_run")
+        self.assertEqual(self.kinds(events, "failure")[0]["stage"], "checkpoint_acceptance")
+
+    def test_complete_game_with_real_checkpoint_prompts(self):
+        # Every real module connected (detective, interpreter, suspects incl. checkpoint prompts, extraction);
+        # a scripted LLM recognises each prompt and answers it.
+        decisions = iter([{"action": "interrogate", "suspect": name, "question": "Tell me about your evening."}
+                          for name in ["Alex", "Blair", "Casey", "Drew", "Ellis", "Alex"]]
+                         + [accuse("Alex", first=True)])
+        invited = set()
+
+        def llm(request):
+            system = request["messages"][0]["content"]
+            last = request["messages"][-1]["content"]
+            if system.startswith("You are a celebrated private detective"):
+                if '{"accept": true}' in last:
+                    return {"accept": True}
+                if '{"message":' in last:
+                    return {"message": "Thank you, noted."}
+                return next(decisions)
+            if system.startswith("You classify one question"):
+                return interpretation("overview")
+            if system.startswith("You take notes"):
+                return {"entries": []}
+            if "invite ONE person" in system:
+                name = system.split("You are ")[1].split(",")[0]
+                choice = "Detective" if not invited else None   # only the first suspect asked invites
+                invited.add(name)
+                return {"invite": choice}
+            if "invites you to a short private conversation" in system:
+                return {"accept": True}
+            return "I was in the Study at 21:00."                   # answers and messages
+
+        for condition in ("raw", "ledger"):
+            with self.subTest(condition=condition):
+                decisions = iter([{"action": "interrogate", "suspect": n, "question": "Tell me about your evening."}
+                                  for n in ["Alex", "Blair", "Casey", "Drew", "Ellis", "Alex"]]
+                                 + [accuse("Alex", first=True)])
+                invited.clear()
+                result, events = self.play(llm, condition, default_parts())
+                conversation = self.kinds(events, "conversation")[0]
+                self.assertEqual(conversation["visibility"], "detective")
+                self.assertEqual(conversation["reply"], "Thank you, noted.")
+                self.assertEqual(self.end(events)["conversations"], {"detective": 1, "private": 0})
+                purposes = {e["purpose"] for e in self.kinds(events, "llm_call")}
+                self.assertTrue({"invitation", "acceptance", "conversation_message", "conversation_reply"} <= purposes)
 
 
 class MatchDelivery(unittest.TestCase):
