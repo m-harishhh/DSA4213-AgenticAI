@@ -13,7 +13,7 @@ sys.path.insert(0, str(ROOT))
 
 from casework import load_case, public_view
 from detective import (PROMPT_VERSION, DecisionContext, SCHEMA_CONFIG, detective_conversation_reply,
-                       detective_invitation_response)
+                       detective_invitation_response, parse_decision)
 from detective.prompts import CHECKPOINT_PROTOCOL, CHECKPOINT_SYSTEM_PROMPT, MEMORY_LABELS
 from infra import LLMCallError, LLMClient, MockBackend, TransportError
 
@@ -170,6 +170,57 @@ class LoggingTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             detective_invitation_response("Drew", {"payload": PAYLOADS["raw"]}, context, llm, "g1")
         self.assertEqual(backend.requests, [])
+
+
+def fenced(obj):
+    return "```json\n" + json.dumps(obj) + "\n```"
+
+
+FENCE_WARNING = "output: code fences stripped"
+
+
+class CodeFenceTests(unittest.TestCase):
+    """pilot_04c: gemini-3.5-flash-lite wraps valid JSON in ```json fences; that is formatting, not a failure."""
+
+    def test_fenced_accept_needs_no_repair(self):
+        llm, backend, _ = client([fenced({"accept": True})])
+        result = detective_invitation_response("Drew", {"payload": PAYLOADS["raw"]}, ctx(), llm, "g1")
+        self.assertEqual((result["accept"], result["ok"]), (True, True))
+        self.assertEqual(len(backend.requests), 1)
+
+    def test_fenced_reply_needs_no_repair(self):
+        llm, backend, _ = client([fenced({"message": "Thank you. Who else was there?"})])
+        result = detective_conversation_reply("Drew", MESSAGE, {"payload": PAYLOADS["raw"]}, ctx(), llm, "g1")
+        self.assertEqual((result["message"], result["ok"]), ("Thank you. Who else was there?", True))
+        self.assertEqual(len(backend.requests), 1)
+
+    def test_fenced_decision_is_accepted_with_warning(self):
+        action = {"action": "interrogate", "suspect": "Blair", "question": "Where were you at 21:00?"}
+        result = parse_decision(fenced(action), ctx())
+        self.assertTrue(result["ok"], result["errors"])
+        self.assertIn(FENCE_WARNING, result["warnings"])
+
+    def test_unfenced_has_no_warning(self):
+        action = {"action": "interrogate", "suspect": "Blair", "question": "Where were you at 21:00?"}
+        for raw in (json.dumps(action), json.dumps(action) + "\n", json.dumps(action).encode("utf-8")):
+            result = parse_decision(raw, ctx())
+            self.assertTrue(result["ok"], result["errors"])
+            self.assertNotIn(FENCE_WARNING, result["warnings"])
+
+    def test_fenced_invalid_action_still_fails(self):
+        result = parse_decision(fenced({"action": "interrogate", "suspect": "Zed", "question": "Hi?"}), ctx())
+        self.assertFalse(result["ok"])
+        self.assertTrue(any("suspect" in error for error in result["errors"]))
+        self.assertIn(FENCE_WARNING, result["warnings"])
+
+    def test_fenced_broken_json_keeps_warning(self):
+        result = parse_decision("```json\n{\"action\": \n```", ctx())
+        self.assertFalse(result["ok"])
+        self.assertIn(FENCE_WARNING, result["warnings"])
+
+    def test_prose_around_json_is_not_extracted(self):
+        result = parse_decision('Here you go: {"accept": true}', ctx())
+        self.assertFalse(result["ok"])
 
 
 if __name__ == "__main__":
