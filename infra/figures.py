@@ -45,7 +45,8 @@ def _dot_interval(ax, summary, name, fmt="{:.0%}", xlim=(0, 1)):
             continue
         if low is not None:
             ax.plot([low, high], [y, y], color=SERIES[condition], linewidth=2, solid_capstyle="round")
-        ax.plot([value], [y], "o", color=SERIES[condition], markersize=8, markeredgecolor=SURFACE, markeredgewidth=1.5)
+        ax.plot([value], [y], "o", color=SERIES[condition], markersize=8, markeredgecolor=SURFACE, markeredgewidth=1.5,
+                clip_on=False)
         label = fmt.format(value) + (f"  n={summary['conditions'][condition]['games']}")
         ax.text((high if high is not None else value) + (xlim[1] - xlim[0]) * 0.02, y, label,
                 color=INK, va="center", fontsize=9)
@@ -98,7 +99,7 @@ def make_figures(summary, out_dir, title_prefix=""):
         ys = [_metric(summary, condition, name)["value"] or 0
               for name in ("first_accusation_accuracy", "solve_rate_within_2", "solve_rate_within_3")]
         ax.plot([1, 2, 3], ys, color=SERIES[condition], linewidth=2, marker="o", markersize=7,
-                markeredgecolor=SURFACE, markeredgewidth=1.5, label=CONDITION_LABEL[condition])
+                markeredgecolor=SURFACE, markeredgewidth=1.5, label=CONDITION_LABEL[condition], clip_on=False)
         ax.text(3.08, ys[-1], f"{CONDITION_LABEL[condition]} {ys[-1]:.0%}", color=INK, va="center", fontsize=9)
     ax.set_xticks([1, 2, 3])
     ax.set_xticklabels(["1st accusation", "within 2", "within 3"], color=INK)
