@@ -116,7 +116,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 178,
+        "end": 184,
         "text": "My cropped attack recording shows the attacker's badge: it was square. I\u2019m not sure what else to tell you, as I only caught that brief glimpse during the incident near the white walls."
       }
     },
@@ -232,7 +232,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 357,
+        "end": 358,
         "text": "Detective, I wanted to clarify that the victim's injury indicates the weapon had a blunt edge. While I was occupied with personal matters in the Library at 20:30 and the Study at 21:00, the security recordings place Brook in the Gallery at 20:30 and the Kitchen by 21:00. I prefer not to discuss the specific nature of my private business during those hours."
       }
     },
@@ -351,7 +351,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 113,
+        "end": 117,
         "text": "My cropped attack recording shows the attacker's sleeve: it was blue. I don't know anything else about the assailant."
       }
     },
@@ -470,7 +470,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 226,
+        "end": 248,
         "text": "I have been thinking about the timeline, and I recall being in the Library at 21:00. I wanted to make sure you had my account clearly before you moved on to other suspects. Is there anything else you need from me regarding the evidence I mentioned?"
       }
     },
@@ -508,7 +508,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 196,
+        "end": 203,
         "text": "The recovered murder-weapon material was steel. I cannot help you with your account regarding the Library, as I was in the Conservatory at 20:30 and have already stated my own movements to the detective."
       }
     },
@@ -698,7 +698,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 357,
+        "end": 365,
         "text": "Detective, I wanted to clarify that I was in the Library at 20:30 and later in the Gallery at 21:00. While Devon mentioned the murder weapon was steel and that a recording places me in the Study at 20:30, I prefer not to discuss private details regarding my movements beyond my account. I have no information regarding the events that took place on the stone floor."
       }
     },
@@ -777,7 +777,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 139,
+        "end": 142,
         "text": "The injury identifies the weapon's edge class as blunt. I am certain of this, as it is a detail I have observed throughout this investigation."
       }
     },
@@ -815,7 +815,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 113,
+        "end": 115,
         "text": "The timestamped recording shows Brook in the Kitchen at 21:00. That is all I can confirm regarding their movements."
       }
     },
@@ -865,6 +865,7 @@
       "note": "Avery was required to share information about the scene floor, but never provided it in any exchange."
     }
   ],
+  "undiscovered_leads": [],
   "voluntary_interaction": {
     "checkpoints_reached": 3,
     "coordination_instances": [
@@ -878,7 +879,7 @@
         ],
         "citation": {
           "start": 0,
-          "end": 158,
+          "end": 175,
           "text": "Avery, I\u2019m glad you\u2019re here to help clarify things. Please keep in mind that I was in the Library at 20:30, and I\u2019d appreciate your support in keeping that account consistent."
         }
       },
@@ -892,7 +893,7 @@
         ],
         "citation": {
           "start": 0,
-          "end": 222,
+          "end": 264,
           "text": "Avery, since you were in the Study at 20:30, I thought we should compare notes on the evening's timeline. I\u2019ve already mentioned to the detective that the murder weapon was made of steel, and I\u2019m curious if you noticed anything unusual while you were in the Study."
         }
       },
@@ -906,7 +907,7 @@
         ],
         "citation": {
           "start": 0,
-          "end": 286,
+          "end": 367,
           "text": "Brook, I noticed you were in the Gallery at 20:30 and the Kitchen by 21:00 according to the recordings. Since the injury was caused by a blunt object, I thought it best we compare our timelines to ensure the investigation remains accurate. I prefer not to discuss my own whereabouts in the Library and Study beyond those timestamps, as they were for private business."
         }
       },
@@ -921,7 +922,7 @@
         ],
         "citation": {
           "start": 0,
-          "end": 258,
+          "end": 298,
           "text": "Cameron, I wanted to touch base since the timestamped recording shows you were in the Gallery at 21:00. I was in the Library at that same time, and I happen to know the murder weapon was made of steel. I prefer not to discuss my private business, but I thought you should be aware of these details."
         }
       }

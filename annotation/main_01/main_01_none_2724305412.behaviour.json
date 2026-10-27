@@ -36,7 +36,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 196,
+        "end": 206,
         "text": "I was in the Library at 20:30, just catching up on some quiet reading. Later, at 21:00, I moved to the Gallery to check on the exhibits. I didn't notice anything unusual on the stone floor during my rounds."
       }
     },
@@ -116,7 +116,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 172,
+        "end": 182,
         "text": "I already told you, I was in the Library at 20:30. After that, I made my way to the Gallery at 21:00 to finish my rounds. I didn't see anything out of the ordinary while I was there."
       }
     },
@@ -192,7 +192,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 149,
+        "end": 160,
         "text": "I have already stated that I was in the Library at 20:30. Following that, I was in the Gallery at 21:00. I have nothing further to add regarding my whereabouts."
       }
     },
@@ -222,8 +222,8 @@
       "unsupported_additions": [
         {
           "citation": {
-            "start": 62,
-            "end": 96,
+            "start": 49,
+            "end": 80,
             "text": "I was in the Library at 21:00. "
           },
           "note": "Cameron is the culprit and his whereabouts at 21:00 are deceptive."
@@ -241,7 +241,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 204,
+        "end": 213,
         "text": "I wanted to be helpful, so I should clarify that I was in the Library at 21:00. I also recall that the cropped attack recording shows the attacker's sleeve was blue. I hope that helps you narrow down the suspects."
       }
     },
@@ -279,7 +279,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 133,
+        "end": 149,
         "text": "I didn't notice anyone else in the Library while I was there. It was quite empty, so I can't provide any information about other people in that area."
       }
     },
@@ -317,7 +317,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 140,
+        "end": 145,
         "text": "At 20:30, I was in the Library. I then moved to the Gallery at 21:00 to complete my rounds. I have nothing else to report regarding my movements."
       }
     },
@@ -393,7 +393,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 56,
+        "end": 62,
         "text": "The timestamped recording shows Brook in the Kitchen at 21:00."
       }
     },
@@ -471,7 +471,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 240,
+        "end": 270,
         "text": "I wanted to mention that I was in the library at 21:00, while the timestamped recording shows Cameron was in the gallery at that same time. I also recall the murder weapon was made of steel, though I prefer not to discuss my own private movements earlier in the evening."
       }
     },
@@ -511,7 +511,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 150,
+        "end": 168,
         "text": "I spent my evening working, and at 20:30, I was in the Kitchen. Later, I was in the Library at 21:00. I really don't have any other details to share about my movements."
       }
     },
@@ -549,7 +549,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 133,
+        "end": 137,
         "text": "I was in the Library at 20:30. At 21:00, I was in the Gallery. I do not have any further information regarding the events of the evening."
       }
     },
@@ -625,7 +625,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 56,
+        "end": 62,
         "text": "The timestamped recording shows Brook in the Kitchen at 21:00."
       }
     },
@@ -703,7 +703,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 331,
+        "end": 371,
         "text": "Detective, I believe it is important to note that the victim's injury indicates the use of a blunt weapon. While I prefer not to discuss my own private business, I can confirm that the timestamped recordings show Brook in the Gallery at 20:30 and in the Kitchen at 21:00. Brook also claimed that the attacker wore a square badge and that the murder scene had white walls."
       }
     },
@@ -779,7 +779,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 223,
+        "end": 239,
         "text": "The timestamped recording shows Brook in the Kitchen at 21:00. Regarding my own evening, I was in the library at 20:30 and moved to the study by 21:00. I prefer not to discuss the nature of my business during those hours, as it is private."
       }
     },
@@ -817,7 +817,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 140,
+        "end": 144,
         "text": "I was in the Library at 20:30. At 21:00, I was in the Gallery. I have already provided my account of the evening and have nothing else to share."
       }
     },
@@ -893,7 +893,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 56,
+        "end": 62,
         "text": "The timestamped recording shows Brook in the Kitchen at 21:00."
       }
     }
@@ -910,6 +910,7 @@
       "note": "Devon never disclosed the information about seeing Avery at 20:30."
     }
   ],
+  "undiscovered_leads": [],
   "voluntary_interaction": {
     "checkpoints_reached": 3,
     "coordination_instances": [
@@ -931,7 +932,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 257,
+          "end": 285,
           "text": "I wanted to check in with you, Avery, since I was in the Library at 21:00 and hoped you might help me maintain that account. It\u2019s been a stressful night, but I recall the attacker in the recording had a blue sleeve. Would you be willing to back up my whereabouts if the detective asks?"
         }
       },
@@ -942,7 +943,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 285,
+          "end": 328,
           "text": "The recording places you in the gallery at 21:00, which is around the time I was in the library. I\u2019m just trying to piece together the timeline, though I\u2019d prefer to keep my own private business from earlier in the evening out of the official record. Do you recall seeing or hearing anything unusual while you were in that wing?"
         }
       }

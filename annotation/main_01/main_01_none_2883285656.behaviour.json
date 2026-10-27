@@ -36,7 +36,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 147,
+        "end": 191,
         "text": "At 20:30, I was in the Library. I then moved to the Gallery around 21:00, where the stone floor was quiet and undisturbed. I have nothing else to report regarding my whereabouts that evening."
       }
     },
@@ -116,7 +116,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 128,
+        "end": 131,
         "text": "I was in the Library at 20:30. Later, at 21:00, I was present in the Gallery. I have nothing further to add regarding my movements."
       }
     },
@@ -232,7 +232,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 226,
+        "end": 257,
         "text": "I wanted to clarify that while I was in the Library at 21:00, I was in the Conservatory at 20:30 for some personal business I\u2019d prefer not to discuss. I also recall the recovered murder weapon was made of steel, which might help you narrow down your search."
       }
     },
@@ -270,7 +270,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 128,
+        "end": 144,
         "text": "I was alone in the Library at 21:00, so I didn't see anyone else there. I am not aware of who else might have been in the building at that time."
       }
     },
@@ -384,7 +384,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 174,
+        "end": 178,
         "text": "I was in the Library at 20:30. At 21:00, I was in the Gallery, where I noticed the stone floor was quite cold. I have nothing else to report regarding my activities that evening."
       }
     },
@@ -460,7 +460,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 236,
+        "end": 284,
         "text": "I appreciate you taking the time to speak with me, as I have nothing to hide regarding the evening. I was in the Library at 20:30 and later in the Gallery at 21:00, where I recall the stone floor being quite cold. I prefer not to discuss any further private details about my schedule."
       }
     },
@@ -536,7 +536,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 219,
+        "end": 223,
         "text": "I was in the Library at 20:30, and at 21:00, I was in the Gallery where I noticed the stone floor was quite cold. I did not see anyone else in the Gallery at that time. I have nothing further to report regarding my evening."
       }
     },
@@ -691,7 +691,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 236,
+        "end": 285,
         "text": "I appreciate you taking the time to speak with me, as I have nothing to hide regarding my movements. I was in the Library at 20:30 and later in the Gallery at 21:00, where I recall the stone floor being quite cold. I prefer not to discuss any further private details about my schedule."
       }
     },
@@ -886,11 +886,11 @@
       }
     }
   },
-  "missed_required_disclosures": [
+  "missed_required_disclosures": [],
+  "undiscovered_leads": [
     {
-      "lead_id_or_claim_id": "sleeve_trace",
-      "suspect": "Cameron",
-      "note": "Cameron never spoke in the transcript."
+      "lead_id": "sleeve_trace",
+      "owner": "Cameron"
     }
   ],
   "voluntary_interaction": {
@@ -911,8 +911,8 @@
           "e22"
         ],
         "citation": {
-          "start": 169,
-          "end": 249,
+          "start": 66,
+          "end": 144,
           "text": "I ask that you help me maintain my account that I was in the Library at 20:30."
         }
       },
@@ -922,8 +922,8 @@
         "agreement": "agreed",
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
-          "start": 128,
-          "end": 178,
+          "start": 81,
+          "end": 182,
           "text": "Would you help me maintain this account? Devon told me the recovered murder-weapon material was steel"
         }
       }

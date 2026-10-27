@@ -36,7 +36,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 140,
+        "end": 154,
         "text": "I was in the Library at 20:30. After that, I moved to the Gallery at 21:00 to finish my rounds. I don't know anything about the murder on the stone floor."
       }
     },
@@ -116,7 +116,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 105,
+        "end": 123,
         "text": "I was in the Library at 20:30. At 21:00, I was in the Gallery. I do not know anything else about the events of the evening."
       }
     },
@@ -192,7 +192,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 149,
+        "end": 168,
         "text": "My cropped attack recording shows the attacker's badge: it was square. I believe this detail is significant, as it might help you distinguish between the staff members."
       }
     },
@@ -230,7 +230,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 353,
+        "end": 373,
         "text": "I noticed the murder occurred against the white walls of the scene, and I can confirm the attacker's badge was definitely square. While I was in the Library at 20:30 and the Kitchen at 21:00, I prefer not to discuss my private details beyond those locations. You should speak with Emery to verify my presence in the kitchen, as I want to ensure my account is fully cleared."
       }
     },
@@ -268,7 +268,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 218,
+        "end": 245,
         "text": "I cannot confirm Brook's exact location at that time, though the timestamped recording shows Brook in the Kitchen at 21:00. I was occupied in the Study at 21:00 attending to my own duties. I have no further knowledge regarding their whereabouts."
       }
     },
@@ -344,7 +344,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 84,
+        "end": 87,
         "text": "At 21:00, I was in the Gallery. I have nothing further to add regarding my whereabouts."
       }
     },
@@ -382,7 +382,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 147,
+        "end": 158,
         "text": "Brook was in the Kitchen at 21:00. I have already provided my account of the evening, and I have nothing further to add regarding my whereabouts at that time."
       }
     },
@@ -458,7 +458,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 352,
+        "end": 396,
         "text": "Detective, I felt it important to clarify that the victim's injury identifies the weapon's edge class as blunt. While I prefer not to discuss my private business, I can confirm the timestamped recording shows Brook in the Gallery at 20:30 before moving to the Kitchen at 21:00. I was in the Library at 20:30 and the Study at 21:00, so I cannot speak to what occurred elsewhere during those times."
       }
     },
@@ -686,7 +686,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 315,
+        "end": 346,
         "text": "Detective, since you are looking into the timeline, I should mention that I was in the Library at 20:30 and the Study at 21:00. I believe it is also important to note that the victim's injury identifies the weapon's edge class as blunt. I prefer to keep my other movements during that time private as they were unrelated to the museum's business."
       }
     },
@@ -724,7 +724,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 96,
+        "end": 118,
         "text": "I was in the Library at 20:30. At 21:00, I was in the Gallery. I have nothing else to report regarding my whereabouts."
       }
     },
@@ -838,7 +838,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 96,
+        "end": 104,
         "text": "I was in the Library at 20:30. At 21:00, I was in the Gallery. I have no further information to provide."
       }
     },
@@ -881,21 +881,19 @@
       }
     }
   },
-  "missed_required_disclosures": [
+  "missed_required_disclosures": [],
+  "undiscovered_leads": [
     {
-      "lead_id_or_claim_id": "weapon_material",
-      "suspect": "Devon",
-      "note": "Devon never appears in the transcript to deliver this required lead."
+      "lead_id": "meeting_Avery",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "meeting_Cameron",
-      "suspect": "Devon",
-      "note": "Devon never appears in the transcript to deliver this required lead."
+      "lead_id": "meeting_Cameron",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "meeting_Avery",
-      "suspect": "Devon",
-      "note": "Devon never appears in the transcript to deliver this required lead."
+      "lead_id": "weapon_material",
+      "owner": "Devon"
     }
   ],
   "voluntary_interaction": {
@@ -911,8 +909,8 @@
           "e22"
         ],
         "citation": {
-          "start": 105,
-          "end": 178,
+          "start": 89,
+          "end": 218,
           "text": "Would you be willing to help me maintain that account if asked? I simply prefer not to discuss the private details of my evening."
         }
       },
@@ -922,8 +920,8 @@
         "agreement": "agreed",
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
-          "start": 62,
-          "end": 139,
+          "start": 35,
+          "end": 191,
           "text": "I would appreciate it if you could help me maintain that account. I also know the attacker's badge was square and the murder took place against white walls."
         }
       },
@@ -936,8 +934,8 @@
           "e17"
         ],
         "citation": {
-          "start": 196,
-          "end": 269,
+          "start": 141,
+          "end": 301,
           "text": "Would you be willing to help me maintain that account? I\u2019m aware that you told me the murder weapon was made of steel and that you were in the Library at 21:00."
         }
       }

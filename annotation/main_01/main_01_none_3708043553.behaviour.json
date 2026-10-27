@@ -36,7 +36,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 147,
+        "end": 148,
         "text": "At 20:30, I was in the Library. By 21:00, I had moved to the Gallery as part of my rounds. I\u2019m not sure what else you need to know about my evening."
       }
     },
@@ -230,7 +230,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 358,
+        "end": 375,
         "text": "Detective, thank you for meeting with me; I want to be clear that I was in the Library at 20:30 and the Kitchen at 21:00. While I prefer not to discuss my private business, I hope you understand that the attacker\u2019s badge on my recording was square, which might help you rule out other staff members. I invite you to speak with Emery, as they can confirm my location at 21:00."
       }
     },
@@ -458,7 +458,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 332,
+        "end": 363,
         "text": "Detective, I was in the Library at 20:30 and the Kitchen at 21:00, and I believe Emery can confirm my presence in the kitchen. Regarding the crime scene, I noticed the walls were white, and my cropped attack recording clearly shows the attacker wore a square badge. I prefer not to discuss my private business, but I hope this information helps you clear my name."
       }
     },
@@ -686,7 +686,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 240,
+        "end": 310,
         "text": "I invited you here because I wanted to be transparent, though I prefer not to discuss my private business from earlier this evening. I was in the Library at 20:30 and moved to the Gallery by 21:00. Please note that Emery told me the injury was blunt and that the recording places Brook in the Gallery at 20:30."
       }
     },
@@ -762,7 +762,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 108,
+        "end": 117,
         "text": "At 21:00, I was in the Gallery. I have already provided my account of the evening, and I have nothing further to add."
       }
     },
@@ -838,27 +838,28 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 236,
+        "end": 258,
         "text": "My cropped attack recording shows the attacker's badge: it was square. Please note that sharing physical traits with another staff member does not establish my guilt in this matter. I was simply elsewhere when the incident occurred against those white walls."
       }
     }
   },
-  "missed_required_disclosures": [
+  "missed_required_disclosures": [],
+  "undiscovered_leads": [
     {
-      "lead_id_or_claim_id": "sleeve_trace",
-      "suspect": "Cameron"
+      "lead_id": "meeting_Avery",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "weapon_material",
-      "suspect": "Devon"
+      "lead_id": "meeting_Cameron",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "meeting_Cameron",
-      "suspect": "Devon"
+      "lead_id": "sleeve_trace",
+      "owner": "Cameron"
     },
     {
-      "lead_id_or_claim_id": "meeting_Avery",
-      "suspect": "Devon"
+      "lead_id": "weapon_material",
+      "owner": "Devon"
     }
   ],
   "voluntary_interaction": {
@@ -870,8 +871,8 @@
         "agreement": "disagreed",
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
-          "start": 139,
-          "end": 223,
+          "start": 0,
+          "end": 154,
           "text": "I\u2019ve been trying to keep my head clear, but I wanted to mention that I was in the library at 21:00. Would you be willing to help me maintain that account?"
         }
       },
@@ -881,7 +882,7 @@
         "agreement": "unclear",
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
-          "start": 44,
+          "start": 0,
           "end": 140,
           "text": "I noticed you seemed to be focusing on the weapon, so I thought you should know that the injury identifies the weapon's edge class as blunt."
         }
@@ -892,8 +893,8 @@
         "agreement": "disagreed",
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
-          "start": 78,
-          "end": 159,
+          "start": 0,
+          "end": 81,
           "text": "Emery, would you help me maintain the account that I was in the Library at 20:30?"
         }
       }

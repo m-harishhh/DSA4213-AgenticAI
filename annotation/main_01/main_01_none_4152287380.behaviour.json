@@ -116,7 +116,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 141,
+        "end": 174,
         "text": "The timestamped recording shows Brook in the Kitchen at 21:00. I was finishing up some work in the Study around that time, so I can confirm that is where the logs place them."
       }
     },
@@ -154,7 +154,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 140,
+        "end": 151,
         "text": "As I mentioned, I was in the Library at 20:30. By 21:00, I had moved to the Gallery to finish my rounds. That is all I can tell you about my movements."
       }
     },
@@ -192,7 +192,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 240,
+        "end": 250,
         "text": "I was in the Library at 20:30, and I was in the Kitchen at 21:00. I have information about the attacker's badge and the scene walls; please ask me about them. You should also speak to Emery, as they have information regarding my whereabouts at 21:00."
       }
     },
@@ -230,7 +230,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 258,
+        "end": 283,
         "text": "I wanted to mention that the victim's injury indicates the weapon used had a blunt edge. While I prefer not to discuss my own private movements during the evening, I can confirm that the timestamped recording shows Brook in the Gallery at 20:30 before moving to the Kitchen by 21:00."
       }
     },
@@ -270,7 +270,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 222,
+        "end": 261,
         "text": "I must correct my previous statement: I was actually in the Gallery at 20:30. I apologize for the earlier confusion, but my presence there was for a private matter entirely unrelated to the murder. I was in the Kitchen at 21:00, which you can verify with Emery."
       }
     },
@@ -308,7 +308,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 273,
+        "end": 290,
         "text": "The timestamped recording shows Brook in the Kitchen at 21:00. Regarding 20:30, I recall seeing Brook in the Gallery, though I cannot speak to why there is a discrepancy in their account. I was occupied with my own private affairs at that hour and prefer to keep those details confidential."
       }
     },
@@ -346,7 +346,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 128,
+        "end": 142,
         "text": "I was in the Library at 20:30, as I previously stated. At 21:00, I was in the Gallery. I have nothing further to add regarding my whereabouts."
       }
     },
@@ -422,7 +422,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 137,
+        "end": 152,
         "text": "The timestamped recording shows Brook in the Kitchen at 21:00. I was in the Study at that time, so I am certain of their location according to the logs."
       }
     },
@@ -462,7 +462,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 351,
+        "end": 406,
         "text": "Detective, I must clarify that Cameron\u2019s claim about being in the Library at 21:00 contradicts the timestamped recording, which places him in the Gallery at that time. Additionally, he told me the attacker in his recording wore a blue sleeve, though I cannot verify that myself. I prefer not to discuss my own private movements during the evening, but I wanted to ensure you had the accurate location data."
       }
     },
@@ -500,7 +500,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 141,
+        "end": 149,
         "text": "That is incorrect; I was in the Library at 21:00. I don't know why Devon would claim otherwise, but I was definitely not in the Gallery at that time."
       }
     },
@@ -538,7 +538,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 113,
+        "end": 116,
         "text": "At 21:00, I was in the Gallery. I do not have anything else to report regarding my movements throughout the evening."
       }
     },
@@ -576,7 +576,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 268,
+        "end": 288,
         "text": "I was in the Gallery at 20:30 and in the Kitchen at 21:00. I have information about the attacker's square badge and the white walls at the murder scene; ask me about them. You should also verify my 21:00 location with Emery, as they have information regarding my whereabouts at that time."
       }
     },
@@ -614,7 +614,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 140,
+        "end": 147,
         "text": "The timestamped recording shows Brook in the Kitchen at 21:00. I was in the Study at that time, so I can confirm that is where the logs place them."
       }
     },
@@ -690,7 +690,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 158,
+        "end": 164,
         "text": "I was in the Kitchen at 21:00, and I can confirm that the murder scene had white walls. My cropped attack recording also shows that the attacker's badge was square."
       }
     },
@@ -728,7 +728,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 175,
+        "end": 195,
         "text": "I spent the evening moving through the museum, and I was in the Library at 20:30. Later, at 21:00, I was in the Gallery. I do not have any further information regarding the events of the evening."
       }
     },
@@ -804,7 +804,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 139,
+        "end": 153,
         "text": "The timestamped recording shows Brook in the Kitchen at 21:00. I was in the Study at that time, and that is where the records indicate they were located."
       }
     },
@@ -842,7 +842,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 142,
+        "end": 160,
         "text": "I was in the Library at 20:30, and then I moved to the Gallery at 21:00. I do not have any further information to provide regarding my whereabouts that evening."
       }
     },
@@ -892,6 +892,7 @@
       "note": "Avery never disclosed the scene floor information despite multiple interrogations."
     }
   ],
+  "undiscovered_leads": [],
   "voluntary_interaction": {
     "checkpoints_reached": 3,
     "coordination_instances": [
@@ -902,7 +903,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 178,
+          "end": 220,
           "text": "Brook, I would appreciate it if you could help me maintain the account that I was in the Library at 20:30. I have my reasons for needing that time to remain private, and I assure you it has nothing to do with the murder."
         }
       },
@@ -914,8 +915,8 @@
           "e13"
         ],
         "citation": {
-          "start": 139,
-          "end": 217,
+          "start": 0,
+          "end": 110,
           "text": "Actually, I was in the Library at 21:00, and I would appreciate it if you could help me maintain that account."
         }
       },
@@ -933,7 +934,7 @@
         ],
         "citation": {
           "start": 0,
-          "end": 242,
+          "end": 296,
           "text": "Emery, I wanted to coordinate with you because I was in the Gallery at 20:30 and the Kitchen at 21:00, and I\u2019m hoping you can confirm my presence in the kitchen. I also have information about the attacker's square badge and the white walls at the murder scene that I would like to share with you."
         }
       },
@@ -951,7 +952,7 @@
         ],
         "citation": {
           "start": 0,
-          "end": 181,
+          "end": 241,
           "text": "Cameron, I wanted to clarify that I was in the Library at 20:30, and I would appreciate your support in maintaining that account. I have my own reasons for keeping my other movements private, but I assure you they are unrelated to the crime."
         }
       }

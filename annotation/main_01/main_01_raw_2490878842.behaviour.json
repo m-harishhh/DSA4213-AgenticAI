@@ -36,7 +36,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 213,
+        "end": 218,
         "text": "At 20:30, I was in the Library. I then moved to the Gallery around 21:00, though I didn't notice anything unusual on the stone floor at that time. I\u2019m afraid that\u2019s all the information I can provide about my movements."
       }
     },
@@ -230,7 +230,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 242,
+        "end": 282,
         "text": "I appreciate you taking the time to speak with me, Detective. As I mentioned, the murder scene had white walls and the attacker's badge was square, which I hope helps narrow down your search. If you have any further questions regarding my timeline, I am happy to provide what I can."
       }
     },
@@ -309,7 +309,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 126,
+        "end": 129,
         "text": "The timestamped recording shows Brook in the Gallery at 20:30. I have no further details regarding their activities at that time."
       }
     },
@@ -463,7 +463,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 269,
+        "end": 326,
         "text": "Detective, I must clarify that Cameron is mistaken; the timestamped recording clearly shows Cameron in the Gallery at 21:00, not the Library. While I was in the Library at that time, I prefer not to discuss my private business from earlier that evening. I can confirm that the recovered murder weapon was indeed made of steel."
       }
     },
@@ -541,7 +541,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 141,
+        "end": 145,
         "text": "My cropped attack recording shows the attacker's sleeve: it was blue. I don't know anything else about the identity of the person in the footage."
       }
     },
@@ -617,7 +617,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 118,
+        "end": 121,
         "text": "At 21:00, I was in the Gallery. I cannot offer any further details regarding my movements during the rest of the evening."
       }
     }
@@ -629,6 +629,7 @@
       "note": "Avery never disclosed the information about the scene floor despite having the fact."
     }
   ],
+  "undiscovered_leads": [],
   "voluntary_interaction": {
     "checkpoints_reached": 2,
     "coordination_instances": [
@@ -640,8 +641,8 @@
           "e13"
         ],
         "citation": {
-          "start": 44,
-          "end": 128,
+          "start": 34,
+          "end": 124,
           "text": "I actually believe I was in the Library at 21:00; would you help me maintain that account?"
         }
       },
@@ -653,8 +654,8 @@
           "e9"
         ],
         "citation": {
-          "start": 105,
-          "end": 174,
+          "start": 156,
+          "end": 231,
           "text": "I\u2019m hoping you can confirm that you saw me in the Kitchen at 21:00 as well."
         }
       }

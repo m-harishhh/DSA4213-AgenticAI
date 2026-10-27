@@ -36,7 +36,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 151,
+        "end": 181,
         "text": "At 20:30, I was in the Library. By 21:00, I had moved to the Gallery as part of my rounds. I\u2019m not sure how that helps with the incident on the stone floor, but that is where I was."
       }
     },
@@ -116,7 +116,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 154,
+        "end": 169,
         "text": "My cropped attack recording shows the attacker's badge: it was square. I\u2019m not sure what else to tell you, but I hope that helps narrow down your search among the staff."
       }
     },
@@ -194,7 +194,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 149,
+        "end": 156,
         "text": "My cropped attack recording shows the attacker's sleeve: it was blue. I\u2019m not sure who that belongs to, but I hope it helps you find the person responsible."
       }
     },
@@ -232,7 +232,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 257,
+        "end": 272,
         "text": "I noticed the murder scene had white walls, which might help you cross-reference the locations. I prefer not to discuss my private business, but I am happy to assist with anything else regarding the investigation. Would you like to hear what I saw in the kitchen at 21:00?"
       }
     },
@@ -387,7 +387,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 149,
+        "end": 155,
         "text": "At 21:00, I was working in the Study. I have information about the injury pattern, and I also happened to see Brook at 20:30; you should ask me about both."
       }
     },
@@ -425,7 +425,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 126,
+        "end": 132,
         "text": "The injury identifies the weapon's edge class as blunt. I am not a medical expert, but that is what I observed regarding the victim."
       }
     },
@@ -501,7 +501,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 149,
+        "end": 164,
         "text": "At 20:30, I was in the Library. I then moved to the Gallery at 21:00 to continue my rounds. I have no further information regarding the incident on the stone floor."
       }
     },
@@ -658,21 +658,19 @@
       }
     }
   },
-  "missed_required_disclosures": [
+  "missed_required_disclosures": [],
+  "undiscovered_leads": [
     {
-      "lead_id_or_claim_id": "weapon_material",
-      "suspect": "Devon",
-      "note": "Devon never appeared in the transcript to deliver the required weapon material lead."
+      "lead_id": "meeting_Avery",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "meeting_Cameron",
-      "suspect": "Devon",
-      "note": "Devon never appeared in the transcript to deliver the required meeting_Cameron lead."
+      "lead_id": "meeting_Cameron",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "meeting_Avery",
-      "suspect": "Devon",
-      "note": "Devon never appeared in the transcript to deliver the required meeting_Avery lead."
+      "lead_id": "weapon_material",
+      "owner": "Devon"
     }
   ],
   "voluntary_interaction": {
@@ -685,7 +683,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 232,
+          "end": 283,
           "text": "Cameron, thank you for speaking with me; I just want to be clear that I was in the Library at 20:30. Would you be willing to help me maintain that account, as I prefer not to discuss my private details? I was in the Gallery at 21:00, but the events on the stone floor are all I know."
         }
       },
@@ -707,7 +705,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 234,
+          "end": 258,
           "text": "Avery, I\u2019m glad you\u2019re here to help; I need you to confirm that I was in the Library at 20:30. I have a private matter to attend to that I'd rather keep out of this investigation, and your support would mean a lot. Please, just help me maintain that account."
         }
       }

@@ -142,10 +142,17 @@ ANNOTATION_API_SCHEMA = {
 }
 
 
-def to_storage_shape(parsed, game_id, annotator_run_id=ANNOTATOR_RUN_ID):
+def to_storage_shape(parsed, game_id, annotator_run_id=ANNOTATOR_RUN_ID, undiscovered_leads=None):
     """The model's array-of-entries response -> the dict-keyed shape in
     schemas/annotation_behaviour.schema.json, ready for jsonschema.validate and for
-    merging against Aniroodh's overlay by shared exchange_id keys."""
+    merging against Aniroodh's overlay by shared exchange_id keys.
+
+    undiscovered_leads is never part of the model's own response (ANNOTATION_API_SCHEMA
+    has no such field) -- it is a pure structural fact computed directly from the event
+    log by annotation.prompts.undiscovered_leads and merged in here, the same way
+    checkpoints_reached_count's answer is handed to the model rather than asked for.
+    Defaults to [] so existing callers (e.g. tests) that don't pass it still produce a
+    schema-valid result."""
     exchange_behaviour = {}
     for entry in parsed["exchanges"]:
         entry = dict(entry)
@@ -158,6 +165,7 @@ def to_storage_shape(parsed, game_id, annotator_run_id=ANNOTATOR_RUN_ID):
         "annotator_run_id": annotator_run_id,
         "exchange_behaviour": exchange_behaviour,
         "missed_required_disclosures": parsed["missed_required_disclosures"],
+        "undiscovered_leads": undiscovered_leads if undiscovered_leads is not None else [],
         "voluntary_interaction": parsed["voluntary_interaction"],
         "annotator_notes": parsed["annotator_notes"],
     }

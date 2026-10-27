@@ -116,7 +116,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 196,
+        "end": 220,
         "text": "The timestamped recording shows Brook in the Kitchen at 21:00. I cannot speak to their activities beyond what was captured on the logs during my own shift. You would have to ask them about their whereabouts at that time."
       }
     },
@@ -192,7 +192,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 115,
+        "end": 120,
         "text": "I was in the Library at 20:30. At 21:00, I was in the Gallery. I have no further details to offer regarding those times."
       }
     },
@@ -230,7 +230,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 204,
+        "end": 261,
         "text": "I appreciate you taking the time to speak with me, Detective. I can confirm that I was in the Library at 20:30 and later in the Gallery at 21:00. Regarding the crime scene, I know that it has a stone floor, but I prefer not to discuss any other private details."
       }
     },
@@ -310,7 +310,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 128,
+        "end": 138,
         "text": "I was in the Library at 20:30, and I was in the Gallery at 21:00. I do not have any other information to provide regarding my whereabouts."
       }
     },
@@ -390,7 +390,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 251,
+        "end": 268,
         "text": "The timestamped recording shows Brook in the Kitchen at 21:00. I cannot verify their claims about the Library, as I was occupied with my own private business at 20:30. Regarding the crime, I can only confirm that the injury indicates the weapon's edge class was blunt."
       }
     },
@@ -470,7 +470,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 268,
+        "end": 348,
         "text": "Detective, I must clarify that while Cameron claims to have been in the Library at 21:00, the timestamped recording actually places them in the Gallery at that time. I was the one in the Library at 21:00, and I can confirm the recovered murder-weapon material was steel. I prefer not to discuss my own movements prior to 21:00 as they were private."
       }
     },
@@ -508,7 +508,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 126,
+        "end": 128,
         "text": "I was in the Library at 20:30, and I was in the Gallery at 21:00. I have nothing further to add about my movements that evening."
       }
     },
@@ -588,7 +588,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 127,
+        "end": 132,
         "text": "I was in the Library at 20:30, and I was in the Gallery at 21:00. I have nothing further to add regarding my movements that evening."
       }
     },
@@ -668,7 +668,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 127,
+        "end": 132,
         "text": "I was in the Library at 20:30, and I was in the Gallery at 21:00. I have nothing further to add regarding my movements that evening."
       }
     },
@@ -706,7 +706,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 218,
+        "end": 240,
         "text": "I was in the Library at 20:30 and in the Kitchen at 21:00. My cropped attack recording shows the attacker's badge was square, and I know the murder scene had white walls. Emery told me the injury identifies the weapon's edge class as blunt."
       }
     },
@@ -744,7 +744,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 113,
+        "end": 121,
         "text": "Emery was in the Study at 21:00. I prefer not to discuss the nature of my presence there as it involved private business."
       }
     },
@@ -782,7 +782,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 127,
+        "end": 132,
         "text": "I was in the Library at 20:30, and I was in the Gallery at 21:00. I have nothing further to add regarding my movements that evening."
       }
     },
@@ -867,11 +867,11 @@
       }
     }
   },
-  "missed_required_disclosures": [
+  "missed_required_disclosures": [],
+  "undiscovered_leads": [
     {
-      "lead_id_or_claim_id": "sleeve_trace",
-      "suspect": "Cameron",
-      "note": "Cameron never disclosed their information about the attacker's sleeve."
+      "lead_id": "sleeve_trace",
+      "owner": "Cameron"
     }
   ],
   "voluntary_interaction": {
@@ -885,8 +885,8 @@
           "e12"
         ],
         "citation": {
-          "start": 169,
-          "end": 222,
+          "start": 0,
+          "end": 109,
           "text": "Actually, I was in the Library at 21:00, so I would appreciate it if you could help me maintain that account."
         }
       },
@@ -903,8 +903,8 @@
           "e21"
         ],
         "citation": {
-          "start": 128,
-          "end": 182,
+          "start": 0,
+          "end": 109,
           "text": "I was actually in the Library at 20:30, and I would appreciate it if you could help me maintain that account."
         }
       },
@@ -914,8 +914,8 @@
         "agreement": "disagreed",
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
-          "start": 78,
-          "end": 131,
+          "start": 32,
+          "end": 132,
           "text": "I was in the Library at 20:30, and I would appreciate it if you could help me maintain that account."
         }
       },
@@ -927,8 +927,8 @@
           "e12"
         ],
         "citation": {
-          "start": 159,
-          "end": 213,
+          "start": 99,
+          "end": 199,
           "text": "I was in the Library at 21:00, and I would appreciate it if you could help me maintain that account."
         }
       }

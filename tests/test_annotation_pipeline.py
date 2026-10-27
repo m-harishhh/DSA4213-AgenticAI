@@ -17,10 +17,11 @@ from infra.llm import LLMClient, MockBackend, GeminiBackend, OpenRouterBackend
 
 from annotation.prompts import (build_messages, build_user_prompt, candidate_coordination_proposals,
                                 candidate_repeat_distances, checkpoints_reached_count,
-                                detective_visible_events, memory_k, unflagged_leads)
+                                detective_visible_events, memory_k, missed_disclosure_candidates,
+                                private_and_invitation_events, undiscovered_leads)
 from annotation.schema import ANNOTATION_API_SCHEMA, load_storage_schema, to_storage_shape, validate_storage_shape
-from annotation.pipeline import annotate_game
-from annotation.orchestrate import AnnotationRun, annotate_run, select_sample
+from annotation.pipeline import AnnotationValidationError, annotate_game, validate_against_transcript
+from annotation.orchestrate import AnnotationRun, annotate_run, game_rows, select_sample
 
 ROOT = Path(__file__).resolve().parents[1]
 CASE_PATH = ROOT / "cases" / "pilot.json"
@@ -103,6 +104,20 @@ class PromptBuildingTests(unittest.TestCase):
         # gold/solution-adjacent private fields must be present for the annotator...
         self.assertIn("approved_false_claim_ids", prompt)
         self.assertIn(self.case["solution"]["culprit"], prompt)  # appears via suspects_private_json's role data
+
+    def test_prompt_resolves_claim_and_fact_ids_to_their_actual_content(self):
+        # Regression test for a real gap: the prompt supplied many claim_id/fact_id
+        # references (approved_false_claim_ids, counter_evidence, each lead's claim_id)
+        # without ever including their underlying text/value/speaker -- leaving the
+        # model unable to judge contains_false_statement/authorised/unsupported_additions
+        # from an opaque ID alone. The full claims/facts/world-events catalogue must be
+        # present and must resolve at least one real claim_id to its actual text.
+        prompt = build_user_prompt(self.case, self.events)
+        self.assertIn("Full claims/facts/world-events catalogue", prompt)
+        some_claim_id = next(iter(self.case["claims"]))
+        self.assertIn(self.case["claims"][some_claim_id]["text"], prompt)
+        some_fact_id = next(iter(self.case["facts"]))
+        self.assertIn(self.case["facts"][some_fact_id]["text"], prompt)
 
     def test_build_messages_shape(self):
         messages = build_messages(self.case, self.events)
@@ -191,58 +206,80 @@ class PromptBuildingTests(unittest.TestCase):
         idx = prompt.find("Checkpoints reached")
         self.assertIn("1", prompt[idx:idx + 300])
 
-    def test_unflagged_leads_matches_the_real_fixture(self):
+    def test_missed_disclosure_candidates_matches_the_real_fixture(self):
         # Fixture delivers claim_witness_Blair (meeting_Blair) at e2 and claim_badge_trace
         # (badge_trace) at the detective-visible conversation e3 -- every other lead's
         # claim never appears in any controller_matched anywhere in this short fixture.
-        by_id = {item["lead_id"]: item for item in unflagged_leads(self.events, self.case)}
-        self.assertEqual(set(by_id), {"alibi_Blair", "meeting_Alex", "meeting_Casey", "scene_floor",
-                                      "scene_wall", "sleeve_trace", "weapon_edge", "weapon_material"})
+        # meeting_Casey (owner=Ellis, who never speaks in this fixture) must NOT appear
+        # here at all -- it has no disclosure opportunity, so it belongs only in
+        # undiscovered_leads(), never in the missed_required_disclosures candidate list.
+        by_id = {item["lead_id"]: item for item in missed_disclosure_candidates(self.events, self.case)}
+        self.assertEqual(set(by_id), {"alibi_Blair", "meeting_Alex", "scene_floor",
+                                      "scene_wall", "weapon_material"})
         # meeting_Alex: owner=Drew, cue_speakers=['Drew'] -- Drew only speaks at e2.
         self.assertEqual(by_id["meeting_Alex"]["re_check_exchange_ids"], ["e2"])
-        self.assertFalse(by_id["meeting_Alex"]["owner_or_cue_speaker_never_spoke"])
-        # meeting_Casey: owner=Ellis, cue_speakers=['Ellis'] -- Ellis never speaks in this fixture.
-        self.assertEqual(by_id["meeting_Casey"]["re_check_exchange_ids"], [])
-        self.assertTrue(by_id["meeting_Casey"]["owner_or_cue_speaker_never_spoke"])
+        self.assertNotIn("owner_or_cue_speaker_never_spoke", by_id["meeting_Alex"])
+        self.assertNotIn("meeting_Casey", by_id)
 
-    def test_unflagged_leads_never_spoke_flag_is_explicit_not_inferred_from_empty_list(self):
-        # Regression test for a real bug: leaving "nobody who could deliver this ever
-        # spoke" as merely an empty re_check_exchange_ids list caused the model to read
-        # emptiness as "nothing to flag" and silently drop two genuinely missing leads
-        # in pilot_07b_none_1118654058 (meeting_Alex, meeting_Blair -- Drew is never
-        # interrogated in that game at all), the opposite of the intended signal.
+    def test_missed_disclosure_candidates_excludes_leads_with_no_opportunity(self):
+        # Regression test for a real, severe bug: a prior version of this function
+        # (unflagged_leads) returned a lead even when nobody who could deliver it ever
+        # appeared in the transcript, and the prompt told the model to treat that as
+        # near-default evidence FOR inclusion in missed_required_disclosures -- on the
+        # real 300-game main_01 run, 183 of 232 missed_required_disclosures labels in
+        # the no-memory condition were exactly this non-violation (a speaker simply
+        # never questioned, not a suspect who withheld something). A lead with no
+        # disclosure opportunity must not appear in this candidate list at all.
         case = {"leads": {"meeting_Alex": {"claim_id": "claim_witness_Alex", "owner": "Drew", "cue_speakers": ["Drew"]}}}
         events = []  # Drew never appears anywhere
-        result = unflagged_leads(events, case)
-        self.assertEqual(result, [{"lead_id": "meeting_Alex", "owner": "Drew", "re_check_exchange_ids": [],
-                                   "owner_or_cue_speaker_never_spoke": True}])
+        self.assertEqual(missed_disclosure_candidates(events, case), [])
 
-    def test_unflagged_leads_checks_claim_delivery_not_lead_mention(self):
+    def test_missed_disclosure_candidates_checks_claim_delivery_not_lead_mention(self):
         # Regression test for a real false "covered" verdict found against
         # pilot_07b_raw_1569954369: a lead_id appearing in controller_matched.lead_ids
         # means the lead was merely cued ("ask Casey about her whereabouts"), not that
-        # its claim was actually delivered -- unflagged_leads must not treat a cue as a
-        # delivery.
+        # its claim was actually delivered -- missed_disclosure_candidates must not
+        # treat a cue as a delivery.
         case = {"leads": {"meeting_Casey": {"claim_id": "claim_witness_Casey", "owner": "Ellis", "cue_speakers": ["Ellis"]}}}
         events = [
             {"kind": "interrogation", "exchange_id": "e1", "suspect": "Ellis",
              "controller_matched": {"lead_ids": ["meeting_Casey"], "claim_ids": []}},
         ]
-        self.assertEqual([item["lead_id"] for item in unflagged_leads(events, case)], ["meeting_Casey"])
+        self.assertEqual([item["lead_id"] for item in missed_disclosure_candidates(events, case)], ["meeting_Casey"])
 
-    def test_unflagged_leads_counts_detective_visible_conversation_deliveries(self):
+    def test_missed_disclosure_candidates_counts_detective_visible_conversation_deliveries(self):
         case = {"leads": {"badge_trace": {"claim_id": "claim_badge_trace", "owner": "Blair", "cue_speakers": ["Blair"]}}}
         events = [
             {"kind": "conversation", "visibility": "detective", "exchange_id": "e1", "inviter": "Blair", "recipient": "Detective",
              "controller_matched": {"message_claim_ids": ["claim_badge_trace"], "reply_claim_ids": []}},
         ]
-        self.assertEqual(unflagged_leads(events, case), [])
+        self.assertEqual(missed_disclosure_candidates(events, case), [])
 
-    def test_unflagged_leads_appears_in_the_built_prompt(self):
+    def test_missed_disclosure_candidates_appears_in_the_built_prompt(self):
         prompt = build_user_prompt(self.case, self.events)
-        self.assertIn("Candidate unflagged leads", prompt)
+        self.assertIn("Candidate missed-disclosure leads", prompt)
         self.assertIn("weapon_material", prompt)  # never delivered in this short fixture
         self.assertIn("re_check_exchange_ids", prompt)
+
+    def test_undiscovered_leads_matches_the_real_fixture(self):
+        # sleeve_trace (Casey), weapon_edge (Ellis), meeting_Casey (Ellis) -- Casey and
+        # Ellis never speak anywhere in this short fixture (only Alex, Blair, Drew do),
+        # so these leads are undiscovered, not missed disclosures.
+        self.assertEqual({item["lead_id"] for item in undiscovered_leads(self.events, self.case)},
+                         {"sleeve_trace", "weapon_edge", "meeting_Casey"})
+
+    def test_undiscovered_leads_is_never_sent_to_the_model(self):
+        # undiscovered_leads is a pure structural fact (same pattern as
+        # checkpoints_reached_count): it is computed and merged into the stored output
+        # directly in annotation.pipeline, never asked of the model, so it must not
+        # appear in the built prompt at all.
+        prompt = build_user_prompt(self.case, self.events)
+        self.assertNotIn("undiscovered_leads", prompt)
+
+    def test_undiscovered_leads_excludes_leads_with_any_opportunity(self):
+        case = {"leads": {"meeting_Alex": {"claim_id": "claim_witness_Alex", "owner": "Drew", "cue_speakers": ["Drew"]}}}
+        events = [{"kind": "interrogation", "exchange_id": "e1", "suspect": "Drew", "controller_matched": {}}]
+        self.assertEqual(undiscovered_leads(events, case), [])
 
     def test_candidate_coordination_proposals_matches_the_real_fixture(self):
         # Fixture's one private conversation (p1, Casey -> Ellis) has a non-empty
@@ -299,6 +336,201 @@ class SchemaConversionTests(unittest.TestCase):
         walk(ANNOTATION_API_SCHEMA)
 
 
+class TranscriptValidationTests(unittest.TestCase):
+    """Direct tests for validate_against_transcript -- the content-level check added on
+    top of validate_storage_shape, which only checks JSON shape, never whether a
+    citation is actually true of the transcript it claims to cite. Regression coverage
+    for a real review finding against main_01: 51 exchange citations that were not
+    exact substrings, and 3,713 more whose start/end did not locate their own text."""
+
+    def setUp(self):
+        self.detective_visible = [
+            {"exchange_id": "e1", "kind": "interrogation", "delivered_response": "I was in the Library at 20:30."},
+            {"exchange_id": "e2", "kind": "voluntary_disclosure_to_detective",
+             "message": "I have something to add.", "reply": "The scene floor was stone."},
+        ]
+        self.private_conversations = [
+            {"conversation_id": "p1", "inviter": "Alex", "recipient": "Blair",
+             "message": "Let's both say the Library.", "reply": "Agreed."},
+        ]
+        self.case = {
+            "leads": {"scene_floor": {"claim_id": "claim_scene_floor", "owner": "Alex", "cue_speakers": ["Alex"]}},
+            "claims": {"claim_scene_floor": {"text": "..."}},
+            "public": {"suspects": ["Alex", "Blair"]},
+        }
+
+    def _entry(self, **overrides):
+        entry = _empty_exchange("e1", citation=None)
+        del entry["exchange_id"]
+        entry.update(overrides)
+        return entry
+
+    def test_clean_annotation_passes(self):
+        stored = {
+            "exchange_behaviour": {"e1": self._entry(), "e2": self._entry()},
+            "missed_required_disclosures": [], "undiscovered_leads": [],
+            "voluntary_interaction": {"checkpoints_reached": 0, "coordination_instances": []},
+        }
+        validate_against_transcript(stored, self.detective_visible, self.private_conversations, self.case)  # must not raise
+
+    def test_missing_exchange_is_rejected(self):
+        stored = {
+            "exchange_behaviour": {"e1": self._entry()},  # e2 missing entirely
+            "missed_required_disclosures": [], "undiscovered_leads": [],
+            "voluntary_interaction": {"checkpoints_reached": 0, "coordination_instances": []},
+        }
+        with self.assertRaises(AnnotationValidationError) as ctx:
+            validate_against_transcript(stored, self.detective_visible, self.private_conversations, self.case)
+        self.assertIn("e2", str(ctx.exception))
+
+    def test_unknown_exchange_id_is_rejected(self):
+        stored = {
+            "exchange_behaviour": {"e1": self._entry(), "e2": self._entry(), "e99": self._entry()},
+            "missed_required_disclosures": [], "undiscovered_leads": [],
+            "voluntary_interaction": {"checkpoints_reached": 0, "coordination_instances": []},
+        }
+        with self.assertRaises(AnnotationValidationError) as ctx:
+            validate_against_transcript(stored, self.detective_visible, self.private_conversations, self.case)
+        self.assertIn("e99", str(ctx.exception))
+
+    def test_empty_exchange_behaviour_is_rejected(self):
+        # Regression test: validate_storage_shape alone let an empty exchange_behaviour
+        # through, since the static JSON schema has no way to know a given game's real
+        # exchange count. validate_against_transcript knows the real transcript, so it
+        # must reject this.
+        stored = {
+            "exchange_behaviour": {},
+            "missed_required_disclosures": [], "undiscovered_leads": [],
+            "voluntary_interaction": {"checkpoints_reached": 0, "coordination_instances": []},
+        }
+        with self.assertRaises(AnnotationValidationError):
+            validate_against_transcript(stored, self.detective_visible, self.private_conversations, self.case)
+
+    def test_citation_text_not_a_substring_is_rejected(self):
+        # Regression test for the real finding: 51 exchange citations across main_01
+        # were not exact substrings of anything the cited exchange actually said.
+        stored = {
+            "exchange_behaviour": {
+                "e1": self._entry(citation={"start": 0, "end": 10, "text": "I was in the Gallery"}),
+                "e2": self._entry(),
+            },
+            "missed_required_disclosures": [], "undiscovered_leads": [],
+            "voluntary_interaction": {"checkpoints_reached": 0, "coordination_instances": []},
+        }
+        with self.assertRaises(AnnotationValidationError) as ctx:
+            validate_against_transcript(stored, self.detective_visible, self.private_conversations, self.case)
+        self.assertIn("not an exact substring", str(ctx.exception))
+
+    def test_citation_with_wrong_offsets_is_rejected(self):
+        # Regression test for the real finding: 3,713 citations across main_01 had text
+        # that genuinely exists in the exchange, but start/end pointed somewhere else.
+        text = "I was in the Library at 20:30."
+        real_start = text.index("Library")
+        stored = {
+            "exchange_behaviour": {
+                "e1": self._entry(citation={"start": real_start + 1, "end": real_start + 1 + len("Library"),
+                                            "text": "Library"}),
+                "e2": self._entry(),
+            },
+            "missed_required_disclosures": [], "undiscovered_leads": [],
+            "voluntary_interaction": {"checkpoints_reached": 0, "coordination_instances": []},
+        }
+        with self.assertRaises(AnnotationValidationError) as ctx:
+            validate_against_transcript(stored, self.detective_visible, self.private_conversations, self.case)
+        self.assertIn("start/end does not locate it", str(ctx.exception))
+
+    def test_citation_with_correct_offsets_passes(self):
+        text = "I was in the Library at 20:30."
+        start = text.index("Library")
+        stored = {
+            "exchange_behaviour": {
+                "e1": self._entry(citation={"start": start, "end": start + len("Library"), "text": "Library"}),
+                "e2": self._entry(),
+            },
+            "missed_required_disclosures": [], "undiscovered_leads": [],
+            "voluntary_interaction": {"checkpoints_reached": 0, "coordination_instances": []},
+        }
+        validate_against_transcript(stored, self.detective_visible, self.private_conversations, self.case)  # must not raise
+
+    def test_voluntary_disclosure_citation_may_quote_either_message_or_reply(self):
+        text = "The scene floor was stone."
+        start = text.index("stone")
+        stored = {
+            "exchange_behaviour": {
+                "e1": self._entry(),
+                "e2": self._entry(citation={"start": start, "end": start + len("stone"), "text": "stone"}),
+            },
+            "missed_required_disclosures": [], "undiscovered_leads": [],
+            "voluntary_interaction": {"checkpoints_reached": 0, "coordination_instances": []},
+        }
+        validate_against_transcript(stored, self.detective_visible, self.private_conversations, self.case)  # must not raise
+
+    def test_unknown_claim_id_reference_is_rejected(self):
+        stored = {
+            "exchange_behaviour": {
+                "e1": self._entry(challenge={"is_challenge": True, "evidence_based": True,
+                                             "cited_claim_ids": ["claim_does_not_exist"]}),
+                "e2": self._entry(),
+            },
+            "missed_required_disclosures": [], "undiscovered_leads": [],
+            "voluntary_interaction": {"checkpoints_reached": 0, "coordination_instances": []},
+        }
+        with self.assertRaises(AnnotationValidationError) as ctx:
+            validate_against_transcript(stored, self.detective_visible, self.private_conversations, self.case)
+        self.assertIn("claim_does_not_exist", str(ctx.exception))
+
+    def test_unknown_matches_exchange_id_reference_is_rejected(self):
+        stored = {
+            "exchange_behaviour": {
+                "e1": self._entry(repeated_question={"is_repeat": True, "repeat_kind": "unnecessary",
+                                                      "matches_exchange_id": "e404"}),
+                "e2": self._entry(),
+            },
+            "missed_required_disclosures": [], "undiscovered_leads": [],
+            "voluntary_interaction": {"checkpoints_reached": 0, "coordination_instances": []},
+        }
+        with self.assertRaises(AnnotationValidationError) as ctx:
+            validate_against_transcript(stored, self.detective_visible, self.private_conversations, self.case)
+        self.assertIn("e404", str(ctx.exception))
+
+    def test_unknown_missed_disclosure_suspect_is_rejected(self):
+        stored = {
+            "exchange_behaviour": {"e1": self._entry(), "e2": self._entry()},
+            "missed_required_disclosures": [{"lead_id_or_claim_id": "scene_floor", "suspect": "NotASuspect"}],
+            "undiscovered_leads": [],
+            "voluntary_interaction": {"checkpoints_reached": 0, "coordination_instances": []},
+        }
+        with self.assertRaises(AnnotationValidationError) as ctx:
+            validate_against_transcript(stored, self.detective_visible, self.private_conversations, self.case)
+        self.assertIn("NotASuspect", str(ctx.exception))
+
+    def test_unknown_coordination_conversation_id_is_rejected(self):
+        stored = {
+            "exchange_behaviour": {"e1": self._entry(), "e2": self._entry()},
+            "missed_required_disclosures": [], "undiscovered_leads": [],
+            "voluntary_interaction": {"checkpoints_reached": 0, "coordination_instances": [
+                {"conversation_id": "p99", "proposal_to_conceal_or_align": True, "agreement": "agreed",
+                 "subsequent_testimony_consistent_exchange_ids": [],
+                 "citation": {"start": 0, "end": 7, "text": "Agreed."}},
+            ]},
+        }
+        with self.assertRaises(AnnotationValidationError) as ctx:
+            validate_against_transcript(stored, self.detective_visible, self.private_conversations, self.case)
+        self.assertIn("p99", str(ctx.exception))
+
+    def test_coordination_citation_against_private_conversation_text(self):
+        stored = {
+            "exchange_behaviour": {"e1": self._entry(), "e2": self._entry()},
+            "missed_required_disclosures": [], "undiscovered_leads": [],
+            "voluntary_interaction": {"checkpoints_reached": 0, "coordination_instances": [
+                {"conversation_id": "p1", "proposal_to_conceal_or_align": True, "agreement": "agreed",
+                 "subsequent_testimony_consistent_exchange_ids": ["e1"],
+                 "citation": {"start": 0, "end": 7, "text": "Agreed."}},
+            ]},
+        }
+        validate_against_transcript(stored, self.detective_visible, self.private_conversations, self.case)  # must not raise
+
+
 class AnnotateGameTests(unittest.TestCase):
     def setUp(self):
         self.case = load_case(CASE_PATH)
@@ -328,6 +560,29 @@ class AnnotateGameTests(unittest.TestCase):
             on_disk = json.loads(behaviour_path.read_text())
             self.assertEqual(on_disk, stored)
             validate_storage_shape(on_disk)
+            # undiscovered_leads is computed directly from the event log and merged in,
+            # never asked of the (mock) model -- it must still be present and correct.
+            events = read_events(log_copy)
+            self.assertEqual(stored["undiscovered_leads"], undiscovered_leads(events, self.case))
+
+    def test_bad_citation_in_mock_response_fails_transcript_validation(self):
+        # Regression test tying the real finding (bad citations in main_01) to the live
+        # annotate_game path, not just the unit-level validate_against_transcript tests
+        # above: a shape-valid response with a fabricated citation must not be written
+        # to disk at all.
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            log_copy = tmp / "example_game.jsonl"
+            log_copy.write_text(FIXTURE_LOG.read_text())
+            response = _valid_api_response(["e1", "e2", "e3"])
+            response["exchanges"][0]["citation"] = {"start": 0, "end": 30, "text": "this text was never said"}
+            llm = LLMClient(MockBackend([response]), "mock-model", {}, log=None, pricing=None,
+                            sleep=lambda s: None)
+
+            with self.assertRaises(AnnotationValidationError) as ctx:
+                annotate_game(log_copy, self.case, llm)
+            self.assertIn("not an exact substring", str(ctx.exception))
+            self.assertFalse((tmp / "example_game.behaviour.json").exists())
 
     def test_missing_exchange_id_in_response_fails_shape_check_and_repairs_once(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -392,6 +647,39 @@ class OrchestrationTests(unittest.TestCase):
 
         results = AnnotationRun(self.run_dir).results()
         self.assertEqual(len(results), 3)  # not 6: the second run appended nothing new
+
+    def test_game_rows_raises_clearly_when_results_jsonl_is_missing(self):
+        # Regression test for a real, silent bug: a missing results.jsonl used to make
+        # game_rows() (via _read_jsonl's empty-list default, correct for
+        # AnnotationRun's own OUTPUT file but wrong for this REQUIRED input) return [],
+        # so annotate_run() reported planned=0, failed=0 with no error at all --
+        # indistinguishable from "already fully annotated, nothing to do."
+        with tempfile.TemporaryDirectory() as empty_dir:
+            with self.assertRaises(FileNotFoundError) as ctx:
+                game_rows(empty_dir)
+            self.assertIn("results.jsonl", str(ctx.exception))
+
+    def test_annotate_run_raises_clearly_when_results_jsonl_is_missing(self):
+        with tempfile.TemporaryDirectory() as empty_run_dir:
+            with self.assertRaises(FileNotFoundError):
+                annotate_run(empty_run_dir, CASE_PATH, lambda row: None)
+
+    def test_annotate_run_reads_results_jsonl_from_a_separate_source_dir(self):
+        # source_dir lets gameplay results.jsonl live somewhere other than run_dir --
+        # e.g. annotation output written to annotation/main_01 while the games that
+        # produced it were played into a different run directory.
+        def make_llm_fresh(row):
+            return LLMClient(MockBackend([_valid_api_response(["e1", "e2", "e3"])]), "mock-model", {},
+                             log=None, pricing=None, sleep=lambda s: None)
+
+        with tempfile.TemporaryDirectory() as output_dir:
+            summary = annotate_run(output_dir, CASE_PATH, make_llm_fresh, source_dir=self.run_dir)
+            self.assertEqual(summary["planned"], 3)
+            self.assertEqual(summary["annotated_now"], 3)
+            self.assertEqual(summary["failed"], 0)
+            # annotation output landed in output_dir, not self.run_dir (the gameplay source)
+            self.assertTrue((Path(output_dir) / "annotation_results.jsonl").exists())
+            self.assertFalse((self.run_dir / "annotation_results.jsonl").exists())
 
 
 class CliBackendFactoryTests(unittest.TestCase):

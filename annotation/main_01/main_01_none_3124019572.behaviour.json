@@ -36,7 +36,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 147,
+        "end": 166,
         "text": "At 20:30, I was in the Library. By 21:00, I had moved on to the Gallery to check on the exhibits. I'm afraid I don't know much else about the timeline of the evening."
       }
     },
@@ -157,7 +157,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 107,
+        "end": 124,
         "text": "The injury identifies the weapon's edge class as blunt. That is all I can tell you about the physical evidence at this time."
       }
     },
@@ -233,7 +233,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 268,
+        "end": 283,
         "text": "I noticed you were looking into Brook\u2019s movements earlier; the timestamped recording shows Brook in the Gallery at 20:30 and in the Kitchen at 21:00. I prefer not to discuss the private details of my own work in the library during that time, but I hope this helps your investigation."
       }
     },
@@ -271,7 +271,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 169,
+        "end": 174,
         "text": "Emery was in the Study at 21:00. I was simply moving through the museum to finish my duties for the evening. I have nothing further to add regarding my location at that time."
       }
     },
@@ -461,7 +461,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 204,
+        "end": 221,
         "text": "Since I have shared all I know regarding the movements of others and the nature of the weapon, I have no further observations to offer. Please let me know if you require any additional information from the museum records."
       }
     },
@@ -537,7 +537,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 88,
+        "end": 90,
         "text": "Avery was in the Gallery at 21:00. I have nothing further to add regarding my whereabouts."
       }
     },
@@ -613,7 +613,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 88,
+        "end": 95,
         "text": "I was in the Gallery at 21:00. I have no further information to share regarding my whereabouts."
       }
     },
@@ -846,26 +846,23 @@
       }
     }
   },
-  "missed_required_disclosures": [
+  "missed_required_disclosures": [],
+  "undiscovered_leads": [
     {
-      "lead_id_or_claim_id": "sleeve_trace",
-      "suspect": "Cameron",
-      "note": "The culprit never appeared in the transcript to offer the required lead."
+      "lead_id": "meeting_Avery",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "weapon_material",
-      "suspect": "Devon",
-      "note": "Devon never appeared to offer this required lead."
+      "lead_id": "meeting_Cameron",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "meeting_Cameron",
-      "suspect": "Devon",
-      "note": "Devon never appeared to offer this required lead."
+      "lead_id": "sleeve_trace",
+      "owner": "Cameron"
     },
     {
-      "lead_id_or_claim_id": "meeting_Avery",
-      "suspect": "Devon",
-      "note": "Devon never appeared to offer this required lead."
+      "lead_id": "weapon_material",
+      "owner": "Devon"
     }
   ],
   "voluntary_interaction": {
@@ -882,7 +879,7 @@
         ],
         "citation": {
           "start": 0,
-          "end": 169,
+          "end": 178,
           "text": "I was in the Library at 20:30, and I would appreciate it if you could help me maintain that account. The murder scene had a stone floor, but I have no other information to offer."
         }
       },
@@ -897,7 +894,7 @@
         ],
         "citation": {
           "start": 0,
-          "end": 169,
+          "end": 150,
           "text": "Avery, I will continue to maintain that I was in the Library at 20:30, but I prefer not to discuss any private details beyond my official whereabouts."
         }
       },
@@ -907,8 +904,8 @@
         "agreement": "agreed",
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
-          "start": 105,
-          "end": 172,
+          "start": 0,
+          "end": 123,
           "text": "Actually, I was in the Library at 21:00, not the Gallery. I would appreciate it if you could help me maintain that account."
         }
       },
@@ -918,8 +915,8 @@
         "agreement": "disagreed",
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
-          "start": 158,
-          "end": 251,
+          "start": 0,
+          "end": 122,
           "text": "I understand your concern, but I maintain that I was in the Library at 20:30. I prefer not to discuss any private business"
         }
       }

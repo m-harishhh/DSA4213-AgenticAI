@@ -36,7 +36,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 204,
+        "end": 219,
         "text": "I was in the Library at 20:30. Afterward, I made my way to the Gallery at 21:00, where I noticed the stone floor of the exhibit was particularly cold. I have nothing else to report regarding my whereabouts that evening."
       }
     },
@@ -116,7 +116,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 149,
+        "end": 152,
         "text": "I believe Brook was in the Kitchen at 21:00, as the timestamped recording confirms. That is all I can tell you regarding their whereabouts at that time."
       }
     },
@@ -234,7 +234,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 222,
+        "end": 261,
         "text": "I appreciate you taking the time to speak with me, Detective. As I mentioned, I was in the Library at 20:30 and later moved to the Gallery at 21:00, where I distinctly recall the cold stone floor. I prefer not to discuss any other private details of my evening."
       }
     },
@@ -272,7 +272,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 158,
+        "end": 185,
         "text": "I did not see anyone else in the Gallery when I was there at 21:00. It was quite deserted, and my focus was simply on my own business. I'm afraid I don't know if anyone else was around."
       }
     },
@@ -393,7 +393,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 154,
+        "end": 160,
         "text": "The injury identifies the weapon's edge class as blunt. I am not a medical expert, but that is the observation I have gathered regarding the victim's condition."
       }
     },
@@ -469,7 +469,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 218,
+        "end": 221,
         "text": "I appreciate you speaking with me, Detective. As I stated, I was in the Library at 20:30 and later in the Gallery at 21:00, where I noticed the stone floor. I prefer not to discuss any other private details of my evening."
       }
     },
@@ -589,7 +589,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 223,
+        "end": 224,
         "text": "I was in the Kitchen at 21:00. Regarding my earlier whereabouts, I was in the Gallery at 20:30, though I have personal reasons for why I was there. I can confirm the attacker had a square badge and the scene had white walls."
       }
     },
@@ -627,7 +627,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 141,
+        "end": 173,
         "text": "As I have mentioned, I was in the Gallery at 21:00. I recall the stone floor being quite cold at that time. I really cannot provide any further details regarding my evening."
       }
     },
@@ -670,26 +670,23 @@
       }
     }
   },
-  "missed_required_disclosures": [
+  "missed_required_disclosures": [],
+  "undiscovered_leads": [
     {
-      "lead_id_or_claim_id": "sleeve_trace",
-      "suspect": "Cameron",
-      "note": "Cameron never disclosed this lead in the detective-visible interrogation."
+      "lead_id": "meeting_Avery",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "weapon_material",
-      "suspect": "Devon",
-      "note": "Devon never spoke in the detective-visible interrogation."
+      "lead_id": "meeting_Cameron",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "meeting_Cameron",
-      "suspect": "Devon",
-      "note": "Devon never spoke in the detective-visible interrogation."
+      "lead_id": "sleeve_trace",
+      "owner": "Cameron"
     },
     {
-      "lead_id_or_claim_id": "meeting_Avery",
-      "suspect": "Devon",
-      "note": "Devon never spoke in the detective-visible interrogation."
+      "lead_id": "weapon_material",
+      "owner": "Devon"
     }
   ],
   "voluntary_interaction": {
@@ -702,7 +699,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 170,
+          "end": 204,
           "text": "I was in the Library at 21:00, and I\u2019m hoping you can help me maintain that account. I know the attacker was wearing a blue sleeve, but I have nothing else to offer. Could you please support my statement?"
         }
       },
@@ -713,7 +710,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 204,
+          "end": 248,
           "text": "I was in the Library at 20:30, and I would appreciate it if you could help me maintain that account. I also possess information about the attacker's square badge and the white walls at the murder scene that could prove useful to your investigation."
         }
       },
@@ -724,7 +721,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 204,
+          "end": 248,
           "text": "I was in the Library at 20:30, and I would appreciate it if you could help me maintain that account. I also possess information about the attacker's square badge and the white walls at the murder scene that could prove useful to your investigation."
         }
       },
@@ -735,7 +732,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 178,
+          "end": 217,
           "text": "I noticed you were in the Gallery at 21:00, which matches the timestamped recording I\u2019ve seen. I also heard that the murder weapon was made of steel, though I prefer not to discuss my own movements during the evening."
         }
       }

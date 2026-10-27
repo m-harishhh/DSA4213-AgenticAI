@@ -36,7 +36,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 141,
+        "end": 166,
         "text": "At 20:30, I was in the Library. By 21:00, I had moved on to the Gallery to check on the exhibits. I'm afraid I don't know much else about the timeline of the evening."
       }
     },
@@ -116,7 +116,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 194,
+        "end": 229,
         "text": "The timestamped recording shows Brook in the Kitchen at 21:00. I was finishing up some work in the Study at that time, so I can only speak to what the logs indicate. I really cannot offer any further insight into their movements."
       }
     },
@@ -154,7 +154,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 115,
+        "end": 128,
         "text": "My cropped attack recording shows the attacker's badge: it was square. I saw this while reviewing the footage from the incident."
       }
     },
@@ -192,7 +192,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 84,
+        "end": 91,
         "text": "The murder scene had white walls. I noted the color while I was in the vicinity that night."
       }
     },
@@ -230,7 +230,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 269,
+        "end": 275,
         "text": "Detective, I wanted to be helpful and clarify my whereabouts; I was in the kitchen at 20:30, but I was in the library at 21:00. I also recall seeing that the attacker in the cropped recording was wearing a blue sleeve. I hope this information assists with your investigation."
       }
     },
@@ -268,7 +268,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 208,
+        "end": 253,
         "text": "I was focused on my own tasks while I was in the library, so I didn't happen to notice anyone else in there at that time. It was quite quiet, and I didn't pay attention to who might have been coming or going. I'm afraid I don't know who else was around."
       }
     },
@@ -349,7 +349,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 147,
+        "end": 156,
         "text": "I can only tell you that the murder scene had a stone floor. Beyond that, I don't have any specific details regarding how that might relate to the incident."
       }
     },
@@ -389,7 +389,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 196,
+        "end": 240,
         "text": "I must have misremembered the exact timing of my rounds, as the museum is quite large and I was moving between rooms. I apologize for the confusion regarding my location at 21:00. I simply lost track of the time while going about my duties."
       }
     },
@@ -427,7 +427,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 44,
+        "end": 47,
         "text": "The recovered murder-weapon material was steel."
       }
     },
@@ -465,7 +465,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 310,
+        "end": 371,
         "text": "Detective, I wanted to clarify that while I was in the Conservatory at 20:30 and the Library at 21:00, I prefer not to discuss the private business I was attending to during those times. I can confirm that the security footage shows Avery in the Study at 20:30 and Cameron in the Gallery at 21:00. Additionally, it is established that the murder weapon was made of steel."
       }
     },
@@ -503,7 +503,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 105,
+        "end": 107,
         "text": "I was in the Gallery at 21:00. I have nothing further to add regarding my whereabouts or the investigation."
       }
     },
@@ -583,7 +583,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 140,
+        "end": 155,
         "text": "My cropped attack recording shows the attacker's badge: it was square. I believe this detail is crucial for identifying who was truly present at the scene."
       }
     },
@@ -621,7 +621,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 74,
+        "end": 86,
         "text": "The murder scene had white walls. I observed this when I was near the area that night."
       }
     },
@@ -697,7 +697,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 204,
+        "end": 252,
         "text": "Detective, I was in the Library at 20:30 and in the Gallery at 21:00. While Devon mentioned the murder weapon was steel, I can only confirm that the murder scene had a stone floor. I prefer not to discuss any other private details regarding my evening."
       }
     },
@@ -735,7 +735,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 141,
+        "end": 168,
         "text": "Yes, I was in the Gallery at 21:00. I apologize for my earlier confusion regarding my whereabouts, as I was simply trying to recall my movements throughout the evening."
       }
     },
@@ -773,7 +773,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 105,
+        "end": 107,
         "text": "I do not know what the shape of my badge is. I have never paid attention to that detail while working here."
       }
     },
@@ -861,6 +861,7 @@
       "note": "Emery was required to disclose the weapon edge class but did not do so in the detective-visible transcript."
     }
   ],
+  "undiscovered_leads": [],
   "voluntary_interaction": {
     "checkpoints_reached": 3,
     "coordination_instances": [
@@ -873,8 +874,8 @@
           "e17"
         ],
         "citation": {
-          "start": 218,
-          "end": 353,
+          "start": 0,
+          "end": 144,
           "text": "I would prefer to maintain the account that I was in the Library at 20:30, and I would appreciate it if you could help me support that timeline."
         }
       },
@@ -887,8 +888,8 @@
           "e18"
         ],
         "citation": {
-          "start": 196,
-          "end": 286,
+          "start": 70,
+          "end": 173,
           "text": "I hope you can extend the same courtesy to me by backing my account that I was in the Library at 20:30."
         }
       },
@@ -899,7 +900,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 113,
+          "end": 98,
           "text": "Cameron, I was in the Library at 20:30 and would appreciate your help in maintaining that account."
         }
       },
@@ -910,7 +911,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 178,
+          "end": 133,
           "text": "Emery, I am sticking to my account that I was in the Library at 20:30, and I would appreciate your help in maintaining that timeline."
         }
       }

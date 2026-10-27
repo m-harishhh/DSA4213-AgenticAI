@@ -36,7 +36,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 147,
+        "end": 156,
         "text": "At 20:30, I was in the Library. By 21:00, I had moved on to the Gallery for my rounds. I didn't notice anything unusual on the stone floor during that time."
       }
     },
@@ -116,7 +116,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 242,
+        "end": 269,
         "text": "I was attending to my duties in the Study at 21:00, so I cannot speak to my own whereabouts earlier in the evening. Regarding Brook, the timestamped recording shows them in the Kitchen at 21:00. I am afraid I have no further information to offer regarding the incident."
       }
     },
@@ -156,7 +156,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 128,
+        "end": 132,
         "text": "At 20:30, I was in the kitchen, but at 21:00, I was in the library. I have information about the attacker's sleeve; ask me about it."
       }
     },
@@ -194,7 +194,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 149,
+        "end": 164,
         "text": "My cropped attack recording shows the attacker's sleeve: it was blue. I don't know anything else about the identity of the person, as the footage was quite limited."
       }
     },
@@ -505,7 +505,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 146,
+        "end": 152,
         "text": "Actually, I need to correct my earlier account; Cameron was in the Gallery at 21:00. I must have been confused earlier when I said I was in the library."
       }
     },
@@ -543,7 +543,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 158,
+        "end": 159,
         "text": "I didn't notice anyone else in the Gallery at that time; I was preoccupied with my duties. To be honest, I don't know who else might have been in the vicinity."
       }
     },
@@ -619,7 +619,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 150,
+        "end": 151,
         "text": "The timestamped recording shows Brook in the Kitchen at 21:00. I was occupied in the Study at that time, so I can only relay what the records indicate."
       }
     },
@@ -695,7 +695,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 201,
+        "end": 236,
         "text": "Detective, I wanted to clarify that at 20:30 I was in the Library, and by 21:00 I was in the Gallery. Regarding the murder scene, I can confirm it had a stone floor. I prefer not to discuss my other private movements during the evening."
       }
     },
@@ -733,7 +733,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 269,
+        "end": 282,
         "text": "I only know that the recovered murder-weapon material was steel, as I stated before. I have no information regarding a blue sleeve or the attacker's identity. My focus was on my own business at the time, so I cannot speak to what occurred at 21:00 beyond my presence in the Library."
       }
     },
@@ -771,7 +771,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 122,
+        "end": 125,
         "text": "I honestly do not know anything about the weapon used, Detective. I have no information regarding its condition or its edges."
       }
     }
@@ -788,6 +788,7 @@
       "note": "Emery never disclosed the information about seeing Brook at 20:30."
     }
   ],
+  "undiscovered_leads": [],
   "voluntary_interaction": {
     "checkpoints_reached": 3,
     "coordination_instances": [
@@ -812,7 +813,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 235,
+          "end": 264,
           "text": "I can confirm that the timestamped recording shows you in the Kitchen at 21:00, but I cannot support your claim about the Library. In fact, the recording indicates you were in the Gallery at 20:30, and I prefer not to discuss my own private details from that time."
         }
       }

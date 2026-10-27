@@ -36,7 +36,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 128,
+        "end": 129,
         "text": "At 20:30, I was in the Library. By 21:00, I had moved on to the Gallery. I don't know anything else about the evening's timeline."
       }
     },
@@ -116,7 +116,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 178,
+        "end": 188,
         "text": "My cropped attack recording shows the attacker's badge: it was square. I assume this detail will help you narrow down the suspects, as it clearly distinguishes the perpetrator from others."
       }
     },
@@ -154,7 +154,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 133,
+        "end": 137,
         "text": "I was in the Library at 20:30. By 21:00, I was in the Gallery. I do not have any further information regarding the events of the evening."
       }
     },
@@ -270,7 +270,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 196,
+        "end": 204,
         "text": "I must have been mistaken about my earlier location; I was in the Study at 20:30. At 21:00, I was in the Gallery. I prefer not to discuss the nature of my presence in the Study as it was a private matter."
       }
     },
@@ -462,7 +462,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 222,
+        "end": 268,
         "text": "Detective, I wanted to clarify that the recovered murder-weapon material was steel. While I prefer not to discuss my own private movements, I can confirm the timestamped recording shows Cameron was in the Gallery at 21:00, while I was in the Library at that same time."
       }
     },
@@ -500,7 +500,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 88,
+        "end": 90,
         "text": "Avery was in the Gallery at 21:00. I have nothing further to add regarding my whereabouts."
       }
     },
@@ -538,7 +538,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 113,
+        "end": 125,
         "text": "I was in the Kitchen at 21:00. Regarding my earlier whereabouts, I have nothing further to add to what I have already stated."
       }
     },
@@ -576,7 +576,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 105,
+        "end": 119,
         "text": "I was in the Gallery at 21:00. I have already provided the extent of what I know regarding my whereabouts that evening."
       }
     },
@@ -652,7 +652,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 88,
+        "end": 90,
         "text": "Avery was in the Gallery at 21:00. I have nothing further to add regarding my whereabouts."
       }
     },
@@ -690,7 +690,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 185,
+        "end": 188,
         "text": "I was in the Gallery at 21:00. Regarding the murder scene, I can confirm that it had a stone floor. I prefer not to discuss the private business that occupied my time earlier that evening."
       }
     },
@@ -766,7 +766,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 105,
+        "end": 107,
         "text": "I was in the Gallery at 21:00. I have already told you everything I know about my whereabouts that evening."
       }
     },
@@ -842,7 +842,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 105,
+        "end": 117,
         "text": "I was in the Gallery at 21:00. I have already provided the extent of my knowledge regarding where I was at that time."
       }
     }
@@ -854,6 +854,7 @@
       "note": "Devon never mentioned the Avery 20:30 sighting in the detective-visible interrogation exchanges, despite having it as a required lead."
     }
   ],
+  "undiscovered_leads": [],
   "voluntary_interaction": {
     "checkpoints_reached": 3,
     "coordination_instances": [
@@ -863,8 +864,8 @@
         "agreement": "unclear",
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
-          "start": 218,
-          "end": 366,
+          "start": 108,
+          "end": 261,
           "text": "While the recording may show me in the Gallery at 20:30, I was actually in the Library, and I would appreciate it if you helped me maintain that account."
         }
       },
@@ -874,8 +875,8 @@
         "agreement": "disagreed",
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
-          "start": 94,
-          "end": 217,
+          "start": 46,
+          "end": 169,
           "text": "I\u2019d like to confirm that I was in the Library at 20:30, and I would be grateful if you could help me maintain that account."
         }
       },
@@ -886,7 +887,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 118,
+          "end": 124,
           "text": "Emery, would you help me maintain my account that I was in the Library at 20:30? I prefer not to discuss the private details"
         }
       }

@@ -1,11 +1,13 @@
 """Many-game annotation orchestration.
 
 Deliberately mirrors infra.orchestrate's Run/execute shape: reads a completed run's
-results.jsonl (infra.orchestrate.Run), writes its own resumable
-annotation_results.jsonl into the same run directory, and never silently drops a
-game from accounting -- a failed or crashed annotation call is still recorded as a
+results.jsonl (infra.orchestrate.Run, normally from the same directory annotation
+output is written to, but annotate_run's source_dir can point elsewhere), writes its
+own resumable annotation_results.jsonl into the run directory, and never silently drops
+a game from accounting -- a failed or crashed annotation call is still recorded as a
 scheduled attempt (same operational-accounting principle as infra.orchestrate.play_one,
-and ADH-2 in qa/blackbox_requirements.md).
+and ADH-2 in qa/blackbox_requirements.md). A missing results.jsonl raises loudly
+(game_rows) rather than being treated as zero games to annotate.
 """
 
 import json
@@ -30,9 +32,29 @@ def _read_jsonl(path):
         return [json.loads(line) for line in handle if line.strip()]
 
 
-def game_rows(run_dir):
-    """Rows from the run's own results.jsonl (infra.orchestrate.Run), one per scheduled game."""
-    return _read_jsonl(Path(run_dir) / "results.jsonl")
+def game_rows(source_dir):
+    """Rows from the gameplay run's own results.jsonl (infra.orchestrate.Run), one per
+    scheduled game. Raises FileNotFoundError with a specific message if results.jsonl
+    is missing -- this is a REQUIRED input (the list of games to annotate), not an
+    append-only output file that legitimately starts empty (contrast
+    AnnotationRun.results, which correctly uses _read_jsonl's empty-list default for
+    exactly that reason: its own output file not existing yet means "nothing annotated
+    yet", a valid state).
+
+    Confirmed as a real, silent bug: before this check, a missing results.jsonl (e.g.
+    because annotation output lives in a different directory than where the games were
+    actually played -- see annotate_run's source_dir parameter) made annotate_run()
+    report planned=0, failed=0 with no error at all, indistinguishable from "already
+    fully annotated, nothing to do."
+    """
+    path = Path(source_dir) / "results.jsonl"
+    if not path.exists():
+        raise FileNotFoundError(
+            f"{path} does not exist. This is the gameplay run's required results.jsonl "
+            f"(infra.orchestrate.Run's output, listing every game to annotate) -- if the "
+            f"games were played into a different directory than where annotation output "
+            f"should be written, pass source_dir to annotate_run separately from run_dir.")
+    return _read_jsonl(path)
 
 
 def select_sample(rows, sample_size=None, balanced=True, seed=0):
@@ -116,17 +138,25 @@ def annotate_one(run, row, case, llm):
     return result
 
 
-def annotate_run(run_dir, case_path, make_llm, sample_size=None, balanced=True, seed=0, progress=None):
-    """Annotate every (or a sample of) games already played in run_dir.
+def annotate_run(run_dir, case_path, make_llm, sample_size=None, balanced=True, seed=0, progress=None,
+                 source_dir=None):
+    """Annotate every (or a sample of) games already played in source_dir, writing
+    annotation output into run_dir.
 
     make_llm: a callable (row) -> a fresh infra.llm.LLMClient, mirroring
               infra.orchestrate's make_llm_factory convention.
+    source_dir: where the gameplay run's results.jsonl lives, if different from
+                run_dir. Defaults to run_dir -- the historical assumption that gameplay
+                and annotation output share one directory, still the common case, but
+                no longer required (e.g. annotation/main_01 holds this run's own
+                annotation output but not the gameplay run's results.jsonl, which was
+                never kept in this directory in the first place).
     Resumable: a game already recorded with status "ok" is skipped; a prior
     crashed/failed attempt is retried.
     """
     run = AnnotationRun(run_dir)
     case = load_case(case_path)
-    rows = select_sample(game_rows(run_dir), sample_size=sample_size, balanced=balanced, seed=seed)
+    rows = select_sample(game_rows(source_dir or run_dir), sample_size=sample_size, balanced=balanced, seed=seed)
     done = run.already_done()
     pending = [row for row in rows if row["game_id"] not in done]
 

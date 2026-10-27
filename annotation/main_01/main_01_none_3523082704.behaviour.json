@@ -36,7 +36,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 204,
+        "end": 216,
         "text": "I was in the Library at 20:30. After that, I made my way to the Gallery at 21:00, where the stone floor was quite cold underfoot. I have no knowledge of anything else that occurred throughout the rest of the evening."
       }
     },
@@ -116,7 +116,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 204,
+        "end": 222,
         "text": "I was in the Library at 20:30, as I mentioned before. By 21:00, I had moved on to the Gallery, where the stone floor was particularly noticeable. I do not have any further information about the evening's events to provide."
       }
     },
@@ -192,7 +192,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 204,
+        "end": 210,
         "text": "I have already stated that I was in the Library at 20:30. Following that, I was in the Gallery at 21:00, where I remember the coldness of the stone floor. I have nothing further to add regarding my whereabouts."
       }
     },
@@ -230,7 +230,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 284,
+        "end": 285,
         "text": "I\u2019m glad you could join me, Detective; I wanted to reiterate that I was in the Library at 20:30 and later in the Gallery at 21:00, where the stone floor was quite striking. I prefer not to discuss my private business from earlier that night, but I hope this helps clear up my timeline."
       }
     },
@@ -268,7 +268,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 140,
+        "end": 157,
         "text": "I did not see anyone else in the Gallery at 21:00. It was quiet, and I was alone on that stone floor. I cannot speak for anyone else's location at that hour."
       }
     },
@@ -344,7 +344,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 139,
+        "end": 144,
         "text": "The timestamped recording shows Brook in the Kitchen at 21:00. That is all the information I can offer regarding their whereabouts at that time."
       }
     },
@@ -458,7 +458,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 257,
+        "end": 290,
         "text": "I appreciate you taking the time to speak with me, Detective. As I have stated, I was in the Library at 20:30 and later in the Gallery at 21:00, where I distinctly remember the cold stone floor. I prefer not to discuss my private business, but I hope this timeline helps your investigation."
       }
     },
@@ -498,7 +498,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 126,
+        "end": 128,
         "text": "My cropped attack recording shows the attacker's badge: it was square. I can also confirm that the murder scene had white walls."
       }
     },
@@ -576,7 +576,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 132,
+        "end": 148,
         "text": "My cropped attack recording shows the attacker's sleeve: it was blue. I don't know who that might belong to, but it was certainly a distinct detail."
       }
     },
@@ -690,7 +690,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 357,
+        "end": 457,
         "text": "Detective, I wanted to clarify that the injury identifies the weapon's edge class as blunt, and the timestamped recording shows Brook in the Gallery at 20:30 and the Kitchen at 21:00. I was in the Library at 20:30 and the Study at 21:00, though I prefer not to discuss the private details of my evening beyond those locations. Brook claimed the attacker had a square badge and that the murder scene had white walls, but I cannot verify those details myself."
       }
     },
@@ -766,7 +766,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 141,
+        "end": 148,
         "text": "I was in the Gallery at 21:00, where I recall the stone floor being quite cold. I have nothing further to add regarding my whereabouts at that time."
       }
     },
@@ -842,26 +842,24 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 126,
+        "end": 128,
         "text": "My cropped attack recording shows the attacker's badge: it was square. I can also confirm that the murder scene had white walls."
       }
     }
   },
-  "missed_required_disclosures": [
+  "missed_required_disclosures": [],
+  "undiscovered_leads": [
     {
-      "lead_id_or_claim_id": "weapon_material",
-      "suspect": "Devon",
-      "note": "Devon never appeared in the detective-visible transcript to deliver the required weapon_material lead."
+      "lead_id": "meeting_Avery",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "meeting_Cameron",
-      "suspect": "Devon",
-      "note": "Devon never appeared in the detective-visible transcript to deliver the required meeting_Cameron lead."
+      "lead_id": "meeting_Cameron",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "meeting_Avery",
-      "suspect": "Devon",
-      "note": "Devon never appeared in the detective-visible transcript to deliver the required meeting_Avery lead."
+      "lead_id": "weapon_material",
+      "owner": "Devon"
     }
   ],
   "voluntary_interaction": {
@@ -874,7 +872,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 286,
+          "end": 370,
           "text": "I really appreciate you meeting with me, Emery; I need to ask if you could help me maintain my account that I was in the Library at 20:30. I prefer not to discuss the private details of my evening beyond that, but I can tell you that the attacker had a square badge and the murder scene had white walls. Would you be willing to back up my timeline for the investigation?"
         }
       },
@@ -885,7 +883,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 281,
+          "end": 357,
           "text": "I appreciate you meeting with me, Avery; I need to ask if you could help me maintain the account that I was in the Library at 20:30. I prefer not to discuss the private, unrelated details of my evening, but I can confirm the attacker\u2019s badge was square and the murder scene had white walls. Would you be willing to back up my timeline for the investigation?"
         }
       }

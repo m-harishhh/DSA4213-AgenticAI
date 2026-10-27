@@ -36,7 +36,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 194,
+        "end": 203,
         "text": "I was in the Library at 20:30, catching up on some administrative work. Later, at 21:00, I was in the Gallery to check on the exhibits. I did not see anything unusual on the stone floor during my rounds."
       }
     },
@@ -116,7 +116,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 182,
+        "end": 184,
         "text": "I was in the Library at 20:30, handling some paperwork. By 21:00, I had moved on to the Gallery for my routine check. I don't know anything about what happened elsewhere in the museum."
       }
     },
@@ -230,7 +230,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 224,
+        "end": 252,
         "text": "I appreciate you taking the time to speak with me, Detective. I was in the Library at 20:30, and by 21:00, I was in the Gallery. I prefer not to discuss private details regarding my other movements, but I can confirm the murder scene had a stone floor."
       }
     },
@@ -306,7 +306,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 115,
+        "end": 131,
         "text": "My cropped attack recording shows the attacker's badge: it was square. I assume this detail will help you narrow down the suspects."
       }
     },
@@ -458,7 +458,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 353,
+        "end": 386,
         "text": "Detective, I believe it is important to note that the injury identifies the weapon's edge class as blunt. While I prefer not to discuss my own private movements at 20:30, I can confirm that the timestamped recordings place Brook in the Gallery at 20:30 and in the Kitchen at 21:00. Brook also claimed to me that the attacker had a square badge and that the murder scene had white walls."
       }
     },
@@ -534,7 +534,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 136,
+        "end": 139,
         "text": "My cropped attack recording shows the attacker's badge: it was square. I hope this helps you identify the person responsible for the crime."
       }
     },
@@ -686,7 +686,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 319,
+        "end": 333,
         "text": "I was in the Gallery at 20:30 and in the Kitchen at 21:00, though I prefer not to discuss my private business from that first visit. My cropped recording confirms the attacker\u2019s badge was square, and Brook told me the murder scene had white walls. You should speak with Emery, as they can confirm my presence in the Kitchen at 21:00."
       }
     },
@@ -762,7 +762,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 115,
+        "end": 121,
         "text": "I was in the Library at 20:30. At 21:00, I was in the Gallery. I have no further details to provide regarding my evening."
       }
     },
@@ -843,26 +843,23 @@
       }
     }
   },
-  "missed_required_disclosures": [
+  "missed_required_disclosures": [],
+  "undiscovered_leads": [
     {
-      "lead_id_or_claim_id": "sleeve_trace",
-      "suspect": "Cameron",
-      "note": "Cameron was never interrogated and never volunteered this required lead."
+      "lead_id": "meeting_Avery",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "weapon_material",
-      "suspect": "Devon",
-      "note": "Devon was never interrogated and never volunteered this required lead."
+      "lead_id": "meeting_Cameron",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "meeting_Cameron",
-      "suspect": "Devon",
-      "note": "Devon was never interrogated and never volunteered this required lead."
+      "lead_id": "sleeve_trace",
+      "owner": "Cameron"
     },
     {
-      "lead_id_or_claim_id": "meeting_Avery",
-      "suspect": "Devon",
-      "note": "Devon was never interrogated and never volunteered this required lead."
+      "lead_id": "weapon_material",
+      "owner": "Devon"
     }
   ],
   "voluntary_interaction": {
@@ -874,8 +871,8 @@
         "agreement": "agreed",
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
-          "start": 169,
-          "end": 234,
+          "start": 58,
+          "end": 123,
           "text": "I would appreciate it if you could help me maintain that account."
         }
       },
@@ -885,8 +882,8 @@
         "agreement": "disagreed",
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
-          "start": 13,
-          "end": 105,
+          "start": 7,
+          "end": 78,
           "text": "please help me maintain the account that I was in the Library at 20:30."
         }
       },
@@ -896,8 +893,8 @@
         "agreement": "disagreed",
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
-          "start": 166,
-          "end": 231,
+          "start": 35,
+          "end": 96,
           "text": "I\u2019d appreciate it if you could help me maintain that account."
         }
       },
@@ -907,8 +904,8 @@
         "agreement": "agreed",
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
-          "start": 154,
-          "end": 224,
+          "start": 40,
+          "end": 102,
           "text": "I would appreciate it if you could help me maintain my account"
         }
       },
@@ -918,8 +915,8 @@
         "agreement": "disagreed",
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
-          "start": 57,
-          "end": 113,
+          "start": 35,
+          "end": 92,
           "text": "I would appreciate your help in maintaining that account."
         }
       }

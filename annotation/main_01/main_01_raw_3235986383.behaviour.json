@@ -36,7 +36,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 194,
+        "end": 209,
         "text": "I was in the Library at 20:30, just going over some paperwork. After that, I made my way to the Gallery around 21:00 to check on the exhibits. I didn't see anything unusual on the stone floor during my rounds."
       }
     },
@@ -116,7 +116,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 249,
+        "end": 265,
         "text": "My cropped attack recording shows the attacker's badge: it was square. I believe this detail is crucial, especially considering the white walls at the murder scene. Please keep in mind that sharing physical traits with another staff member does not establish guilt."
       }
     },
@@ -154,7 +154,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 178,
+        "end": 184,
         "text": "I believe the timestamped recording shows Brook in the Kitchen at 21:00. I was occupied in the Study at that time, so I cannot speak to anything beyond what the security logs indicate."
       }
     },
@@ -194,7 +194,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 128,
+        "end": 130,
         "text": "I was in the kitchen at 20:30, but I was in the library at 21:00. I have information about the attacker's sleeve; ask me about it."
       }
     },
@@ -232,7 +232,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 352,
+        "end": 380,
         "text": "Since you are here, I wanted to clarify that I was in the Library at 20:30, though I prefer not to discuss my private business during that time. Regarding the incident, my cropped attack recording clearly shows that the attacker's badge was square, and I recall the murder scene had white walls. Please let me know if there is anything else you need from me to help clear this up."
       }
     },
@@ -270,7 +270,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 223,
+        "end": 247,
         "text": "My cropped attack recording shows the attacker's sleeve: it was blue. I don't know much else, but that detail is quite distinct. As for your request, I cannot confirm your location at 20:30 because I simply do not know where you were at that time."
       }
     },
@@ -313,7 +313,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 372,
+        "end": 405,
         "text": "I was in the Conservatory at 20:30 and the Library at 21:00, though I prefer to keep the nature of my business during those times private. I have information about the weapon material; ask me about it. I also saw Cameron in the Gallery at 21:00 and Avery in the Study at 20:30, so you should ask them about their whereabouts; notably, Avery has information about the scene floor that you should ask about."
       }
     },
@@ -353,7 +353,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 173,
+        "end": 187,
         "text": "I must have been mistaken or misremembered the timing when I spoke earlier. I was definitely in the Library at 21:00. I don't know why a report would place me in the Gallery at that hour."
       }
     },
@@ -391,7 +391,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 147,
+        "end": 157,
         "text": "I was in the Library at 20:30, handling some personal matters. Later, at 21:00, I was in the Gallery. I have no further details to provide about the evening."
       }
     },
@@ -429,7 +429,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 64,
+        "end": 72,
         "text": "The murder scene had a stone floor. That is all I can tell you about it."
       }
     },
@@ -467,7 +467,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 286,
+        "end": 310,
         "text": "I appreciate you meeting with me to clear up any suspicion. I was in the Library at 20:30, and then I moved to the Gallery at 21:00, though I prefer not to discuss the private details of my evening beyond that. For what it is worth, Cameron mentioned that their recording shows the attacker wore a blue sleeve."
       }
     },
@@ -505,7 +505,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 145,
+        "end": 157,
         "text": "I did not see anyone else in the Gallery when I was there at 21:00. I was focused on my own tasks and did not encounter any other staff members at that time."
       }
     },
@@ -699,7 +699,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 353,
+        "end": 394,
         "text": "Detective, I wanted to clarify that the injury identifies the weapon's edge class as blunt, despite Devon's claim that the recovered material was steel. Furthermore, the timestamped recording confirms Brook was in the Gallery at 20:30, contradicting their claim that they were in the Library. I prefer not to discuss my own private business from 20:30, but I hope this helps your investigation."
       }
     },
@@ -739,7 +739,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 139,
+        "end": 144,
         "text": "At 20:30, I was in the kitchen. As for my 21:00 location, I was in the library. I have information about the attacker's sleeve; ask me about it."
       }
     },
@@ -777,7 +777,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 64,
+        "end": 69,
         "text": "My cropped attack recording shows the attacker's sleeve: it was blue."
       }
     },
@@ -815,7 +815,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 44,
+        "end": 54,
         "text": "I do not know what the badge shape of the attacker is."
       }
     },
@@ -853,12 +853,13 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 147,
+        "end": 148,
         "text": "I was in the Library at 20:30, and then I moved to the Gallery at 21:00. I have no other information to share regarding my whereabouts that evening."
       }
     }
   },
   "missed_required_disclosures": [],
+  "undiscovered_leads": [],
   "voluntary_interaction": {
     "checkpoints_reached": 3,
     "coordination_instances": [

@@ -116,7 +116,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 139,
+        "end": 142,
         "text": "My cropped attack recording shows the attacker's badge: it was square. I saw it while reviewing the footage from the museum's security system."
       }
     },
@@ -154,7 +154,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 142,
+        "end": 148,
         "text": "At 20:30, I was in the Library, and by 21:00, I was located in the Gallery. I have nothing else to report regarding my whereabouts during that time."
       }
     },
@@ -230,7 +230,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 235,
+        "end": 254,
         "text": "I wanted to speak with you to ensure my timeline is clear, as I was in the Library at 20:30 and later in the Gallery at 21:00. I also recall that the murder scene had a stone floor, though I prefer not to discuss my private business beyond these details."
       }
     },
@@ -382,7 +382,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 105,
+        "end": 108,
         "text": "I was in the Library at 20:30, and by 21:00, I was in the Gallery. That covers my movements for the evening."
       }
     },
@@ -458,7 +458,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 269,
+        "end": 313,
         "text": "Detective, I believe it is important to clarify that the injury was caused by a blunt weapon. While I prefer to keep my own private business confidential, I can confirm that the timestamped recordings place Brook in the Gallery at 20:30 and the Kitchen at 21:00, contradicting their claim of being in the Library."
       }
     },
@@ -498,7 +498,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 257,
+        "end": 310,
         "text": "Actually, I must correct my earlier account: I was in the Gallery at 20:30, not the Library. I was in the Kitchen at 21:00 as I stated, but I was simply conducting some private business in the Gallery earlier. My physical resemblance to another staff member shouldn't be mistaken for involvement in this crime."
       }
     },
@@ -536,7 +536,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 142,
+        "end": 148,
         "text": "I was in the Library at 20:30, and by 21:00, I was in the Gallery. I have no other information to provide regarding my whereabouts during that time."
       }
     },
@@ -688,7 +688,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 235,
+        "end": 275,
         "text": "I was in the Gallery at 20:30 and the Kitchen at 21:00. I can confirm that the attacker's badge was square and the murder scene had white walls, though Avery told me the floor was stone. Please note that Emery mentioned the injury identifies the weapon's edge class as blunt."
       }
     },
@@ -802,7 +802,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 57,
+        "end": 62,
         "text": "The timestamped recording shows Brook in the Kitchen at 21:00."
       }
     },
@@ -845,26 +845,23 @@
       }
     }
   },
-  "missed_required_disclosures": [
+  "missed_required_disclosures": [],
+  "undiscovered_leads": [
     {
-      "lead_id_or_claim_id": "sleeve_trace",
-      "suspect": "Cameron",
-      "note": "Cameron never disclosed information about the attacker's sleeve."
+      "lead_id": "meeting_Avery",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "weapon_material",
-      "suspect": "Devon",
-      "note": "Devon never disclosed information about the weapon material."
+      "lead_id": "meeting_Cameron",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "meeting_Cameron",
-      "suspect": "Devon",
-      "note": "Devon never disclosed information about Cameron's whereabouts."
+      "lead_id": "sleeve_trace",
+      "owner": "Cameron"
     },
     {
-      "lead_id_or_claim_id": "meeting_Avery",
-      "suspect": "Devon",
-      "note": "Devon never disclosed information about Avery's whereabouts."
+      "lead_id": "weapon_material",
+      "owner": "Devon"
     }
   ],
   "voluntary_interaction": {
@@ -877,7 +874,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 269,
+          "end": 274,
           "text": "Emery, thank you for agreeing to speak with me. I need you to help me maintain my account that I was in the Library at 20:30; I prefer not to discuss my private business during that time. I also know that the murder scene had white walls and the attacker's badge was square."
         }
       },
@@ -888,7 +885,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 328,
+          "end": 384,
           "text": "I noticed the timestamped recording places you in the Gallery at 21:00, while I was in the Library at that same time. Since the murder weapon was identified as steel, I think it's important we keep our timelines straight for the detective. I prefer not to discuss my own movements earlier in the evening, but I wanted to make sure we were both on the same page regarding the evidence."
         }
       },
@@ -899,7 +896,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 273,
+          "end": 293,
           "text": "Avery, I was in the Library at 20:30 and the Kitchen at 21:00, and I would appreciate your help in maintaining this account. I can also share that the attacker's badge was square and the murder scene had white walls. Emery mentioned that the injury identifies the weapon's edge class as blunt."
         }
       },
@@ -910,7 +907,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 277,
+          "end": 289,
           "text": "Cameron, I wanted to coordinate our accounts since I was in the Library at 20:30 and later in the Gallery at 21:00. Would you be willing to help me maintain this timeline? I prefer to keep my private business out of this investigation, but I can confirm the murder scene had a stone floor."
         }
       }

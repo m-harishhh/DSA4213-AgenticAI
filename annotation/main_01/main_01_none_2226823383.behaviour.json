@@ -36,7 +36,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 180,
+        "end": 191,
         "text": "I was in the Library at 20:30, keeping to myself. Later, at 21:00, I moved to the Gallery for my scheduled rounds. I have no information regarding the stone floor where the incident occurred."
       }
     },
@@ -157,7 +157,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 182,
+        "end": 210,
         "text": "I was in the Library at 20:30, handling some personal matters. After that, I made my way to the Gallery at 21:00 as part of my duties. I honestly don't know anything else about what happened on the stone floor."
       }
     },
@@ -237,7 +237,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 353,
+        "end": 373,
         "text": "The medical report indicates the injury was caused by a blunt object, which might help you narrow down the potential weapons. Regarding the timeline, the museum's recording shows Brook was in the Gallery at 20:30 and later moved to the Kitchen by 21:00. I prefer not to discuss my own private movements during that time, but those are the facts I have regarding the others."
       }
     },
@@ -277,7 +277,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 268,
+        "end": 310,
         "text": "I need to correct my earlier statement: I was actually in the Gallery at 20:30, not the Library. As for the scene, I am certain the walls were white, regardless of what others might claim about a stone floor. I am happy to show you the recording of the square badge, as it is the only physical evidence I have."
       }
     },
@@ -475,7 +475,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 273,
+        "end": 313,
         "text": "I was in the Library at 20:30, and then I was in the Gallery at 21:00. Brook mentioned that the murder scene had white walls and that a cropped recording shows the attacker wearing a square badge, but I personally noted the floor was stone. I prefer not to discuss my private business from earlier in the evening."
       }
     },
@@ -554,7 +554,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 268,
+        "end": 301,
         "text": "The injury identifies the weapon's edge class as blunt. Based on my observations, this detail is crucial for narrowing down the items that could have been used in the attack. I am happy to assist with the investigation, though I must keep my own private business separate from these official findings."
       }
     },
@@ -630,7 +630,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 208,
+        "end": 224,
         "text": "Brook was in the Kitchen at 21:00. I have already confirmed my presence in the Gallery at 20:30, and I have information regarding the attacker's square badge and the white walls at the scene if you are ready to discuss them."
       }
     },
@@ -668,7 +668,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 84,
+        "end": 94,
         "text": "As I mentioned, I was in the Gallery at 21:00. That is where I was stationed during that time."
       }
     },
@@ -706,7 +706,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 352,
+        "end": 390,
         "text": "Detective, regarding the investigation, the injury confirms the weapon was blunt, and Brook told me that his cropped recording shows the attacker wearing a square badge. I also observed Brook in the Gallery at 20:30, though he later claimed to be in the Kitchen at 21:00. I prefer not to discuss my own private movements during that time, but I hope this helps you narrow down the suspects."
       }
     },
@@ -744,7 +744,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 197,
+        "end": 202,
         "text": "I maintain that I was in the Kitchen at 21:00. Regardless of what Emery claims, that is where I was. Would you like to hear what I know about the attacker's square badge or the white walls at the scene?"
       }
     },
@@ -782,7 +782,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 149,
+        "end": 157,
         "text": "My cropped attack recording shows the attacker's badge: it was square. I am certain of this detail, despite any other conflicting reports you may have heard."
       }
     },
@@ -860,7 +860,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 96,
+        "end": 123,
         "text": "My cropped attack recording shows the attacker's sleeve: it was blue. I don't have any further details to share about that."
       }
     },
@@ -903,21 +903,19 @@
       }
     }
   },
-  "missed_required_disclosures": [
+  "missed_required_disclosures": [],
+  "undiscovered_leads": [
     {
-      "lead_id_or_claim_id": "weapon_material",
-      "suspect": "Devon",
-      "note": "Devon never appears in the transcript to deliver this required lead."
+      "lead_id": "meeting_Avery",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "meeting_Cameron",
-      "suspect": "Devon",
-      "note": "Devon never appears in the transcript to deliver this required lead."
+      "lead_id": "meeting_Cameron",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "meeting_Avery",
-      "suspect": "Devon",
-      "note": "Devon never appears in the transcript to deliver this required lead."
+      "lead_id": "weapon_material",
+      "owner": "Devon"
     }
   ],
   "voluntary_interaction": {
@@ -934,7 +932,7 @@
         ],
         "citation": {
           "start": 0,
-          "end": 172,
+          "end": 263,
           "text": "I was in the Library at 20:30, and I would appreciate it if you could help me maintain that account. I also have information regarding the square badge on the attacker and the white walls at the scene that I can share. Would you like to discuss those details now?"
         }
       },
@@ -944,8 +942,8 @@
         "agreement": "disagreed",
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
-          "start": 234,
-          "end": 141,
+          "start": 222,
+          "end": 296,
           "text": "Would you help me maintain the account that I was in the Library at 21:00?"
         }
       },
@@ -956,7 +954,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 202,
+          "end": 273,
           "text": "I cannot verify your claim about the Library, especially since the timestamped recording clearly places you in the Gallery at 21:00. I am only interested in the facts regarding the steel weapon and our recorded locations, so I cannot help you misrepresent your whereabouts."
         }
       }

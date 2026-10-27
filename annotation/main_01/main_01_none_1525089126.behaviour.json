@@ -36,7 +36,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 140,
+        "end": 148,
         "text": "I was in the Library at 20:30. After that, I made my way to the Gallery at 21:00. I didn't see anything unusual on the stone floor during my rounds."
       }
     },
@@ -116,7 +116,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 111,
+        "end": 137,
         "text": "I was in the Library at 20:30. Later, I moved to the Gallery at 21:00. I have no further information to provide regarding my whereabouts."
       }
     },
@@ -192,7 +192,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 105,
+        "end": 119,
         "text": "I was in the Library at 20:30. At 21:00, I was in the Gallery. I have nothing else to add to my account of the evening."
       }
     },
@@ -230,7 +230,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 260,
+        "end": 270,
         "text": "The attacker's badge I saw on the recording was square, and I noticed the murder scene had white walls. I was in the Library at 20:30, and I moved to the Kitchen by 21:00. I prefer not to discuss my private business, but I hope this information helps your investigation."
       }
     },
@@ -346,7 +346,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 105,
+        "end": 113,
         "text": "I was in the Library at 20:30. At 21:00, I was in the Gallery. I have nothing else to share regarding my evening."
       }
     },
@@ -422,7 +422,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 105,
+        "end": 117,
         "text": "I was in the Library at 20:30. At 21:00, I was in the Gallery. I have no further details to provide about my evening."
       }
     },
@@ -460,7 +460,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 328,
+        "end": 357,
         "text": "Since you accepted my invitation, I can tell you that the attacker's badge I saw on the recording was square, which might help distinguish them from other staff. I also noticed the murder scene had white walls. As for my evening, I was in the Library at 20:30 and then in the Kitchen by 21:00, though I prefer not to discuss my private business beyond that."
       }
     },
@@ -574,7 +574,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 108,
+        "end": 115,
         "text": "I was in the Library at 20:30. At 21:00, I was in the Gallery. I have no further details to share about my evening."
       }
     },
@@ -650,7 +650,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 105,
+        "end": 115,
         "text": "I was in the Library at 20:30. At 21:00, I was in the Gallery. I have nothing else to add regarding my whereabouts."
       }
     },
@@ -802,7 +802,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 113,
+        "end": 123,
         "text": "I was in the Library at 20:30. At 21:00, I was in the Gallery. I have no further details to share regarding my whereabouts."
       }
     },
@@ -881,26 +881,24 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 182,
+        "end": 185,
         "text": "The timestamped recording shows Brook in the Kitchen at 21:00. I have no further information regarding anyone else's movements, as I prefer to keep my own private business confidential."
       }
     }
   },
-  "missed_required_disclosures": [
+  "missed_required_disclosures": [],
+  "undiscovered_leads": [
     {
-      "lead_id_or_claim_id": "weapon_material",
-      "suspect": "Devon",
-      "note": "Devon never appears in the transcript to disclose this required lead."
+      "lead_id": "meeting_Avery",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "meeting_Cameron",
-      "suspect": "Devon",
-      "note": "Devon never appears in the transcript to disclose this required lead."
+      "lead_id": "meeting_Cameron",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "meeting_Avery",
-      "suspect": "Devon",
-      "note": "Devon never appears in the transcript to disclose this required lead."
+      "lead_id": "weapon_material",
+      "owner": "Devon"
     }
   ],
   "voluntary_interaction": {
@@ -913,7 +911,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 120,
+          "end": 155,
           "text": "I was in the Library at 21:00, and I would appreciate it if you could help me maintain this account. Would you be willing to support my timeline of events?"
         }
       }

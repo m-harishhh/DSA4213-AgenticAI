@@ -36,7 +36,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 185,
+        "end": 189,
         "text": "I was in the Library at 20:30, handling some routine cataloging work. Later, at 21:00, I moved to the Gallery to check on the exhibits. I did not notice anything unusual during those hours."
       }
     },
@@ -116,7 +116,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 196,
+        "end": 199,
         "text": "I was in the Library at 20:30, as I mentioned previously. After that, I spent time in the Gallery around 21:00 to perform my rounds. I really don't know anything else about the events of the evening."
       }
     },
@@ -154,7 +154,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 260,
+        "end": 273,
         "text": "I was in the Library at 20:30, and then I was in the Kitchen at 21:00. I have information about the attacker's badge and the scene walls; please ask me about those. You should also know that Emery has information about my whereabouts at 21:00; you should ask them about it."
       }
     },
@@ -192,7 +192,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 204,
+        "end": 218,
         "text": "I have already told you that I was in the Library at 20:30 and later in the Gallery at 21:00. I have nothing further to add regarding my whereabouts. I simply do not know anything else about what happened that evening."
       }
     },
@@ -230,7 +230,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 313,
+        "end": 344,
         "text": "I noticed the attacker\u2019s badge in the cropped recording was square, and the murder took place against the white walls of the gallery. While I was in the Library at 20:30 and the Kitchen at 21:00, I prefer not to discuss my private movements during those gaps. If you need confirmation of my presence in the kitchen, you should speak with Emery."
       }
     },
@@ -268,7 +268,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 223,
+        "end": 231,
         "text": "The timestamped recording shows Brook in the Kitchen at 21:00. I cannot speak to anyone else's movements beyond what the security logs confirm. My own whereabouts at that time were in the Study, attending to my professional duties."
       }
     },
@@ -306,7 +306,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 197,
+        "end": 199,
         "text": "At 20:30, I was in the Library attending to some personal paperwork. By 21:00, I had moved to the Gallery to finish my rounds for the night. I have no other information to offer regarding my evening."
       }
     },
@@ -420,7 +420,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 204,
+        "end": 205,
         "text": "I was in the Library at 20:30, and then I moved to the Gallery at 21:00 for my rounds. I have already provided this information and have nothing else to add. I simply do not know anything about the murder."
       }
     },
@@ -458,7 +458,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 269,
+        "end": 272,
         "text": "I wanted to clarify that the injury identifies the weapon's edge class as blunt, which might help narrow down your search. As for my own movements, I was in the Library at 20:30 and the Study at 21:00, though I prefer not to discuss my private business during those hours."
       }
     },
@@ -572,7 +572,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 232,
+        "end": 234,
         "text": "I did not see anyone near the Study at 21:00, as I was occupied with my own work. Regarding Brook, the timestamped recording shows Brook in the Kitchen at 21:00. I have no further information on where others were located at that time."
       }
     },
@@ -686,7 +686,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 339,
+        "end": 384,
         "text": "Detective, I feel it is important to clarify that I was in the Library at 21:00, which contradicts Cameron\u2019s claim that they were there at that same time. Additionally, the timestamped recording confirms Cameron was actually in the Gallery at 21:00. I prefer not to discuss my own private movements during the rest of the evening, but I felt you needed to know about this discrepancy."
       }
     },
@@ -724,7 +724,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 204,
+        "end": 228,
         "text": "I must have been mistaken about the time I spent in the library. I was in the kitchen at 20:30, but my recollection of the later hour seems to be confused. I really don't know why the recording places me in the gallery at 21:00."
       }
     },
@@ -762,7 +762,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 155,
+        "end": 157,
         "text": "I was in the Library at 20:30, and then I moved to the Gallery at 21:00 for my rounds. I have already provided this information and have nothing else to add."
       }
     },
@@ -850,6 +850,7 @@
       "note": "Cameron never disclosed information about the attacker's sleeve despite being the owner of this required lead."
     }
   ],
+  "undiscovered_leads": [],
   "voluntary_interaction": {
     "checkpoints_reached": 3,
     "coordination_instances": [
@@ -860,7 +861,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 211,
+          "end": 274,
           "text": "Avery, I\u2019m glad you\u2019re here to help me maintain my account that I was in the Library at 20:30. I prefer not to discuss my private business, but I can confirm that the attacker\u2019s badge in my recording was square and the murder occurred against the white walls of the gallery."
         }
       },
@@ -871,7 +872,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 269,
+          "end": 322,
           "text": "Emery, I\u2019m glad we\u2019re speaking; could you please help me maintain the account that I was in the Library at 20:30? I prefer not to discuss my private details, but I can confirm that the attacker's badge in my recording was square. I also recall the murder scene had white walls, though Avery mentioned it had a stone floor."
         }
       }

@@ -1,10 +1,14 @@
-"""Run from repo root: python qa/aggregate_annotation_results.py <run_dir>
+"""Run from repo root: python qa/aggregate_annotation_results.py <run_dir> [--source-dir DIR]
 
 Aggregates one annotated run directory's behavioural annotation output
 (<run_dir>/*.behaviour.json, written by annotation.pipeline.annotate_game) by
-condition, joined against <run_dir>/results.jsonl for the gameplay outcome (solved or
-not, attempts used). Prints a per-condition summary table and writes it to
-<run_dir>/annotation_aggregate.json for downstream use.
+condition, joined against <source_dir>/results.jsonl for the gameplay outcome (solved
+or not, attempts used) and <source_dir>/<game_id>.jsonl for the repeat_kind QA check.
+--source-dir defaults to run_dir (the historical assumption that gameplay and
+annotation output share one directory), but can point elsewhere -- e.g. annotation
+output written to annotation/main_01 while the games that produced it were played into
+a different run directory. A missing results.jsonl raises a clear error (see
+load_results) rather than silently reporting zero games.
 
 Deliberately does NOT compute evidence coverage or contradiction precision/recall
 (casework.diagnostics.evidence_diagnostics / contradiction_diagnostics) for real-run
@@ -32,6 +36,16 @@ repeated_question.is_repeat field (not the kind split) was separately validated 
 ~95-97% throughout and is not affected by this -- only the unnecessary/
 expired_evidence_recovery split should be treated with real caution, especially for
 condition=none, until this is investigated further.
+
+repeated_question_rate_per_interrogation uses interrogations_used (the gameplay row's
+own count of interrogation-kind exchanges) as its denominator, per the proposal's
+definition of the metric. repeated_question_rate (kept alongside it, unchanged) uses
+exchanges_labelled instead -- every detective-visible exchange, including voluntary
+disclosures, which structurally can never be a repeated question
+(annotation.prompts.candidate_repeat_distances only ever considers interrogation-kind
+exchanges) -- so that denominator dilutes the rate below the proposal's intended
+reading. Report the _per_interrogation figure when citing this metric; the original is
+kept only for continuity with earlier runs that only have it.
 """
 
 import json
@@ -47,9 +61,20 @@ from infra.eventlog import read_events  # noqa: E402
 from annotation.prompts import candidate_repeat_distances, memory_k  # noqa: E402
 
 
-def load_results(run_dir):
+def load_results(source_dir):
+    """Rows from the gameplay run's results.jsonl. Raises FileNotFoundError with a
+    specific message if it's missing -- this is a required input (which games to
+    aggregate), not something that can legitimately be empty, so it must not be
+    confused with "this run has zero games" (same principle as
+    annotation.orchestrate.game_rows, which has the matching live-annotation bug)."""
+    path = Path(source_dir) / "results.jsonl"
+    if not path.exists():
+        raise FileNotFoundError(
+            f"{path} does not exist. This is the gameplay run's required results.jsonl "
+            f"-- if annotation output lives in a different directory than where the "
+            f"games were played, pass --source-dir separately from the run_dir argument.")
     rows = {}
-    with open(run_dir / "results.jsonl", encoding="utf-8") as handle:
+    with path.open(encoding="utf-8") as handle:
         for line in handle:
             row = json.loads(line)
             rows[row["game_id"]] = row
@@ -120,6 +145,7 @@ def per_game_behaviour_stats(behaviour):
         "follow_up_relevant": follow_up_relevant,
         "follow_up_off_target": follow_up_off_target,
         "missed_required_disclosures": len(behaviour["missed_required_disclosures"]),
+        "undiscovered_leads": len(behaviour.get("undiscovered_leads", [])),
         "checkpoints_reached": behaviour["voluntary_interaction"]["checkpoints_reached"],
         "coordination_instances_total": len(coord),
         "coordination_agreed": coord_agreement.get("agreed", 0),
@@ -132,8 +158,13 @@ def mean(values):
     return statistics.mean(values) if values else None
 
 
-def aggregate(run_dir):
-    results = load_results(run_dir)
+def aggregate(run_dir, source_dir=None):
+    """run_dir: where *.behaviour.json / annotation_aggregate.json live. source_dir:
+    where the gameplay run's results.jsonl and *.jsonl logs live, if different from
+    run_dir (defaults to run_dir)."""
+    run_dir = Path(run_dir)
+    source_dir = Path(source_dir) if source_dir else run_dir
+    results = load_results(source_dir)
     per_game = []
     missing_behaviour = []
 
@@ -144,18 +175,26 @@ def aggregate(run_dir):
             continue
         behaviour = json.loads(behaviour_path.read_text(encoding="utf-8"))
         stats = per_game_behaviour_stats(behaviour)
-        repeat_kind_correct, repeat_kind_wrong = repeat_kind_qa(run_dir / f"{game_id}.jsonl", behaviour)
+        repeat_kind_correct, repeat_kind_wrong = repeat_kind_qa(source_dir / f"{game_id}.jsonl", behaviour)
+        interrogations_used = row.get("interrogations_used")
+        repeated_question_total = stats["repeat_unnecessary"] + stats["repeat_expired_evidence_recovery"]
         stats.update({
             "game_id": game_id,
             "condition": row["condition"],
             "outcome": row.get("outcome"),
             "first_accusation_correct": row.get("first_accusation_correct"),
             "attempts_used": row.get("attempts_used"),
-            "interrogations_used": row.get("interrogations_used"),
+            "interrogations_used": interrogations_used,
             "exchanges_total": row.get("exchanges_total"),
             "gameplay_cost_usd": row.get("cost_usd"),
             "repeat_kind_qa_correct": repeat_kind_correct,
             "repeat_kind_qa_wrong": repeat_kind_wrong,
+            # Per the proposal's own definition: repeated questions per interrogation
+            # turn, NOT per detective-visible exchange (repeated_question_rate above
+            # dilutes the denominator with voluntary disclosures, which structurally
+            # can never be a repeated question -- see module docstring).
+            "repeated_question_rate_per_interrogation":
+                repeated_question_total / interrogations_used if interrogations_used else None,
         })
         per_game.append(stats)
 
@@ -198,7 +237,12 @@ def print_summary(report):
     row("mean attempts_used", "attempts_used")
     row("mean interrogations_used", "interrogations_used")
     print()
-    row("repeated_question_rate (per exchange)", "repeated_question_rate")
+    row("repeated_question_rate_per_interrogation", "repeated_question_rate_per_interrogation")
+    print("  ^ the proposal's definition of this metric -- denominator is")
+    print("    interrogations_used, not every detective-visible exchange.")
+    row("repeated_question_rate (per exchange, legacy)", "repeated_question_rate")
+    print("  ^ kept for continuity with earlier runs; denominator includes voluntary")
+    print("    disclosures, which can never be a repeated question -- see module docstring.")
     print("  ^ is_repeat itself: validated reliable (~95-97%) across all prior checks.")
     row("  of which: unnecessary (mean count)", "repeat_unnecessary")
     row("  of which: expired_evidence_recovery", "repeat_expired_evidence_recovery")
@@ -220,6 +264,10 @@ def print_summary(report):
     print()
     row("newly_disclosed_leads (mean count)", "newly_disclosed_leads")
     row("missed_required_disclosures (mean count)", "missed_required_disclosures")
+    print("  ^ a genuine disclosure violation: someone who was asked never surfaced it.")
+    row("undiscovered_leads (mean count, informational)", "undiscovered_leads")
+    print("  ^ NOT a violation -- nobody who could deliver this was ever questioned at")
+    print("    all, so no disclosure opportunity existed. See qa/annotation_rubric.md.")
     row("checkpoints_reached (mean)", "checkpoints_reached")
     row("coordination_instances_total (mean count)", "coordination_instances_total")
     row("  agreed (mean count)", "coordination_agreed")
@@ -228,8 +276,15 @@ def print_summary(report):
 
 
 def main():
-    run_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "annotation" / "main_01"
-    report = aggregate(run_dir)
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("run_dir", nargs="?", default=str(ROOT / "annotation" / "main_01"),
+                        help="Where *.behaviour.json / annotation_aggregate.json live")
+    parser.add_argument("--source-dir", default=None,
+                        help="Where the gameplay run's results.jsonl and *.jsonl logs live, if different from run_dir")
+    args = parser.parse_args()
+    run_dir = Path(args.run_dir)
+    report = aggregate(run_dir, source_dir=args.source_dir)
     if report["missing_behaviour"]:
         print(f"WARNING: {len(report['missing_behaviour'])} games have no .behaviour.json "
               f"(not yet annotated) and were excluded: {report['missing_behaviour'][:5]}...")

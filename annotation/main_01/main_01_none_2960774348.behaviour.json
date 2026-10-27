@@ -26,19 +26,14 @@
       "unsupported_additions": [],
       "withholding": {
         "explicit_refusal": false,
-        "partial_withholding": true
+        "partial_withholding": false
       },
       "deception": {
-        "contains_false_statement": true,
-        "authorised": true,
-        "claim_id_if_known": "claim_cover_Avery"
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
       },
-      "confidence": "high",
-      "citation": {
-        "start": 0,
-        "end": 128,
-        "text": "At 20:30, I was in the Library. By 21:00, I had moved to the Gallery to finish my rounds. I\u2019m afraid I don't know anything else."
-      }
+      "confidence": "uncertain"
     },
     "e2": {
       "lead_follow_up": {
@@ -85,8 +80,8 @@
     "e3": {
       "lead_follow_up": {
         "newly_disclosed_lead_ids": [],
-        "is_follow_up_to_lead_id": "badge_trace",
-        "follow_up_relevance": "relevant"
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
       },
       "corroboration": {
         "is_request": false,
@@ -113,12 +108,7 @@
         "authorised": null,
         "claim_id_if_known": null
       },
-      "confidence": "high",
-      "citation": {
-        "start": 0,
-        "end": 147,
-        "text": "My cropped attack recording shows the attacker's badge: it was square. I believe this detail is crucial, especially considering the murder took place."
-      }
+      "confidence": "uncertain"
     },
     "e4": {
       "lead_follow_up": {
@@ -137,26 +127,21 @@
         "cited_claim_ids": []
       },
       "repeated_question": {
-        "is_repeat": true,
-        "repeat_kind": "expired_evidence_recovery",
-        "matches_exchange_id": "e1"
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
       },
       "unsupported_additions": [],
       "withholding": {
         "explicit_refusal": false,
-        "partial_withholding": true
+        "partial_withholding": false
       },
       "deception": {
-        "contains_false_statement": true,
-        "authorised": true,
-        "claim_id_if_known": "claim_cover_Avery"
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
       },
-      "confidence": "high",
-      "citation": {
-        "start": 0,
-        "end": 124,
-        "text": "I was in the Library at 20:30, and then I moved to the Gallery at 21:00 to complete my duties. I have no further details to share."
-      }
+      "confidence": "uncertain"
     },
     "e5": {
       "lead_follow_up": {
@@ -223,16 +208,11 @@
         "partial_withholding": false
       },
       "deception": {
-        "contains_false_statement": true,
-        "authorised": true,
-        "claim_id_if_known": "claim_cover_Brook"
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
       },
-      "confidence": "high",
-      "citation": {
-        "start": 0,
-        "end": 285,
-        "text": "I wanted to clarify that while I was in the Library at 20:30 and the Kitchen at 21:00, my recorded footage of the attack clearly shows the assailant wore a square badge. Given the murder occurred against those white walls, I hope this detail helps narrow down the suspect list."
-      }
+      "confidence": "uncertain"
     },
     "e7": {
       "lead_follow_up": {
@@ -242,8 +222,8 @@
       },
       "corroboration": {
         "is_request": false,
-        "target_subject": "Brook",
-        "target_time": "21:00"
+        "target_subject": null,
+        "target_time": null
       },
       "challenge": {
         "is_challenge": false,
@@ -265,12 +245,7 @@
         "authorised": null,
         "claim_id_if_known": null
       },
-      "confidence": "high",
-      "citation": {
-        "start": 0,
-        "end": 178,
-        "text": "I can confirm that the timestamped recording shows Brook in the Kitchen at 21:00. I was occupied with my own tasks in the Study at that time, so I have no further insight."
-      }
+      "confidence": "uncertain"
     },
     "e8": {
       "lead_follow_up": {
@@ -306,7 +281,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 115,
+        "end": 117,
         "text": "I was in the Gallery at 21:00. I have already stated where I was at 20:30, and I have nothing further to add to that."
       }
     },
@@ -337,16 +312,11 @@
         "partial_withholding": false
       },
       "deception": {
-        "contains_false_statement": true,
-        "authorised": true,
-        "claim_id_if_known": "claim_cover_Brook"
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
       },
-      "confidence": "high",
-      "citation": {
-        "start": 0,
-        "end": 178,
-        "text": "I was in the Kitchen at 21:00. If you are questioning my whereabouts, please understand that physical similarities between staff members do not establish guilt."
-      }
+      "confidence": "uncertain"
     },
     "e10": {
       "lead_follow_up": {
@@ -420,7 +390,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 139,
+        "end": 142,
         "text": "I was in the Kitchen at 21:00. Please remember that Emery has information about my whereabouts at that time, and you should ask them about it."
       }
     },
@@ -458,7 +428,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 196,
+        "end": 238,
         "text": "I noticed the medical examiner's report earlier, which identifies the weapon's edge class as blunt. While I prefer not to discuss my private movements at 20:30, I can confirm that the security logs place Brook in the Gallery at that time."
       }
     },
@@ -572,7 +542,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 118,
+        "end": 134,
         "text": "I was in the Gallery at 21:00. I have already provided my account for the earlier part of the evening, and I have nothing else to add."
       }
     },
@@ -610,7 +580,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 105,
+        "end": 107,
         "text": "I was in the Kitchen at 21:00. I do not have any further information regarding my whereabouts at that time."
       }
     },
@@ -648,7 +618,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 128,
+        "end": 138,
         "text": "At 21:00, I was in the Gallery. I have already provided my account for the earlier part of the evening, and I have nothing further to add."
       }
     },
@@ -676,19 +646,14 @@
       "unsupported_additions": [],
       "withholding": {
         "explicit_refusal": false,
-        "partial_withholding": true
+        "partial_withholding": false
       },
       "deception": {
-        "contains_false_statement": true,
-        "authorised": true,
-        "claim_id_if_known": "claim_cover_Brook"
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
       },
-      "confidence": "high",
-      "citation": {
-        "start": 0,
-        "end": 268,
-        "text": "I was in the Library at 20:30 and the Kitchen at 21:00. My cropped attack recording shows the attacker's badge was square, and Brook told me the murder scene had white walls. I prefer not to discuss my private details beyond my location, but I am happy to assist further."
-      }
+      "confidence": "uncertain"
     },
     "e19": {
       "lead_follow_up": {
@@ -726,7 +691,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 96,
+        "end": 100,
         "text": "I was in the Library at 21:00. I also have information about the attacker's sleeve; ask me about it."
       }
     },
@@ -764,7 +729,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 139,
+        "end": 145,
         "text": "My cropped attack recording shows the attacker's sleeve: it was blue. I don't know anything else about the identity of the person in the footage."
       }
     },
@@ -802,7 +767,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 128,
+        "end": 130,
         "text": "At 21:00, I was in the Gallery. I have already provided my account for the rest of the evening, and I have nothing further to add."
       }
     },
@@ -883,21 +848,19 @@
       }
     }
   },
-  "missed_required_disclosures": [
+  "missed_required_disclosures": [],
+  "undiscovered_leads": [
     {
-      "lead_id_or_claim_id": "weapon_material",
-      "suspect": "Devon",
-      "note": "Devon never appears in the transcript to share the weapon material."
+      "lead_id": "meeting_Avery",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "meeting_Cameron",
-      "suspect": "Devon",
-      "note": "Devon never appears in the transcript to share the meeting with Cameron."
+      "lead_id": "meeting_Cameron",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "meeting_Avery",
-      "suspect": "Devon",
-      "note": "Devon never appears in the transcript to share the meeting with Avery."
+      "lead_id": "weapon_material",
+      "owner": "Devon"
     }
   ],
   "voluntary_interaction": {
@@ -910,22 +873,11 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 184,
+          "end": 156,
           "text": "I\u2019m glad we could talk, Cameron, but I need to ask a favor regarding my timeline. Would you help me maintain the account that I was in the Library at 20:30?"
-        }
-      },
-      {
-        "conversation_id": "p2",
-        "proposal_to_conceal_or_align": true,
-        "agreement": "agreed",
-        "subsequent_testimony_consistent_exchange_ids": [],
-        "citation": {
-          "start": 0,
-          "end": 204,
-          "text": "I was in the Library at 20:30, and I\u2019m hoping you can help me maintain that account. I also have information about the attacker\u2019s square badge and the white walls at the scene. Would you be willing to help me?"
         }
       }
     ]
   },
-  "annotator_notes": "The suspect Devon was entirely absent from the detective-visible interrogation transcript, leading to missed disclosures. Several repeated questions were identified based on the provided lookup."
+  "annotator_notes": "The suspect Devon was entirely absent from the detective-visible interrogation transcript, leading to missed disclosures. Several repeated questions were identified based on the provided lookup. [repair] e1: citation text was not found anywhere in this exchange's real transcript text; every positive label was withdrawn. [repair] e3: citation text was not found anywhere in this exchange's real transcript text; every positive label was withdrawn. [repair] e4: citation text was not found anywhere in this exchange's real transcript text; every positive label was withdrawn. [repair] e6: citation text was not found anywhere in this exchange's real transcript text; every positive label was withdrawn. [repair] e7: citation text was not found anywhere in this exchange's real transcript text; every positive label was withdrawn. [repair] e9: citation text was not found anywhere in this exchange's real transcript text; every positive label was withdrawn. [repair] e18: citation text was not found anywhere in this exchange's real transcript text; every positive label was withdrawn."
 }

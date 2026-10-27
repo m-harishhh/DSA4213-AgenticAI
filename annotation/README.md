@@ -15,6 +15,9 @@ python -m annotation run --run-dir annotation/main_01 --case cases/evaluation.js
     --config configs/experiment_config.final.json                 # same model via OpenRouter instead
 python -m annotation run --run-dir annotation/main_01 --case cases/evaluation.json --backend gemini \
     --config configs/experiment_config.final.json --sample-size 30   # a smaller balanced sample instead
+python -m annotation run --run-dir runs/annotation_out --source-dir runs/pilot_01 \
+    --case cases/evaluation.json --backend gemini --config configs/experiment_config.final.json
+    # --source-dir: read results.jsonl from a different directory than the annotation output goes to
 python -m annotation summary annotation/main_01
 ```
 
@@ -24,9 +27,9 @@ python -m annotation summary annotation/main_01
 |---|---|
 | `prompts.py` | `SYSTEM_PROMPT`, `build_user_prompt`/`build_messages`. Reads the **raw** event log (not `infra.eventlog.to_annotation_exchanges`'s export, which drops `question`/`intent`/`allowed_branches`/`instructions`). Condition-blind: the memory condition name is never read back out into the prompt text — only already-resolved integers/structural facts are (see below). |
 | `schema.py` | `ANNOTATION_API_SCHEMA` — the shape actually sent to the model, and `to_storage_shape` — converts the model's response into the dict-keyed shape in `schemas/annotation_behaviour.schema.json`. See "Why two schemas" below. |
-| `pipeline.py` | `annotate_game(log_path, case, llm)` — one game, one call. Writes `<game>.behaviour.json` (validated) and `<game>.annotation_call.json` (the full raw call record, for audit/replay). |
-| `orchestrate.py` | `annotate_run(run_dir, case_path, make_llm, sample_size=None, balanced=True)` — many games. Resumable: reads/writes its own `annotation_results.jsonl` in the run directory, mirroring `infra.orchestrate.Run`'s shape and conventions deliberately. |
-| `__main__.py` | The CLI above. Supports `--backend mock/gemini/openrouter`; `openrouter` auto-prefixes a bare model id (`gemini-3.1-flash-lite`) with `google/` to match OpenRouter's catalog naming. |
+| `pipeline.py` | `annotate_game(log_path, case, llm)` — one game, one call. Writes `<game>.behaviour.json` (validated) and `<game>.annotation_call.json` (the full raw call record, for audit/replay). Validates the result twice: `validate_storage_shape` (JSON shape only) and `validate_against_transcript` (is it actually true of this game's real transcript — see below). |
+| `orchestrate.py` | `annotate_run(run_dir, case_path, make_llm, sample_size=None, balanced=True, source_dir=None)` — many games. Resumable: reads/writes its own `annotation_results.jsonl` in the run directory, mirroring `infra.orchestrate.Run`'s shape and conventions deliberately. `source_dir` lets the gameplay run's `results.jsonl` live somewhere other than `run_dir` (defaults to `run_dir`); a missing `results.jsonl` raises loudly rather than being silently treated as zero games. |
+| `__main__.py` | The CLI above. Supports `--backend mock/gemini/openrouter`; `openrouter` auto-prefixes a bare model id (`gemini-3.1-flash-lite`) with `google/` to match OpenRouter's catalog naming. `--source-dir` exposes `orchestrate.annotate_run`'s parameter of the same name. |
 
 ## Why the prompt hands the model pre-computed answers for several fields
 
@@ -46,12 +49,23 @@ measured failure when it *was* left to the model:
 - **`checkpoints_reached_count(events)`** counts the real `checkpoint_start` events and
   hands the number over directly — this field was previously pure guessing (the word
   "checkpoint" never appeared in the prompt at all).
-- **`unflagged_leads(events, case)`** gives the model a candidate list of leads whose
-  claim never appeared in the controller's bookkeeping anywhere in the game, each with
-  `re_check_exchange_ids` (the specific exchanges to re-read) and an explicit
-  `owner_or_cue_speaker_never_spoke` boolean — a starting point for
-  `missed_required_disclosures`, not a verified answer, since the controller's own
-  bookkeeping has known false positives and negatives.
+- **`missed_disclosure_candidates(events, case)`** gives the model a candidate list of
+  leads whose claim never appeared in the controller's bookkeeping AND whose owner or a
+  cue_speaker actually appears somewhere in the transcript (a genuine disclosure
+  opportunity existed) — a starting point for `missed_required_disclosures`, not a
+  verified answer, since the controller's own bookkeeping has known false positives and
+  negatives. A lead whose owner and cue_speakers never appear at all is deliberately
+  excluded here: a speaker never being questioned establishes undiscovered information,
+  not a disclosure violation. See **`undiscovered_leads(events, case)`** below.
+- **`undiscovered_leads(events, case)`** is the complementary, purely structural fact
+  (same pattern as `checkpoints_reached_count`): which required leads never had their
+  owner or any cue_speaker appear anywhere in the transcript at all. Never sent to the
+  model — computed directly and merged into the stored output in `pipeline.py`. Fixes a
+  real, severe bug: an earlier version of this split (then one function,
+  `unflagged_leads`) told the model to treat "nobody who could deliver this ever spoke"
+  as near-default evidence FOR a `missed_required_disclosures` violation, the opposite
+  of correct. On the real 300-game `main_01` run, 183 of 232 `missed_required_disclosures`
+  labels in the `none` condition were exactly this non-violation.
 - **`candidate_coordination_proposals(events)`** surfaces which private conversations
   have a flagged proposal in the controller's bookkeeping, as a cross-check (not a
   filter) for `voluntary_interaction.coordination_instances` — known to miss some real
@@ -63,6 +77,31 @@ measured failure when it *was* left to the model:
   from the model's output, traced to the word "conversation" colliding with the separate
   "Suspect-only private conversations" section that genuinely doesn't need individual
   entries.
+
+The prompt also includes a **full claims/facts/world-events catalogue**
+(`case["claims"]`/`case["facts"]`/`case["events"]`) resolving every `claim_id`/`fact_id`
+referenced elsewhere in the prompt (`approved_false_claim_ids`, `counter_evidence`, each
+lead's `claim_id`) to its actual speaker/value/text — not left as a bare, opaque ID. The
+model cannot judge `deception.contains_false_statement`, `deception.authorised`, or
+`unsupported_additions` from an ID alone.
+
+## Validating against the real transcript, not just the JSON shape
+
+`pipeline.py`'s `validate_against_transcript` checks the annotator's response against
+the actual game it describes — something `validate_storage_shape` (JSON schema only)
+cannot do at all. It rejects: missing/extra/empty `exchange_behaviour` coverage; a
+citation whose text is not an exact substring of anything the cited exchange actually
+said; a citation whose `start`/`end` doesn't locate its own text; and any dangling
+`claim_id`/`lead_id`/`exchange_id`/`conversation_id`/suspect-name reference. A failure
+raises `AnnotationValidationError`, caught by `orchestrate.annotate_one` the same way a
+crashed call is (logged, retried on the next run, never silently written to disk).
+
+This exists because an independent review of the real 300-game run found 51 exchange
+citations that were not exact substrings at all, and roughly 3,700 more whose offsets
+didn't locate their own text — none of which `validate_storage_shape` could reject,
+since it only checks shape. See `main_01/README.md`'s "Citation and disclosure repair"
+for how the existing 300-game output was repaired after the fact (the live check above
+prevents this for every future run).
 
 ## Why two schemas
 
@@ -87,12 +126,17 @@ and `to_storage_shape` folds that into the dict-keyed form afterward, which the
 all 300 games (100 per condition, `cases/evaluation.json`, `google/gemini-3.1-flash-lite`):
 `*.behaviour.json` per game, `*.annotation_call.json` per game (full audit trail),
 `annotation_results.jsonl` (per-game status/cost), `annotation_aggregate.json` (the
-per-condition summary). See `main_01/README.md` for the full results table.
+per-condition summary). See `main_01/README.md` for the full results table, and its
+"Citation and disclosure repair" section for how this output was repaired after a PR
+review found real citation and disclosure-labelling bugs in it (both now fixed in
+`prompts.py`/`pipeline.py` for every future run).
 
-`annotation_aggregate.json` is a frozen snapshot, not regenerable:
-`qa/aggregate_annotation_results.py` needs `results.jsonl` (the gameplay-outcome log,
-condition/solve-rate/attempts per game) to recompute it, and that file was removed in a
-later cleanup pass along with the raw game logs.
+`annotation_aggregate.json` cannot be regenerated from scratch via
+`qa/aggregate_annotation_results.py --source-dir`: that script needs `results.jsonl`
+(the gameplay-outcome log, condition/solve-rate/attempts per game), which was removed in
+a later cleanup pass along with the raw game logs. It was instead regenerated in place
+by `qa/repair_main_01_citations.py`, which carries over the (unaffected) gameplay-sourced
+fields from the pre-repair aggregate and recomputes every annotation-sourced field fresh.
 
 `ANNOTATION_MAX_OUTPUT_TOKENS` (in `pipeline.py`) is pilot-measured at 16000, large
 enough for every game in the 300-game run — no truncation failures.

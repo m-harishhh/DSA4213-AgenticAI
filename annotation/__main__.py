@@ -56,7 +56,7 @@ def cmd_run(args):
 
     summary = annotate_run(args.run_dir, args.case, make_llm_factory(args.backend, model_id, decoding),
                            sample_size=args.sample_size, balanced=not args.unbalanced, seed=args.seed,
-                           progress=progress)
+                           progress=progress, source_dir=args.source_dir)
     print(json.dumps(summary, indent=2))
     return 0 if summary["failed"] == 0 else 1
 
@@ -82,7 +82,8 @@ def main(argv=None):
     sub = parser.add_subparsers(dest="command", required=True)
 
     run = sub.add_parser("run", help="Annotate every (or a sample of) games already played in a run directory")
-    run.add_argument("--run-dir", required=True, help="The infra.orchestrate run directory to read results.jsonl from")
+    run.add_argument("--run-dir", required=True, help="Where to write annotation output (annotation_results.jsonl, *.behaviour.json)")
+    run.add_argument("--source-dir", help="Where the gameplay run's results.jsonl lives, if different from --run-dir (default: --run-dir)")
     run.add_argument("--case", required=True, help="Case JSON path (must match the one the run was played against)")
     run.add_argument("--config", help="Experiment config JSON for model_id/decoding_settings (optional)")
     run.add_argument("--model-id", help="Overrides --config's model_id")

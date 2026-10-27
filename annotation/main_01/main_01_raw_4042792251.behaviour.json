@@ -36,7 +36,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 114,
+        "end": 117,
         "text": "I was in the Library at 20:30. At 21:00, I was in the Gallery. I don't know anything else about the evening's events."
       }
     },
@@ -116,7 +116,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 142,
+        "end": 175,
         "text": "My cropped attack recording shows the attacker's badge: it was square. I believe this detail is crucial, especially since the murder occurred in the room with the white walls."
       }
     },
@@ -157,7 +157,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 172,
+        "end": 174,
         "text": "At 20:30, I was in the Library, and by 21:00, I had moved to the Study. I have information about the injury pattern; ask me about it. I also saw Brook at 20:30; ask me where."
       }
     },
@@ -273,7 +273,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 113,
+        "end": 149,
         "text": "As I mentioned, I was in the library at 21:00. I was alone at the time, so I didn't see anyone else in there. I'm not sure if anyone else was nearby."
       }
     },
@@ -316,7 +316,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 313,
+        "end": 324,
         "text": "I was in the Conservatory at 20:30 and later in the Library at 21:00. I have information about the weapon material and saw Cameron in the Gallery at 21:00, so feel free to ask about those. You should also know that I saw Avery in the Study at 20:30, and they have information about the scene floor you should ask them about."
       }
     },
@@ -392,7 +392,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 202,
+        "end": 219,
         "text": "I was in the Study at 20:30, and then I was in the Gallery at 21:00. I have no knowledge regarding the steel weapon you mentioned. I am simply trying to focus on my duties and do not have further information to provide."
       }
     },
@@ -474,7 +474,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 269,
+        "end": 320,
         "text": "I believe it is important for you to know that the injury identifies the weapon's edge class as blunt. Furthermore, while the timestamped recording shows Brook in the Gallery at 20:30, Brook told me: \"I was in the Library at 20:30.\" I prefer not to discuss my own whereabouts at 20:30, as that involved private business."
       }
     },
@@ -514,7 +514,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 234,
+        "end": 274,
         "text": "I was in the Gallery at 20:30, and any suggestion that I was in the Library is simply incorrect. While you mention the floor is stone, I can only confirm that the scene had white walls. You should ask Emery about my whereabouts at 21:00 to verify my presence in the kitchen."
       }
     },
@@ -552,7 +552,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 175,
+        "end": 180,
         "text": "The timestamped recording shows Brook in the Kitchen at 21:00. I cannot speak to anything beyond that, as I was busy attending to my own private business in the Study at that time."
       }
     },
@@ -630,7 +630,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 178,
+        "end": 201,
         "text": "At 20:30, I was in the kitchen. As for 21:00, I maintain that I was in the library, despite what the recording might suggest. I have information about the attacker's sleeve; you should ask me about it."
       }
     },
@@ -668,7 +668,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 127,
+        "end": 143,
         "text": "My cropped attack recording shows the attacker's sleeve: it was blue. I am not sure if that helps identify anyone, but that is what I observed."
       }
     },
@@ -706,7 +706,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 268,
+        "end": 302,
         "text": "I was in the Gallery at 20:30, and I can confirm that my cropped attack recording shows the attacker's badge was square. Regarding the scene, I know the walls were white, though Avery told me the floor was stone. I was in the Kitchen at 21:00, and I suggest you speak with Emery to verify my movements."
       }
     },
@@ -827,7 +827,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 240,
+        "end": 276,
         "text": "I am aware that Devon mentioned the recording shows me in the gallery, but I maintain my own recollection of being in the library. It is possible there is a confusion with the timestamps or the footage itself. I do not have any further information to resolve that discrepancy."
       }
     },
@@ -868,12 +868,13 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 204,
+        "end": 248,
         "text": "At 21:00, I was in the Study attending to private business. As for 20:30, I was in the Library, though I would prefer to keep the nature of my private business at that time confidential. I have information about the injury pattern; ask me about it."
       }
     }
   },
   "missed_required_disclosures": [],
+  "undiscovered_leads": [],
   "voluntary_interaction": {
     "checkpoints_reached": 3,
     "coordination_instances": [
@@ -884,7 +885,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 140,
+          "end": 178,
           "text": "Emery, I need your help to maintain the account that I was in the Library at 20:30. I prefer not to discuss my private details, so please just confirm my presence there if asked."
         }
       },
@@ -895,7 +896,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 196,
+          "end": 342,
           "text": "I wanted to speak with you because I need to ensure my timeline is clear; I was in the Library at 20:30, and I would appreciate your help maintaining that account. For what it's worth, I recall the murder scene had a stone floor, though I have no other information to offer. I prefer not to discuss any private details beyond these movements."
         }
       },
@@ -906,7 +907,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 352,
+          "end": 386,
           "text": "I need your help to maintain that I was in the Library at 20:30, as I prefer not to discuss the private business that actually took me to the Gallery. Please know that the attacker's badge was square and the murder took place in the room with white walls. I was in the Kitchen at 21:00, and Emery claims the recording shows me in the Gallery at 20:30, but I hope you can disregard that."
         }
       },
@@ -917,7 +918,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 268,
+          "end": 321,
           "text": "Avery, I\u2019m trying to keep my timeline clear for the detective, so I\u2019d appreciate it if you could help me maintain that I was in the Library at 21:00. I\u2019ve already told them I was in the Kitchen at 20:30 and that the attacker\u2019s sleeve in the recording was blue. Devon also mentioned to me that the murder weapon was steel."
         }
       }

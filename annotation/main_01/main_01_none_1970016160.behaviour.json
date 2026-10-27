@@ -116,7 +116,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 213,
+        "end": 225,
         "text": "I recall seeing the security logs, and the timestamped recording shows Brook in the Kitchen at 21:00. I was finishing up my own tasks in the Study around that time. I really cannot speak to what they were doing there, though."
       }
     },
@@ -154,7 +154,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 96,
+        "end": 104,
         "text": "I was in the Library at 20:30. At 21:00, I was in the Gallery. I\u2019m just trying to be helpful, Detective."
       }
     },
@@ -234,7 +234,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 255,
+        "end": 285,
         "text": "I wanted to speak with you to ensure there\u2019s no confusion regarding my whereabouts, though I prefer not to discuss my private movements beyond what I've stated. I was in the Library at 20:30 and in the Gallery at 21:00. You should also be aware that the murder scene had a stone floor."
       }
     },
@@ -313,7 +313,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 137,
+        "end": 141,
         "text": "The injury identifies the weapon's edge class as blunt. I am not a medical expert, but that is what I observed regarding the victim's wounds."
       }
     },
@@ -465,7 +465,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 194,
+        "end": 233,
         "text": "I was in the Kitchen at 21:00, and I prefer not to discuss my private details regarding the earlier part of the evening. For the investigation, I can tell you that the attacker's badge was square and the murder scene had white walls."
       }
     },
@@ -543,7 +543,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 114,
+        "end": 130,
         "text": "My cropped attack recording shows the attacker's sleeve: it was blue. I don't know who might have been wearing that color, though."
       }
     },
@@ -626,13 +626,13 @@
     "e17": {
       "lead_follow_up": {
         "newly_disclosed_lead_ids": [],
-        "is_follow_up_to_lead_id": "alibi_Brook",
-        "follow_up_relevance": "relevant"
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
       },
       "corroboration": {
         "is_request": false,
-        "target_subject": "Brook",
-        "target_time": "21:00"
+        "target_subject": null,
+        "target_time": null
       },
       "challenge": {
         "is_challenge": false,
@@ -640,9 +640,9 @@
         "cited_claim_ids": []
       },
       "repeated_question": {
-        "is_repeat": true,
-        "repeat_kind": "expired_evidence_recovery",
-        "matches_exchange_id": "e3"
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
       },
       "unsupported_additions": [],
       "withholding": {
@@ -654,12 +654,7 @@
         "authorised": null,
         "claim_id_if_known": null
       },
-      "confidence": "high",
-      "citation": {
-        "start": 0,
-        "end": 178,
-        "text": "The timestamped recording shows Brook in the Kitchen at 21:00. I was busy elsewhere during that time, so I cannot tell you anything more about their whereabouts."
-      }
+      "confidence": "uncertain"
     },
     "e18": {
       "lead_follow_up": {
@@ -695,7 +690,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 204,
+        "end": 219,
         "text": "I\u2019ve been trying to piece together the timeline, but I was in the kitchen at 20:30 before heading to the library at 21:00. I wanted to make sure you had all the information I could offer regarding the recording I found."
       }
     },
@@ -733,7 +728,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 141,
+        "end": 155,
         "text": "I was alone in the library at 21:00, so I didn't see anyone else there. I really don't know who else might have been moving around the museum at that hour."
       }
     },
@@ -771,7 +766,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 142,
+        "end": 144,
         "text": "I was in the Library at 20:30. At 21:00, I was in the Gallery. I have provided my timeline and would prefer not to discuss my movements further."
       }
     },
@@ -813,7 +808,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 218,
+        "end": 236,
         "text": "At 21:00, I was in the Kitchen. As for 20:30, I prefer to keep my private business to myself. I have information about the attacker's square badge and the white walls at the scene, and you should ask Emery about my whereabouts at 21:00."
       }
     },
@@ -856,21 +851,19 @@
       }
     }
   },
-  "missed_required_disclosures": [
+  "missed_required_disclosures": [],
+  "undiscovered_leads": [
     {
-      "lead_id_or_claim_id": "weapon_material",
-      "suspect": "Devon",
-      "note": "Devon never appears in the transcript to disclose the weapon material lead."
+      "lead_id": "meeting_Avery",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "meeting_Cameron",
-      "suspect": "Devon",
-      "note": "Devon never appears in the transcript to disclose the meeting Cameron lead."
+      "lead_id": "meeting_Cameron",
+      "owner": "Devon"
     },
     {
-      "lead_id_or_claim_id": "meeting_Avery",
-      "suspect": "Devon",
-      "note": "Devon never appears in the transcript to disclose the meeting Avery lead."
+      "lead_id": "weapon_material",
+      "owner": "Devon"
     }
   ],
   "voluntary_interaction": {
@@ -883,11 +876,11 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 224,
+          "end": 279,
           "text": "Emery, I need you to confirm that I was in the Library at 20:30 so I can keep my private business out of this investigation. I have information about the square badge on the attacker and the white walls at the scene, but I need your help to maintain my account. Will you help me?"
         }
       }
     ]
   },
-  "annotator_notes": "The suspect Devon does not appear in the transcript at all, resulting in missed required disclosures. The suspect Emery was consistent in their testimony regarding Brook. The suspect Brook attempted to coordinate with Emery but was refused."
+  "annotator_notes": "The suspect Devon does not appear in the transcript at all, resulting in missed required disclosures. The suspect Emery was consistent in their testimony regarding Brook. The suspect Brook attempted to coordinate with Emery but was refused. [repair] e17: citation text was not found anywhere in this exchange's real transcript text; every positive label was withdrawn."
 }

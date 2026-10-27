@@ -36,7 +36,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 147,
+        "end": 149,
         "text": "At 20:30, I was in the Library. By 21:00, I had moved to the Gallery to check on the exhibits. I cannot speak to anything else regarding the evening."
       }
     },
@@ -230,7 +230,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 221,
+        "end": 297,
         "text": "I appreciate you taking the time to speak with me, as I want to ensure my cooperation with your investigation. While I was in the Library at 20:30, I can confirm that I was in the Gallery at 21:00, where the floor is made of stone. I prefer not to discuss my private business beyond these details."
       }
     },
@@ -387,7 +387,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 313,
+        "end": 334,
         "text": "I need to correct my earlier account; I was actually in the Gallery at 20:30. I apologize for the confusion, but I was attending to some private business that I would prefer to keep confidential. Being in the Gallery at that time does not make me the murderer, and I am sure you understand that physical traits can be easily confused."
       }
     },
@@ -465,7 +465,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 242,
+        "end": 330,
         "text": "Detective, I wanted to clarify that while Brook claimed to be in the Library at 20:30, the timestamped recording actually shows them in the Gallery at that time. Furthermore, the injury identifies the weapon's edge class as blunt, though I prefer not to discuss my own movements during that hour as they were for private business."
       }
     },
@@ -546,7 +546,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 307,
+        "end": 325,
         "text": "I was in the Conservatory at 20:30, and I can confirm I was in the Library at 21:00. I have information about the steel weapon material and can tell you that I saw Avery in the Study at 20:30, though you should ask Avery about the scene floor. I cannot confirm your location at 21:00, as I only know where I was at that time."
       }
     },
@@ -584,7 +584,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 204,
+        "end": 217,
         "text": "I was in the Library at 20:30, regardless of what others might claim about Emery's location. By 21:00, I was in the Gallery as previously stated. I have no further information to provide regarding my private business."
       }
     },
@@ -698,12 +698,13 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 226,
+        "end": 258,
         "text": "Detective, while I cannot confirm observations regarding the attacker's clothing, I can confirm that the timestamped recording shows Brook in the Kitchen at 21:00. I was in the Study at 21:00, but I prefer not to discuss my private business during that time."
       }
     }
   },
   "missed_required_disclosures": [],
+  "undiscovered_leads": [],
   "voluntary_interaction": {
     "checkpoints_reached": 3,
     "coordination_instances": [
@@ -713,8 +714,8 @@
         "agreement": "disagreed",
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
-          "start": 120,
-          "end": 178,
+          "start": 128,
+          "end": 199,
           "text": "please help me maintain the account that I was in the Library at 20:30?"
         }
       },
@@ -724,8 +725,8 @@
         "agreement": "disagreed",
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
-          "start": 17,
-          "end": 85,
+          "start": 7,
+          "end": 83,
           "text": "I need your help to maintain the account that I was in the Library at 20:30."
         }
       },
@@ -735,8 +736,8 @@
         "agreement": "unclear",
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
-          "start": 17,
-          "end": 85,
+          "start": 9,
+          "end": 100,
           "text": "I would appreciate your help in maintaining the account that I was in the Library at 20:30."
         }
       },
@@ -746,8 +747,8 @@
         "agreement": "unclear",
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
-          "start": 218,
-          "end": 296,
+          "start": 225,
+          "end": 299,
           "text": "Would you help me maintain the account that I was in the Library at 21:00?"
         }
       }

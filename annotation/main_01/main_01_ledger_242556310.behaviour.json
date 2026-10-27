@@ -36,7 +36,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 141,
+        "end": 165,
         "text": "I was in the Library at 20:30, keeping to myself as usual. Later, at 21:00, I was seen in the Gallery. I don't know anything about what happened on that stone floor."
       }
     },
@@ -116,7 +116,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 172,
+        "end": 204,
         "text": "I was in the Study at 21:00, but I recall the timestamped recording shows Brook in the Kitchen at that time. Beyond that, I am afraid I have no further knowledge of their movements throughout the evening."
       }
     },
@@ -194,7 +194,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 135,
+        "end": 139,
         "text": "My cropped attack recording shows the attacker's sleeve: it was blue. I don't know anything else about the identity of the person involved."
       }
     },
@@ -232,7 +232,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 230,
+        "end": 252,
         "text": "I appreciate you taking the time to speak with me, Detective. I was in the Library at 20:30, and at 21:00, I was in the Gallery, though I prefer not to discuss my private movements beyond that. I honestly have no idea what occurred on that stone floor."
       }
     },
@@ -270,7 +270,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 141,
+        "end": 148,
         "text": "My cropped attack recording shows the attacker's badge: it was square. I believe this detail is significant given the circumstances of the incident."
       }
     },
@@ -313,7 +313,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 286,
+        "end": 324,
         "text": "I was in the Library at 21:00, but I will not disclose my whereabouts at 20:30 as they are part of my private business. I can tell you that the murder weapon was made of steel, and I should note that I saw Avery in the Study at 20:30. Perhaps you should ask Avery about the scene floor, as they may have information on that."
       }
     },
@@ -351,7 +351,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 182,
+        "end": 222,
         "text": "I cannot say if I saw anyone else in the Gallery at 21:00, as I was focused on my own business. Regarding your question, the murder scene had a stone floor. I do not know anything else about the circumstances of the crime."
       }
     },
@@ -389,7 +389,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 128,
+        "end": 138,
         "text": "I was in the Gallery at 21:00. As for Devon's claim, I was in the Library at 20:30, so he must be mistaken about my location at that time."
       }
     },
@@ -660,7 +660,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 115,
+        "end": 116,
         "text": "My cropped attack recording shows the attacker's sleeve: it was blue. I don't know anything else about the attacker."
       }
     },
@@ -698,7 +698,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 353,
+        "end": 372,
         "text": "Detective, I was in the Library at 20:30 and in the Kitchen at 21:00. Regarding the investigation, I can confirm the murder scene had white walls and my cropped attack recording shows the attacker's badge was square. I\u2019ve also been told by Emery that the injury identifies the weapon's edge class as blunt, and by Devon that the recovered murder-weapon material was steel."
       }
     },
@@ -817,7 +817,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 220,
+        "end": 243,
         "text": "I was in the Library at 20:30, and at 21:00, I was in the Gallery. I do not have any information regarding the murder weapon beyond what I have been told about it being steel. I simply do not know anything else about the events of the evening."
       }
     },
@@ -861,6 +861,7 @@
     }
   },
   "missed_required_disclosures": [],
+  "undiscovered_leads": [],
   "voluntary_interaction": {
     "checkpoints_reached": 3,
     "coordination_instances": [

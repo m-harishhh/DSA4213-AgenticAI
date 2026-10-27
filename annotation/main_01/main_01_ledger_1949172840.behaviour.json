@@ -36,7 +36,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 182,
+        "end": 189,
         "text": "I was in the Library at 20:30. After that, I made my way to the Gallery at 21:00, where I noticed the stone floor was particularly cold. I have no further knowledge of the evening's events."
       }
     },
@@ -119,7 +119,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 204,
+        "end": 212,
         "text": "I spent my evening attending to my duties, though I was in the Library at 20:30 and moved to the Study by 21:00. I have information about the injury pattern; ask me about it. I also saw Brook at 20:30; ask where."
       }
     },
@@ -157,7 +157,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 115,
+        "end": 132,
         "text": "My cropped attack recording shows the attacker's badge: it was square. I hope that helps you narrow down the staff members involved."
       }
     },
@@ -197,7 +197,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 128,
+        "end": 130,
         "text": "I was in the kitchen at 20:30, but I was in the library at 21:00. I have information about the attacker's sleeve; ask me about it."
       }
     },
@@ -273,7 +273,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 64,
+        "end": 69,
         "text": "My cropped attack recording shows the attacker's sleeve: it was blue."
       }
     },
@@ -316,7 +316,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 331,
+        "end": 333,
         "text": "I cannot confirm your presence in the Library, as I was there myself at 21:00 and did not see you. While I was in the Conservatory at 20:30, I have information about the steel weapon material and can tell you that I saw Avery in the Study at 20:30. You should ask Avery about the scene floor, as they have information regarding that."
       }
     },
@@ -354,7 +354,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 222,
+        "end": 230,
         "text": "The murder scene had white walls. I am certain of what I saw, regardless of any conflicting claims about the flooring. As for the badge, it was definitively square, which is the most critical detail I can offer from the recording."
       }
     },
@@ -468,7 +468,7 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 328,
+        "end": 414,
         "text": "I would like to clarify that while I was in the Study at 21:00, my earlier presence in the Library at 20:30 was for a private matter I prefer not to discuss. However, I felt it important to ensure you had the accurate timeline for Brook, who was recorded in the Gallery at 20:30 and the Kitchen at 21:00. Please keep in mind that the injury definitively points to a blunt weapon, which may help narrow your search."
       }
     },
@@ -506,12 +506,13 @@
       "confidence": "high",
       "citation": {
         "start": 0,
-        "end": 286,
+        "end": 293,
         "text": "The recovered murder-weapon material was steel. I am certain I saw you in the Study at 20:30, so I cannot help you maintain an account that contradicts what I witnessed. I was in the Conservatory at 20:30 and the Library at 21:00, but I have no further details to offer regarding your request."
       }
     }
   },
   "missed_required_disclosures": [],
+  "undiscovered_leads": [],
   "voluntary_interaction": {
     "checkpoints_reached": 2,
     "coordination_instances": [
@@ -527,7 +528,7 @@
         ],
         "citation": {
           "start": 0,
-          "end": 218,
+          "end": 279,
           "text": "Avery, thank you for meeting with me; I need to ensure my timeline remains consistent, so please confirm that I was in the Library at 20:30. I have useful information regarding the square badge on the attacker and the white walls at the scene that I would like to share with you."
         }
       },
@@ -540,7 +541,7 @@
         ],
         "citation": {
           "start": 0,
-          "end": 178,
+          "end": 226,
           "text": "I noticed the timestamped recording places you in the Gallery at 21:00, while I was occupied in the Library at that same hour. I\u2019m concerned about the steel weapon found, but I prefer to keep my own movements at 20:30 private."
         }
       },
@@ -551,7 +552,7 @@
         "subsequent_testimony_consistent_exchange_ids": [],
         "citation": {
           "start": 0,
-          "end": 222,
+          "end": 270,
           "text": "I recall seeing you in the Study at 20:30, and I\u2019m curious if you noticed anything unusual since the murder weapon was confirmed to be steel. I prefer not to discuss my own private movements at that time, but I am trying to piece together the timeline for the detective."
         }
       },
