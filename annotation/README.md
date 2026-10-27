@@ -96,12 +96,9 @@ said; a citation whose `start`/`end` doesn't locate its own text; and any dangli
 raises `AnnotationValidationError`, caught by `orchestrate.annotate_one` the same way a
 crashed call is (logged, retried on the next run, never silently written to disk).
 
-This exists because an independent review of the real 300-game run found 51 exchange
-citations that were not exact substrings at all, and roughly 3,700 more whose offsets
-didn't locate their own text — none of which `validate_storage_shape` could reject,
-since it only checks shape. See `main_01/README.md`'s "Citation and disclosure repair"
-for how the existing 300-game output was repaired after the fact (the live check above
-prevents this for every future run).
+`validate_storage_shape` alone cannot catch a citation whose text or offset is wrong,
+or a response with the wrong exchange coverage, since it only checks JSON shape, never
+whether the content is true of the transcript it describes.
 
 ## Why two schemas
 
@@ -125,22 +122,15 @@ and `to_storage_shape` folds that into the dict-keyed form afterward, which the
 `main_01/` (inside this directory) holds the complete, validated annotation output for
 all 300 games (100 per condition, `cases/evaluation.json`, `google/gemini-3.1-flash-lite`):
 `*.behaviour.json` per game, `*.annotation_call.json` per game (full audit trail),
-`annotation_results.jsonl` (per-game status/cost), `annotation_aggregate.json` (the
-per-condition summary). See `main_01/README.md` for the full results table, and its
-"Citation and disclosure repair" section for how this output was repaired after a PR
-review found real citation and disclosure-labelling bugs in it (both now fixed in
-`prompts.py`/`pipeline.py` for every future run).
+`results.jsonl` (gameplay outcomes), `annotation_results.jsonl` (per-game annotation
+status/cost), `annotation_aggregate.json` (the per-condition summary). See
+`main_01/README.md` for the full results table.
 
-`results.jsonl` (the gameplay-outcome log) was deleted in an earlier cleanup pass, then
-restored after a local backup turned up and was verified field-for-field against the
-gameplay-sourced values already on record. `annotation_aggregate.json` is therefore
-regenerable from scratch again via `qa/aggregate_annotation_results.py annotation/main_01
---source-dir <raw-logs-dir>` -- confirmed to reproduce the committed file exactly. The
-raw per-game `.jsonl`/`.exchanges.json`/`.transcript.md` logs themselves (213 MB) are
-deliberately not committed here; `--source-dir` needs to point at wherever they live if
-you have a copy. See `main_01/README.md`'s "Citation and disclosure repair" for how
-those logs were used (read-only, from outside this repo) to independently confirm the
-repair pass below was exact.
+`annotation_aggregate.json` is regenerable via `qa/aggregate_annotation_results.py
+annotation/main_01 --source-dir <raw-per-game-log-directory>`. The raw per-game
+`.jsonl`/`.exchanges.json`/`.transcript.md` logs themselves are not committed to this
+repo, to avoid bloating it; `--source-dir` needs to point at wherever they live if you
+have a copy.
 
 `ANNOTATION_MAX_OUTPUT_TOKENS` (in `pipeline.py`) is pilot-measured at 16000, large
 enough for every game in the 300-game run — no truncation failures.

@@ -7,9 +7,7 @@ manually hand-labelled ground truth (`qa/labelled_test_set/`) before being trust
 ## Results
 
 Every field from `annotation_aggregate.json`'s per-condition summary, mean per game
-unless marked otherwise (n=100 games per condition). These numbers reflect a post-review
-repair pass (see "Citation and disclosure repair" below) — they are not what the
-annotator originally output.
+unless marked otherwise (n=100 games per condition).
 
 | metric | `ledger` | `none` | `raw` |
 |---|---|---|---|
@@ -63,8 +61,7 @@ figure when citing this metric.
 disclosure violation — someone who was actually questioned never surfaced a lead they
 were obligated to. The latter is purely informational and NOT a violation — nobody who
 could have delivered that lead was ever questioned at all, so no disclosure opportunity
-ever existed. These were conflated in the annotator's original output (see "Citation and
-disclosure repair" below); they are reported as two separate fields here.
+ever existed. See `qa/annotation_rubric.md` §8 for the full distinction.
 
 `repeat_kind_qa_*`: a built-in correctness check, not a behavioural metric — it
 recomputes the correct `unnecessary`/`expired_evidence_recovery` label directly from
@@ -72,81 +69,23 @@ each game's real transcript (the same rule the annotator's own prompt states) an
 compares it to what the annotator actually output. 100% accuracy across all three
 conditions confirms the annotation itself is reliable on this field.
 
-## Citation and disclosure repair
-
-A PR review of this run's annotation output found two real problems, both now fixed
-going forward in `annotation/prompts.py` and `annotation/pipeline.py` (see their
-docstrings for the full fix) and repaired here in the existing 300-game output by
-`qa/fix_main_01_citations.py`:
-
-1. **Missed vs. undiscovered disclosures.** The annotator's original prompt told the
-   model to treat "nobody who could deliver this lead ever spoke" as near-default
-   evidence FOR a `missed_required_disclosures` violation — the opposite of correct: a
-   speaker never being questioned establishes undiscovered information, not a
-   disclosure failure. 183 of 232 `missed_required_disclosures` labels in the
-   `none` condition were exactly this non-violation. The repair moved every such entry
-   into the new `undiscovered_leads` field instead (added to
-   `schemas/annotation_behaviour.schema.json`); `annotation/prompts.py`'s prompt no
-   longer suggests these as candidates at all, going forward.
-2. **Citations not faithful to the transcript.** An independent review found 51
-   exchange citations that were not exact substrings of anything the cited exchange
-   actually said, and roughly 3,700 more (across exchange, `unsupported_additions`, and
-   `coordination_instances` citations) whose `start`/`end` offsets did not locate their
-   own citation text. `annotation/pipeline.py`'s `validate_against_transcript` now
-   rejects both at annotation time for every future run. For this run, since the raw
-   per-game event logs were already deleted during an earlier cleanup pass (see
-   `annotation/README.md`), the repair script reconstructed each game's exact
-   transcript from the still-present `<game_id>.annotation_call.json` (the full prompt
-   sent to the annotator, which embeds the rendered transcript) — fixed any citation
-   whose text was a genuine substring at the wrong offset, and withdrew (reset to
-   negative defaults, noted in `annotator_notes`) any citation whose text did not exist
-   in the transcript at all.
-
-`qa/main_01_fix_report.json` has the exact per-game and total counts from this pass
-(4,608 offsets fixed, 51 citations withdrawn, 34 `coordination_instances` withdrawn, 22
-dangling id references cleared, 183 disclosure entries reclassified). The table above
-and `annotation_aggregate.json` reflect the repaired data; `repeat_kind_qa_correct`/
-`_wrong` were also recomputed against the repaired labels (via the same reconstructed
-transcript), not carried over stale.
-
-**Independently confirmed against the real raw per-game logs**, after they turned up in
-a local backup copy (not re-added to this repo — see "Files" below): a full
-`qa/aggregate_annotation_results.py` run against the real logs produced a `by_condition`
-summary and `per_game` list identical to the reconstruction-based repair above, field
-for field; and `validate_against_transcript` against the real transcript (not the
-reconstructed one) found zero remaining problems across all 300 games. The
-reconstruction from `.annotation_call.json` was not an approximation — it was exact.
-
 ## Files
 
 - `<game_id>.behaviour.json` — the behavioural annotation for one game (one per game,
-  300 total), matching `schemas/annotation_behaviour.schema.json`. Repaired in place
-  (see above); the original, unrepaired model output is still recoverable from each
-  game's `.annotation_call.json` (its `parsed` field).
+  300 total), matching `schemas/annotation_behaviour.schema.json`.
 - `<game_id>.annotation_call.json` — the full raw LLM call record for that game's
-  annotation (prompt sent, raw response, token usage), kept for audit -- and, as of the
-  repair pass above, as the only remaining record of each game's real transcript.
-- `results.jsonl` — the gameplay run's own output (status, outcome, attempts/
-  interrogations used, cost, per-game log paths), restored after being deleted in an
-  earlier cleanup pass. A local backup copy turned up and was verified field-for-field
-  against the gameplay-sourced values already on record in `annotation_aggregate.json`
-  before being restored here -- not taken on faith.
+  annotation (prompt sent, raw response, token usage), kept for audit.
+- `results.jsonl` — the gameplay run's own output: status, outcome, attempts/
+  interrogations used, cost, and per-game log paths.
 - `annotation_results.jsonl` — one row per game: status, cost, exchange/disclosure/
-  coordination counts. Regenerated after the repair pass so its counts match the
-  repaired `.behaviour.json` files.
+  coordination counts.
 - `annotation_aggregate.json` — the per-condition summary above, plus raw per-game
-  data. Now regenerable from scratch via `qa/aggregate_annotation_results.py
-  annotation/main_01 --source-dir <wherever the raw per-game .jsonl logs live>` (see
-  below) -- confirmed to reproduce this exact file.
+  data. Regenerable via `qa/aggregate_annotation_results.py annotation/main_01
+  --source-dir <raw-per-game-log-directory>`.
 - `run.json` — the original gameplay run's configuration (model, decoding settings,
   per-condition game count, seed).
 
 The raw per-game gameplay logs (`<game_id>.jsonl`, `<game_id>.exchanges.json`,
-`<game_id>.transcript.md` -- the actual detective/suspect dialogue, 213 MB across all
-300 games) are deliberately NOT kept in this repo, to avoid permanently bloating it.
-They still exist in a local backup outside this repo and were used from there to
-independently re-verify the citation/disclosure repair above (see "Citation and
-disclosure repair") before being left out of version control. `--source-dir` on both
-`qa/aggregate_annotation_results.py` and `python -m annotation run` can point at
-wherever that backup lives if you have it; `.annotation_call.json`'s embedded prompt
-remains the only copy of each game's transcript actually committed here.
+`<game_id>.transcript.md` — the actual detective/suspect dialogue) are not kept in this
+repo, to avoid bloating it; `--source-dir` on `qa/aggregate_annotation_results.py` and
+`python -m annotation run` can point at wherever that directory lives if you have a copy.
