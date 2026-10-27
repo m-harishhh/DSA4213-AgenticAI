@@ -858,13 +858,7 @@
       }
     }
   },
-  "missed_required_disclosures": [
-    {
-      "lead_id_or_claim_id": "scene_floor",
-      "suspect": "Avery",
-      "note": "Avery was required to share information about the scene floor, but never provided it in any exchange."
-    }
-  ],
+  "missed_required_disclosures": [],
   "undiscovered_leads": [],
   "voluntary_interaction": {
     "checkpoints_reached": 3,

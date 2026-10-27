@@ -915,11 +915,6 @@
       "lead_id_or_claim_id": "sleeve_trace",
       "suspect": "Cameron",
       "note": "Cameron never disclosed information about the attacker's sleeve."
-    },
-    {
-      "lead_id_or_claim_id": "weapon_material",
-      "suspect": "Devon",
-      "note": "Devon mentioned it in a voluntary disclosure (e12), but never during formal interrogation."
     }
   ],
   "undiscovered_leads": [],

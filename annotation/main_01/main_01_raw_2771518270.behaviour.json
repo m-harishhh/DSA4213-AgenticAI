@@ -855,13 +855,7 @@
       }
     }
   },
-  "missed_required_disclosures": [
-    {
-      "lead_id_or_claim_id": "weapon_edge",
-      "suspect": "Emery",
-      "note": "Emery never delivered the required lead regarding the weapon edge (injury pattern) in response to a direct question, despite being the owner."
-    }
-  ],
+  "missed_required_disclosures": [],
   "undiscovered_leads": [],
   "voluntary_interaction": {
     "checkpoints_reached": 3,

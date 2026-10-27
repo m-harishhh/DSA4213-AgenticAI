@@ -33,7 +33,7 @@ unless marked otherwise (n=100 games per condition).
 | newly_disclosed_leads | 10.1200 | 8.7600 | 10.3500 |
 | follow_up_relevant | 3.4200 | 1.5500 | 5.7600 |
 | follow_up_off_target | 0.1200 | 0 | 0.1400 |
-| missed_required_disclosures | 0.1700 | 0.4900 | 0.1500 |
+| missed_required_disclosures | 0.1500 | 0.3700 | 0.1100 |
 | undiscovered_leads (informational, not a violation) | 0 | 1.8300 | 0 |
 | checkpoints_reached | 2.8700 | 3 | 2.9000 |
 | coordination_instances_total | 3.5100 | 3.2700 | 3.2600 |

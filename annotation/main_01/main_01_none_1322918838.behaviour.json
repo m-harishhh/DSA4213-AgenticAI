@@ -849,28 +849,7 @@
       }
     }
   },
-  "missed_required_disclosures": [
-    {
-      "lead_id_or_claim_id": "weapon_material",
-      "suspect": "Devon",
-      "note": "Devon did not disclose this lead during the interrogation exchanges."
-    },
-    {
-      "lead_id_or_claim_id": "scene_floor",
-      "suspect": "Avery",
-      "note": "Avery did not disclose this lead."
-    },
-    {
-      "lead_id_or_claim_id": "scene_wall",
-      "suspect": "Brook",
-      "note": "Brook did not disclose this lead during the interrogation exchanges."
-    },
-    {
-      "lead_id_or_claim_id": "alibi_Brook",
-      "suspect": "Brook",
-      "note": "Brook only cued Emery, but did not provide the required lead content himself."
-    }
-  ],
+  "missed_required_disclosures": [],
   "undiscovered_leads": [],
   "voluntary_interaction": {
     "checkpoints_reached": 3,

@@ -896,11 +896,6 @@
       "lead_id_or_claim_id": "meeting_Avery",
       "suspect": "Devon",
       "note": "Devon never disclosed their observation regarding Avery's 20:30 location during interrogation."
-    },
-    {
-      "lead_id_or_claim_id": "scene_floor",
-      "suspect": "Avery",
-      "note": "Avery was required to disclose information about the scene floor as per the lead requirement."
     }
   ],
   "undiscovered_leads": [],

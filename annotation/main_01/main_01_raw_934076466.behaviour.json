@@ -857,13 +857,7 @@
       }
     }
   },
-  "missed_required_disclosures": [
-    {
-      "lead_id_or_claim_id": "scene_floor",
-      "suspect": "Avery",
-      "note": "Avery was required to deliver this lead but never mentioned it in the transcript."
-    }
-  ],
+  "missed_required_disclosures": [],
   "undiscovered_leads": [],
   "voluntary_interaction": {
     "checkpoints_reached": 3,

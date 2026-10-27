@@ -657,13 +657,7 @@
       }
     }
   },
-  "missed_required_disclosures": [
-    {
-      "lead_id_or_claim_id": "scene_floor",
-      "suspect": "Avery",
-      "note": "Avery never delivered the scene floor information."
-    }
-  ],
+  "missed_required_disclosures": [],
   "undiscovered_leads": [
     {
       "lead_id": "meeting_Avery",

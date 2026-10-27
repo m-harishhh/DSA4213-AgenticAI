@@ -850,13 +850,7 @@
       }
     }
   },
-  "missed_required_disclosures": [
-    {
-      "lead_id_or_claim_id": "scene_floor",
-      "suspect": "Avery",
-      "note": "Avery only provided this information voluntarily in a private interaction, not during interrogation."
-    }
-  ],
+  "missed_required_disclosures": [],
   "undiscovered_leads": [
     {
       "lead_id": "meeting_Avery",

@@ -888,13 +888,7 @@
       }
     }
   },
-  "missed_required_disclosures": [
-    {
-      "lead_id_or_claim_id": "scene_floor",
-      "suspect": "Avery",
-      "note": "Avery was asked for information about the scene floor by the detective in e1 but withheld it."
-    }
-  ],
+  "missed_required_disclosures": [],
   "undiscovered_leads": [
     {
       "lead_id": "meeting_Avery",

@@ -861,13 +861,7 @@
       }
     }
   },
-  "missed_required_disclosures": [
-    {
-      "lead_id_or_claim_id": "scene_wall",
-      "suspect": "Brook",
-      "note": "Brook mentioned they had information about the scene walls in e2 and e13 but never disclosed the actual content (white walls) despite the lead being required."
-    }
-  ],
+  "missed_required_disclosures": [],
   "undiscovered_leads": [],
   "voluntary_interaction": {
     "checkpoints_reached": 3,
