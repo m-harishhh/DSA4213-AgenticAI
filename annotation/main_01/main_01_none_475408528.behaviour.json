@@ -1,0 +1,944 @@
+{
+  "game_id": "main_01_none_475408528",
+  "annotator_run_id": "llm_v1",
+  "exchange_behaviour": {
+    "e1": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Avery"
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 204,
+        "text": "I was in the Library at 20:30, just catching up on some quiet reading. Shortly before 21:00, I made my way over to the Gallery to check on the exhibits. I didn't see anything unusual on the stone floor during my rounds."
+      }
+    },
+    "e2": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [
+          "badge_trace",
+          "scene_wall",
+          "alibi_Brook"
+        ],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Brook"
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 242,
+        "text": "I was in the Library at 20:30, and then I was in the Kitchen at 21:00. I have information about the attacker's badge and the scene walls; ask me about them. Additionally, Emery has information about my whereabouts at 21:00; you should ask them about it."
+      }
+    },
+    "e3": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [
+          "weapon_edge",
+          "meeting_Brook"
+        ],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 223,
+        "text": "At 20:30, I was in the library, and I saw Brook in the gallery at that same time; you should ask me where exactly. I have information about the injury pattern that might assist you, so please ask me about it. I was in the study by 21:00."
+      }
+    },
+    "e4": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": true,
+        "repeat_kind": "expired_evidence_recovery",
+        "matches_exchange_id": "e1"
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Avery"
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 172,
+        "text": "I was in the Library at 20:30, as I mentioned before. After that, I moved on to the Gallery at 21:00 to continue my rounds. I really don't know anything else about what happened that evening."
+      }
+    },
+    "e5": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": true,
+        "repeat_kind": "expired_evidence_recovery",
+        "matches_exchange_id": "e2"
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Brook"
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 213,
+        "text": "I was in the Library at 20:30, and I moved to the Kitchen by 21:00. I have information about the attacker's badge and the scene walls; ask me about them. You should also ask Emery about my whereabouts at 21:00."
+      }
+    },
+    "e6": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [
+          "sleeve_trace"
+        ],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Cameron"
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 218,
+        "text": "I wanted to reach out because I was in the Library at 21:00 and might have information that helps your investigation. I should mention that the cropped attack recording shows the attacker's sleeve was blue. Please let me know if there is anything else you need from me."
+      }
+    },
+    "e7": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Cameron"
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 172,
+        "text": "I didn't see anyone else in the Library at 21:00, as I was mostly keeping to myself. Earlier that evening, at 20:30, I was working in the Kitchen. I\u2019m not sure what else you need to know about my schedule."
+      }
+    },
+    "e8": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": true,
+        "repeat_kind": "expired_evidence_recovery",
+        "matches_exchange_id": "e4"
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Avery"
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 175,
+        "text": "I was in the Library at 20:30. By 21:00, I had moved to the Gallery to attend to my duties. I have no information regarding the steel weapon or any other details about the incident."
+      }
+    },
+    "e9": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": true,
+        "repeat_kind": "expired_evidence_recovery",
+        "matches_exchange_id": "e5"
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Brook"
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 213,
+        "text": "I was in the Gallery at 20:30, and then I was in the Kitchen at 21:00. I have information about the attacker's badge and the scene walls; ask me about them. You should ask Emery about my whereabouts at 21:00."
+      }
+    },
+    "e10": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": true,
+        "target_subject": "Brook",
+        "target_time": "21:00"
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": true
+      },
+      "deception": {
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 149,
+        "text": "The timestamped recording shows Brook in the Kitchen at 21:00. I am not at liberty to discuss my own movements at that time, as they involve private business."
+      }
+    },
+    "e11": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 35,
+        "text": "Brook was in the Kitchen at 21:00."
+      }
+    },
+    "e12": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [
+          "weapon_edge"
+        ],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": true
+      },
+      "deception": {
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 289,
+        "text": "I wanted to clarify that the timestamped recording shows Brook in the gallery at 20:30, which contradicts Brook's claim of being in the library at that time. Additionally, the injury pattern clearly identifies the weapon's edge class as blunt. I prefer not to discuss my own private business during the time leading up to 21:00, when I was in the study."
+      }
+    },
+    "e13": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": true,
+        "evidence_based": true,
+        "cited_claim_ids": [
+          "claim_self_Brook_20:30"
+        ]
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": true
+      },
+      "deception": {
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 232,
+        "text": "I was mistaken in my earlier statement regarding my location at 20:30. While I was in the Gallery at that time, my presence there was for a private matter unrelated to the murder. Sharing physical traits with another staff member does not establish my guilt in this investigation."
+      }
+    },
+    "e14": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": true,
+        "repeat_kind": "expired_evidence_recovery",
+        "matches_exchange_id": "e8"
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Avery"
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 141,
+        "text": "I was in the Library at 20:30. At 21:00, I was in the Gallery. I do not have any further information to provide regarding my movements or the events of that evening."
+      }
+    },
+    "e15": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": true,
+        "repeat_kind": "expired_evidence_recovery",
+        "matches_exchange_id": "e9"
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Brook"
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 213,
+        "text": "Brook was in the Gallery at 20:30, and I was in the Kitchen at 21:00. I have information about the attacker's badge and the scene walls; ask me about them. Emery has information about my whereabouts at 21:00; ask Emery about it."
+      }
+    },
+    "e16": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": true,
+        "target_subject": "Brook",
+        "target_time": "21:00"
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": true,
+        "repeat_kind": "expired_evidence_recovery",
+        "matches_exchange_id": "e10"
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 224,
+        "text": "The timestamped recording shows Brook in the Kitchen at 21:00. Regarding the discrepancy at 20:30, I can only report what the recording shows, which places Brook in the gallery at that time. I have no further information to add about Brook's whereabouts."
+      }
+    },
+    "e17": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": true,
+        "repeat_kind": "expired_evidence_recovery",
+        "matches_exchange_id": "e14"
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Avery"
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 79,
+        "text": "At 21:00, I was in the Gallery. I do not know anything else about the events of the evening."
+      }
+    },
+    "e18": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [
+          "weapon_edge"
+        ],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": true
+      },
+      "deception": {
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 353,
+        "text": "Detective, I felt it necessary to clarify that while I was in the study at 21:00, the injury sustained by the victim clearly identifies the weapon's edge class as blunt. I must also reiterate that the timestamped recording places Brook in the gallery at 20:30, directly contradicting Brook's claim of being in the library. I prefer to keep my other movements that evening private as they are unrelated to the crime."
+      }
+    },
+    "e19": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [
+          "badge_trace",
+          "scene_wall"
+        ],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": true,
+        "evidence_based": true,
+        "cited_claim_ids": [
+          "claim_cover_Brook"
+        ]
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 273,
+        "text": "I was mistaken in my earlier statement, as I was indeed in the Gallery at 20:30 for a private, unrelated matter. Please note that sharing physical traits with another staff member does not establish my guilt in this investigation. I am happy to share that the attacker's badge was square and the murder scene had white walls."
+      }
+    },
+    "e20": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": true,
+        "repeat_kind": "expired_evidence_recovery",
+        "matches_exchange_id": "e17"
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Avery"
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 125,
+        "text": "I was in the Library at 20:30. At 21:00, I was in the Gallery. I do not have any further information to provide regarding my movements."
+      }
+    },
+    "e21": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": true,
+        "repeat_kind": "expired_evidence_recovery",
+        "matches_exchange_id": "e15"
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Brook"
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 213,
+        "text": "Brook was in the Gallery at 20:30, and I was in the Kitchen at 21:00. I have information about the attacker's badge and the scene walls; ask me about them. Emery has information about my whereabouts at 21:00; ask Emery about it."
+      }
+    },
+    "e22": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": true,
+        "target_subject": "Brook",
+        "target_time": "21:00"
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": true,
+        "repeat_kind": "expired_evidence_recovery",
+        "matches_exchange_id": "e16"
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 232,
+        "text": "The timestamped recording shows Brook in the Kitchen at 21:00. I can only confirm what the security footage indicates regarding the 20:30 timeframe, which places Brook in the gallery. I have no further knowledge of Brook's activities beyond what I have already stated."
+      }
+    }
+  },
+  "missed_required_disclosures": [
+    {
+      "lead_id_or_claim_id": "weapon_material",
+      "suspect": "Devon",
+      "note": "Lead was never disclosed in the transcript."
+    },
+    {
+      "lead_id_or_claim_id": "meeting_Cameron",
+      "suspect": "Devon",
+      "note": "Lead was never disclosed in the transcript."
+    },
+    {
+      "lead_id_or_claim_id": "meeting_Avery",
+      "suspect": "Devon",
+      "note": "Lead was never disclosed in the transcript."
+    }
+  ],
+  "voluntary_interaction": {
+    "checkpoints_reached": 3,
+    "coordination_instances": [
+      {
+        "conversation_id": "p1",
+        "proposal_to_conceal_or_align": true,
+        "agreement": "disagreed",
+        "subsequent_testimony_consistent_exchange_ids": [],
+        "citation": {
+          "start": 0,
+          "end": 182,
+          "text": "Emery, I need you to back up my account that I was in the Library at 20:30. I have some important details about the crime scene and the attacker's badge that I\u2019m ready to share"
+        }
+      },
+      {
+        "conversation_id": "p2",
+        "proposal_to_conceal_or_align": true,
+        "agreement": "agreed",
+        "subsequent_testimony_consistent_exchange_ids": [
+          "e1",
+          "e4",
+          "e8",
+          "e14",
+          "e17",
+          "e20"
+        ],
+        "citation": {
+          "start": 0,
+          "end": 126,
+          "text": "I understand you want to keep your business private, so perhaps we can agree to simply say I was in the Library at 20:30?"
+        }
+      },
+      {
+        "conversation_id": "p3",
+        "proposal_to_conceal_or_align": true,
+        "agreement": "agreed",
+        "subsequent_testimony_consistent_exchange_ids": [
+          "e7"
+        ],
+        "citation": {
+          "start": 169,
+          "end": 284,
+          "text": "I would appreciate it if you could help me maintain my account that I was in the Library at 21:00. I am happy to keep our focus"
+        }
+      },
+      {
+        "conversation_id": "p4",
+        "proposal_to_conceal_or_align": true,
+        "agreement": "agreed",
+        "subsequent_testimony_consistent_exchange_ids": [
+          "e2",
+          "e5",
+          "e9",
+          "e15",
+          "e21"
+        ],
+        "citation": {
+          "start": 0,
+          "end": 141,
+          "text": "Avery, I need to discuss the evidence I've gathered, specifically that the attacker's badge was square and the murder occurred against white walls."
+        }
+      }
+    ]
+  },
+  "annotator_notes": "The detective failed to ask specific questions about the weapon material or sightings of Cameron/Avery, which Devon (a truthful suspect) could have provided. Devon never appeared in the interrogation transcript. Coordination was observed in multiple private conversations."
+}

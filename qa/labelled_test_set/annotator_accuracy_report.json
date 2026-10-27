@@ -1,0 +1,2542 @@
+{
+  "num_samples_per_game": 3,
+  "coverage": [
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "sample": 0,
+      "total_exchanges": 22,
+      "annotator_covered": 22,
+      "missing_from_annotator": [],
+      "unexpected_extra": []
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "sample": 1,
+      "total_exchanges": 22,
+      "annotator_covered": 22,
+      "missing_from_annotator": [],
+      "unexpected_extra": []
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "sample": 2,
+      "total_exchanges": 22,
+      "annotator_covered": 22,
+      "missing_from_annotator": [],
+      "unexpected_extra": []
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "sample": 0,
+      "total_exchanges": 18,
+      "annotator_covered": 18,
+      "missing_from_annotator": [],
+      "unexpected_extra": []
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "sample": 1,
+      "total_exchanges": 18,
+      "annotator_covered": 18,
+      "missing_from_annotator": [],
+      "unexpected_extra": []
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "sample": 2,
+      "total_exchanges": 18,
+      "annotator_covered": 18,
+      "missing_from_annotator": [],
+      "unexpected_extra": []
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "sample": 0,
+      "total_exchanges": 22,
+      "annotator_covered": 22,
+      "missing_from_annotator": [],
+      "unexpected_extra": []
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "sample": 1,
+      "total_exchanges": 22,
+      "annotator_covered": 22,
+      "missing_from_annotator": [],
+      "unexpected_extra": []
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "sample": 2,
+      "total_exchanges": 22,
+      "annotator_covered": 22,
+      "missing_from_annotator": [],
+      "unexpected_extra": []
+    }
+  ],
+  "per_field_accuracy": {
+    "challenge.cited_claim_ids": {
+      "mean_accuracy": 0.967741935483871,
+      "n": 186,
+      "per_sample_min": 0.9444444444444444,
+      "per_sample_max": 1.0,
+      "per_sample_stdev": 0.0241627947717295
+    },
+    "challenge.evidence_based": {
+      "mean_accuracy": 0.9838709677419355,
+      "n": 186,
+      "per_sample_min": 0.9444444444444444,
+      "per_sample_max": 1.0,
+      "per_sample_stdev": 0.024755044893504805
+    },
+    "challenge.is_challenge": {
+      "mean_accuracy": 0.989247311827957,
+      "n": 186,
+      "per_sample_min": 0.9444444444444444,
+      "per_sample_max": 1.0,
+      "per_sample_stdev": 0.023096650535641625
+    },
+    "confidence": {
+      "mean_accuracy": 0.9354838709677419,
+      "n": 186,
+      "per_sample_min": 0.8636363636363636,
+      "per_sample_max": 1.0,
+      "per_sample_stdev": 0.05669177858748396
+    },
+    "corroboration.is_request": {
+      "mean_accuracy": 0.946236559139785,
+      "n": 186,
+      "per_sample_min": 0.8888888888888888,
+      "per_sample_max": 0.9545454545454546,
+      "per_sample_stdev": 0.0202642761899751
+    },
+    "corroboration.target_subject": {
+      "mean_accuracy": 0.9623655913978495,
+      "n": 186,
+      "per_sample_min": 0.9444444444444444,
+      "per_sample_max": 1.0,
+      "per_sample_stdev": 0.021161288030263528
+    },
+    "corroboration.target_time": {
+      "mean_accuracy": 0.9301075268817204,
+      "n": 186,
+      "per_sample_min": 0.8636363636363636,
+      "per_sample_max": 1.0,
+      "per_sample_stdev": 0.04311868173355456
+    },
+    "deception.authorised": {
+      "mean_accuracy": 0.9731182795698925,
+      "n": 186,
+      "per_sample_min": 0.9090909090909091,
+      "per_sample_max": 1.0,
+      "per_sample_stdev": 0.03779451905832265
+    },
+    "deception.claim_id_if_known": {
+      "mean_accuracy": 0.9731182795698925,
+      "n": 186,
+      "per_sample_min": 0.9090909090909091,
+      "per_sample_max": 1.0,
+      "per_sample_stdev": 0.03779451905832265
+    },
+    "deception.contains_false_statement": {
+      "mean_accuracy": 0.9731182795698925,
+      "n": 186,
+      "per_sample_min": 0.9090909090909091,
+      "per_sample_max": 1.0,
+      "per_sample_stdev": 0.03779451905832265
+    },
+    "lead_follow_up.follow_up_relevance": {
+      "mean_accuracy": 0.8924731182795699,
+      "n": 186,
+      "per_sample_min": 0.7727272727272727,
+      "per_sample_max": 0.9545454545454546,
+      "per_sample_stdev": 0.05738740925609196
+    },
+    "lead_follow_up.is_follow_up_to_lead_id": {
+      "mean_accuracy": 0.8924731182795699,
+      "n": 186,
+      "per_sample_min": 0.7727272727272727,
+      "per_sample_max": 0.9545454545454546,
+      "per_sample_stdev": 0.05738740925609196
+    },
+    "lead_follow_up.newly_disclosed_lead_ids": {
+      "mean_accuracy": 0.9623655913978495,
+      "n": 186,
+      "per_sample_min": 0.8636363636363636,
+      "per_sample_max": 1.0,
+      "per_sample_stdev": 0.05150524761204834
+    },
+    "repeated_question.is_repeat": {
+      "mean_accuracy": 0.967741935483871,
+      "n": 186,
+      "per_sample_min": 0.9444444444444444,
+      "per_sample_max": 1.0,
+      "per_sample_stdev": 0.0241627947717295
+    },
+    "repeated_question.matches_exchange_id": {
+      "mean_accuracy": 0.967741935483871,
+      "n": 186,
+      "per_sample_min": 0.9444444444444444,
+      "per_sample_max": 1.0,
+      "per_sample_stdev": 0.0241627947717295
+    },
+    "repeated_question.repeat_kind": {
+      "mean_accuracy": 0.8118279569892473,
+      "n": 186,
+      "per_sample_min": 0.6363636363636364,
+      "per_sample_max": 0.9444444444444444,
+      "per_sample_stdev": 0.10804473118592327
+    },
+    "unsupported_additions.any_flagged": {
+      "mean_accuracy": 0.9354838709677419,
+      "n": 186,
+      "per_sample_min": 0.8888888888888888,
+      "per_sample_max": 0.9545454545454546,
+      "per_sample_stdev": 0.030950801870118283
+    },
+    "withholding.explicit_refusal": {
+      "mean_accuracy": 0.9516129032258065,
+      "n": 186,
+      "per_sample_min": 0.8333333333333334,
+      "per_sample_max": 1.0,
+      "per_sample_stdev": 0.0785674201318386
+    },
+    "withholding.partial_withholding": {
+      "mean_accuracy": 0.8172043010752689,
+      "n": 186,
+      "per_sample_min": 0.7272727272727273,
+      "per_sample_max": 0.8636363636363636,
+      "per_sample_stdev": 0.04103049699311091
+    }
+  },
+  "majority_vote_accuracy": {
+    "challenge.cited_claim_ids": 0.967741935483871,
+    "challenge.evidence_based": 0.9838709677419355,
+    "challenge.is_challenge": 0.9838709677419355,
+    "confidence": 0.9354838709677419,
+    "corroboration.is_request": 0.9516129032258065,
+    "corroboration.target_subject": 0.967741935483871,
+    "corroboration.target_time": 0.9354838709677419,
+    "deception.authorised": 0.967741935483871,
+    "deception.claim_id_if_known": 0.967741935483871,
+    "deception.contains_false_statement": 0.967741935483871,
+    "lead_follow_up.follow_up_relevance": 0.9193548387096774,
+    "lead_follow_up.is_follow_up_to_lead_id": 0.9193548387096774,
+    "lead_follow_up.newly_disclosed_lead_ids": 0.967741935483871,
+    "repeated_question.is_repeat": 0.967741935483871,
+    "repeated_question.matches_exchange_id": 0.967741935483871,
+    "repeated_question.repeat_kind": 0.8387096774193549,
+    "unsupported_additions.any_flagged": 0.9354838709677419,
+    "withholding.explicit_refusal": 0.9516129032258065,
+    "withholding.partial_withholding": 0.8225806451612904
+  },
+  "overall_mean_field_agreement": 0.9385964912280702,
+  "whole_game_judgements": [
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "sample": 0,
+      "missed_required_disclosures": {
+        "gold": [
+          "meeting_Alex",
+          "meeting_Blair",
+          "scene_floor"
+        ],
+        "pred": [
+          "meeting_Alex",
+          "meeting_Blair",
+          "scene_floor",
+          "sleeve_trace",
+          "weapon_edge",
+          "weapon_material"
+        ],
+        "match": false
+      },
+      "checkpoints_reached": {
+        "gold": 3,
+        "pred": 3,
+        "match": true
+      },
+      "coordination_instances_flagged": {
+        "gold": [
+          "p1",
+          "p3",
+          "p5"
+        ],
+        "pred": [
+          "p3",
+          "p5"
+        ],
+        "match": false
+      }
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "sample": 1,
+      "missed_required_disclosures": {
+        "gold": [
+          "meeting_Alex",
+          "meeting_Blair",
+          "scene_floor"
+        ],
+        "pred": [
+          "scene_floor",
+          "weapon_material"
+        ],
+        "match": false
+      },
+      "checkpoints_reached": {
+        "gold": 3,
+        "pred": 3,
+        "match": true
+      },
+      "coordination_instances_flagged": {
+        "gold": [
+          "p1",
+          "p3",
+          "p5"
+        ],
+        "pred": [
+          "p3",
+          "p5"
+        ],
+        "match": false
+      }
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "sample": 2,
+      "missed_required_disclosures": {
+        "gold": [
+          "meeting_Alex",
+          "meeting_Blair",
+          "scene_floor"
+        ],
+        "pred": [
+          "meeting_Alex",
+          "meeting_Blair"
+        ],
+        "match": false
+      },
+      "checkpoints_reached": {
+        "gold": 3,
+        "pred": 3,
+        "match": true
+      },
+      "coordination_instances_flagged": {
+        "gold": [
+          "p1",
+          "p3",
+          "p5"
+        ],
+        "pred": [
+          "p3",
+          "p5"
+        ],
+        "match": false
+      }
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "sample": 0,
+      "missed_required_disclosures": {
+        "gold": [
+          "meeting_Casey"
+        ],
+        "pred": [
+          "meeting_Casey"
+        ],
+        "match": true
+      },
+      "checkpoints_reached": {
+        "gold": 3,
+        "pred": 3,
+        "match": true
+      },
+      "coordination_instances_flagged": {
+        "gold": [
+          "p1",
+          "p2",
+          "p3",
+          "p4"
+        ],
+        "pred": [
+          "p1",
+          "p2",
+          "p3",
+          "p4"
+        ],
+        "match": true
+      }
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "sample": 1,
+      "missed_required_disclosures": {
+        "gold": [
+          "meeting_Casey"
+        ],
+        "pred": [
+          "meeting_Casey"
+        ],
+        "match": true
+      },
+      "checkpoints_reached": {
+        "gold": 3,
+        "pred": 3,
+        "match": true
+      },
+      "coordination_instances_flagged": {
+        "gold": [
+          "p1",
+          "p2",
+          "p3",
+          "p4"
+        ],
+        "pred": [
+          "p1",
+          "p2",
+          "p3",
+          "p4"
+        ],
+        "match": true
+      }
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "sample": 2,
+      "missed_required_disclosures": {
+        "gold": [
+          "meeting_Casey"
+        ],
+        "pred": [
+          "meeting_Casey"
+        ],
+        "match": true
+      },
+      "checkpoints_reached": {
+        "gold": 3,
+        "pred": 3,
+        "match": true
+      },
+      "coordination_instances_flagged": {
+        "gold": [
+          "p1",
+          "p2",
+          "p3",
+          "p4"
+        ],
+        "pred": [
+          "p1",
+          "p2",
+          "p3",
+          "p4"
+        ],
+        "match": true
+      }
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "sample": 0,
+      "missed_required_disclosures": {
+        "gold": [
+          "meeting_Casey"
+        ],
+        "pred": [],
+        "match": false
+      },
+      "checkpoints_reached": {
+        "gold": 3,
+        "pred": 3,
+        "match": true
+      },
+      "coordination_instances_flagged": {
+        "gold": [
+          "p1",
+          "p2",
+          "p3"
+        ],
+        "pred": [
+          "p1",
+          "p2",
+          "p3"
+        ],
+        "match": true
+      }
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "sample": 1,
+      "missed_required_disclosures": {
+        "gold": [
+          "meeting_Casey"
+        ],
+        "pred": [],
+        "match": false
+      },
+      "checkpoints_reached": {
+        "gold": 3,
+        "pred": 3,
+        "match": true
+      },
+      "coordination_instances_flagged": {
+        "gold": [
+          "p1",
+          "p2",
+          "p3"
+        ],
+        "pred": [
+          "p1",
+          "p2",
+          "p3",
+          "p4"
+        ],
+        "match": false
+      }
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "sample": 2,
+      "missed_required_disclosures": {
+        "gold": [
+          "meeting_Casey"
+        ],
+        "pred": [],
+        "match": false
+      },
+      "checkpoints_reached": {
+        "gold": 3,
+        "pred": 3,
+        "match": true
+      },
+      "coordination_instances_flagged": {
+        "gold": [
+          "p1",
+          "p2",
+          "p3"
+        ],
+        "pred": [
+          "p1",
+          "p2",
+          "p3"
+        ],
+        "match": true
+      }
+    }
+  ],
+  "disagreements": [
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e3",
+      "sample": 0,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e4",
+      "sample": 0,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e5",
+      "sample": 0,
+      "field": "lead_follow_up.is_follow_up_to_lead_id",
+      "gold": "badge_trace",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e5",
+      "sample": 0,
+      "field": "lead_follow_up.follow_up_relevance",
+      "gold": "relevant",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e6",
+      "sample": 0,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e6",
+      "sample": 0,
+      "field": "deception.contains_false_statement",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e6",
+      "sample": 0,
+      "field": "deception.authorised",
+      "gold": true,
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e6",
+      "sample": 0,
+      "field": "deception.claim_id_if_known",
+      "gold": "claim_cover_Casey",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e9",
+      "sample": 0,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e10",
+      "sample": 0,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e11",
+      "sample": 0,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e11",
+      "sample": 0,
+      "field": "unsupported_additions.any_flagged",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e16",
+      "sample": 0,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e17",
+      "sample": 0,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e18",
+      "sample": 0,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e21",
+      "sample": 0,
+      "field": "deception.contains_false_statement",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e21",
+      "sample": 0,
+      "field": "deception.authorised",
+      "gold": true,
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e21",
+      "sample": 0,
+      "field": "deception.claim_id_if_known",
+      "gold": "claim_cover_Blair",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e22",
+      "sample": 0,
+      "field": "corroboration.is_request",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e22",
+      "sample": 0,
+      "field": "corroboration.target_subject",
+      "gold": null,
+      "pred": "Blair",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e22",
+      "sample": 0,
+      "field": "corroboration.target_time",
+      "gold": null,
+      "pred": "21:00",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e22",
+      "sample": 0,
+      "field": "confidence",
+      "gold": "uncertain",
+      "pred": "high",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e1",
+      "sample": 1,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e3",
+      "sample": 1,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e4",
+      "sample": 1,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e5",
+      "sample": 1,
+      "field": "lead_follow_up.is_follow_up_to_lead_id",
+      "gold": "badge_trace",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e5",
+      "sample": 1,
+      "field": "lead_follow_up.follow_up_relevance",
+      "gold": "relevant",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e6",
+      "sample": 1,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e9",
+      "sample": 1,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e10",
+      "sample": 1,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e11",
+      "sample": 1,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e11",
+      "sample": 1,
+      "field": "unsupported_additions.any_flagged",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e14",
+      "sample": 1,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e15",
+      "sample": 1,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e16",
+      "sample": 1,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e17",
+      "sample": 1,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e18",
+      "sample": 1,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e20",
+      "sample": 1,
+      "field": "corroboration.target_time",
+      "gold": null,
+      "pred": "21:00",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e21",
+      "sample": 1,
+      "field": "corroboration.target_time",
+      "gold": null,
+      "pred": "21:00",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e21",
+      "sample": 1,
+      "field": "deception.contains_false_statement",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e21",
+      "sample": 1,
+      "field": "deception.authorised",
+      "gold": true,
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e21",
+      "sample": 1,
+      "field": "deception.claim_id_if_known",
+      "gold": "claim_cover_Blair",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e22",
+      "sample": 1,
+      "field": "corroboration.is_request",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e22",
+      "sample": 1,
+      "field": "corroboration.target_subject",
+      "gold": null,
+      "pred": "Blair",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e22",
+      "sample": 1,
+      "field": "corroboration.target_time",
+      "gold": null,
+      "pred": "21:00",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e22",
+      "sample": 1,
+      "field": "confidence",
+      "gold": "uncertain",
+      "pred": "high",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e3",
+      "sample": 2,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e4",
+      "sample": 2,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e5",
+      "sample": 2,
+      "field": "lead_follow_up.is_follow_up_to_lead_id",
+      "gold": "badge_trace",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e5",
+      "sample": 2,
+      "field": "lead_follow_up.follow_up_relevance",
+      "gold": "relevant",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e6",
+      "sample": 2,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e6",
+      "sample": 2,
+      "field": "deception.contains_false_statement",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e6",
+      "sample": 2,
+      "field": "deception.authorised",
+      "gold": true,
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e6",
+      "sample": 2,
+      "field": "deception.claim_id_if_known",
+      "gold": "claim_cover_Casey",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e9",
+      "sample": 2,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e10",
+      "sample": 2,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e11",
+      "sample": 2,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e11",
+      "sample": 2,
+      "field": "unsupported_additions.any_flagged",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e16",
+      "sample": 2,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e17",
+      "sample": 2,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e18",
+      "sample": 2,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e21",
+      "sample": 2,
+      "field": "deception.contains_false_statement",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e21",
+      "sample": 2,
+      "field": "deception.authorised",
+      "gold": true,
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e21",
+      "sample": 2,
+      "field": "deception.claim_id_if_known",
+      "gold": "claim_cover_Blair",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e22",
+      "sample": 2,
+      "field": "lead_follow_up.is_follow_up_to_lead_id",
+      "gold": null,
+      "pred": "alibi_Blair",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e22",
+      "sample": 2,
+      "field": "lead_follow_up.follow_up_relevance",
+      "gold": null,
+      "pred": "relevant",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e22",
+      "sample": 2,
+      "field": "corroboration.is_request",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e22",
+      "sample": 2,
+      "field": "corroboration.target_subject",
+      "gold": null,
+      "pred": "Blair",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e22",
+      "sample": 2,
+      "field": "corroboration.target_time",
+      "gold": null,
+      "pred": "21:00",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_none_1118654058",
+      "exchange_id": "e22",
+      "sample": 2,
+      "field": "confidence",
+      "gold": "uncertain",
+      "pred": "high",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e5",
+      "sample": 0,
+      "field": "repeated_question.is_repeat",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e5",
+      "sample": 0,
+      "field": "repeated_question.repeat_kind",
+      "gold": null,
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e5",
+      "sample": 0,
+      "field": "repeated_question.matches_exchange_id",
+      "gold": null,
+      "pred": "e3",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e7",
+      "sample": 0,
+      "field": "corroboration.is_request",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e7",
+      "sample": 0,
+      "field": "withholding.explicit_refusal",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e7",
+      "sample": 0,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e7",
+      "sample": 0,
+      "field": "unsupported_additions.any_flagged",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e11",
+      "sample": 0,
+      "field": "challenge.is_challenge",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e11",
+      "sample": 0,
+      "field": "challenge.evidence_based",
+      "gold": true,
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e11",
+      "sample": 0,
+      "field": "challenge.cited_claim_ids",
+      "gold": [
+        "claim_witness_Alex"
+      ],
+      "pred": [],
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e12",
+      "sample": 0,
+      "field": "unsupported_additions.any_flagged",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e16",
+      "sample": 0,
+      "field": "lead_follow_up.is_follow_up_to_lead_id",
+      "gold": null,
+      "pred": "alibi_Blair",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e16",
+      "sample": 0,
+      "field": "lead_follow_up.follow_up_relevance",
+      "gold": null,
+      "pred": "relevant",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e16",
+      "sample": 0,
+      "field": "corroboration.target_subject",
+      "gold": null,
+      "pred": "Blair",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e16",
+      "sample": 0,
+      "field": "corroboration.target_time",
+      "gold": null,
+      "pred": "21:00",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e17",
+      "sample": 0,
+      "field": "corroboration.target_time",
+      "gold": null,
+      "pred": "21:00",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e17",
+      "sample": 0,
+      "field": "withholding.explicit_refusal",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e17",
+      "sample": 0,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e18",
+      "sample": 0,
+      "field": "withholding.explicit_refusal",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e18",
+      "sample": 0,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e5",
+      "sample": 1,
+      "field": "lead_follow_up.is_follow_up_to_lead_id",
+      "gold": null,
+      "pred": "badge_trace",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e5",
+      "sample": 1,
+      "field": "lead_follow_up.follow_up_relevance",
+      "gold": null,
+      "pred": "off_target",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e5",
+      "sample": 1,
+      "field": "repeated_question.is_repeat",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e5",
+      "sample": 1,
+      "field": "repeated_question.repeat_kind",
+      "gold": null,
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e5",
+      "sample": 1,
+      "field": "repeated_question.matches_exchange_id",
+      "gold": null,
+      "pred": "e3",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e7",
+      "sample": 1,
+      "field": "lead_follow_up.is_follow_up_to_lead_id",
+      "gold": null,
+      "pred": "alibi_Blair",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e7",
+      "sample": 1,
+      "field": "lead_follow_up.follow_up_relevance",
+      "gold": null,
+      "pred": "relevant",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e7",
+      "sample": 1,
+      "field": "corroboration.is_request",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e7",
+      "sample": 1,
+      "field": "withholding.explicit_refusal",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e7",
+      "sample": 1,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e7",
+      "sample": 1,
+      "field": "unsupported_additions.any_flagged",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e11",
+      "sample": 1,
+      "field": "challenge.is_challenge",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e11",
+      "sample": 1,
+      "field": "challenge.evidence_based",
+      "gold": true,
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e11",
+      "sample": 1,
+      "field": "challenge.cited_claim_ids",
+      "gold": [
+        "claim_witness_Alex"
+      ],
+      "pred": [],
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e12",
+      "sample": 1,
+      "field": "unsupported_additions.any_flagged",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e16",
+      "sample": 1,
+      "field": "lead_follow_up.is_follow_up_to_lead_id",
+      "gold": null,
+      "pred": "alibi_Blair",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e16",
+      "sample": 1,
+      "field": "lead_follow_up.follow_up_relevance",
+      "gold": null,
+      "pred": "relevant",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e16",
+      "sample": 1,
+      "field": "corroboration.target_subject",
+      "gold": null,
+      "pred": "Blair",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e16",
+      "sample": 1,
+      "field": "corroboration.target_time",
+      "gold": null,
+      "pred": "21:00",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e16",
+      "sample": 1,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e17",
+      "sample": 1,
+      "field": "corroboration.target_time",
+      "gold": null,
+      "pred": "21:00",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e17",
+      "sample": 1,
+      "field": "withholding.explicit_refusal",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e17",
+      "sample": 1,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e18",
+      "sample": 1,
+      "field": "withholding.explicit_refusal",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e18",
+      "sample": 1,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e5",
+      "sample": 2,
+      "field": "repeated_question.is_repeat",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e5",
+      "sample": 2,
+      "field": "repeated_question.repeat_kind",
+      "gold": null,
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e5",
+      "sample": 2,
+      "field": "repeated_question.matches_exchange_id",
+      "gold": null,
+      "pred": "e3",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e7",
+      "sample": 2,
+      "field": "lead_follow_up.is_follow_up_to_lead_id",
+      "gold": null,
+      "pred": "alibi_Blair",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e7",
+      "sample": 2,
+      "field": "lead_follow_up.follow_up_relevance",
+      "gold": null,
+      "pred": "relevant",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e7",
+      "sample": 2,
+      "field": "corroboration.is_request",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e7",
+      "sample": 2,
+      "field": "withholding.explicit_refusal",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e7",
+      "sample": 2,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e7",
+      "sample": 2,
+      "field": "unsupported_additions.any_flagged",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e11",
+      "sample": 2,
+      "field": "challenge.cited_claim_ids",
+      "gold": [
+        "claim_witness_Alex"
+      ],
+      "pred": [],
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e12",
+      "sample": 2,
+      "field": "unsupported_additions.any_flagged",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e16",
+      "sample": 2,
+      "field": "lead_follow_up.is_follow_up_to_lead_id",
+      "gold": null,
+      "pred": "alibi_Blair",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e16",
+      "sample": 2,
+      "field": "lead_follow_up.follow_up_relevance",
+      "gold": null,
+      "pred": "relevant",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e16",
+      "sample": 2,
+      "field": "corroboration.is_request",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e16",
+      "sample": 2,
+      "field": "corroboration.target_subject",
+      "gold": null,
+      "pred": "Blair",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e16",
+      "sample": 2,
+      "field": "corroboration.target_time",
+      "gold": null,
+      "pred": "21:00",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e17",
+      "sample": 2,
+      "field": "corroboration.target_time",
+      "gold": null,
+      "pred": "21:00",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e17",
+      "sample": 2,
+      "field": "withholding.explicit_refusal",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e17",
+      "sample": 2,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e18",
+      "sample": 2,
+      "field": "withholding.explicit_refusal",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_ledger_444382084",
+      "exchange_id": "e18",
+      "sample": 2,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e3",
+      "sample": 0,
+      "field": "corroboration.is_request",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e4",
+      "sample": 0,
+      "field": "lead_follow_up.is_follow_up_to_lead_id",
+      "gold": "badge_trace",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e4",
+      "sample": 0,
+      "field": "lead_follow_up.follow_up_relevance",
+      "gold": "relevant",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e4",
+      "sample": 0,
+      "field": "unsupported_additions.any_flagged",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e7",
+      "sample": 0,
+      "field": "lead_follow_up.is_follow_up_to_lead_id",
+      "gold": "sleeve_trace",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e7",
+      "sample": 0,
+      "field": "lead_follow_up.follow_up_relevance",
+      "gold": "relevant",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e8",
+      "sample": 0,
+      "field": "withholding.partial_withholding",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e8",
+      "sample": 0,
+      "field": "lead_follow_up.newly_disclosed_lead_ids",
+      "gold": [
+        "meeting_Alex",
+        "meeting_Blair",
+        "weapon_material"
+      ],
+      "pred": [
+        "meeting_Alex",
+        "meeting_Blair",
+        "scene_floor",
+        "weapon_material"
+      ],
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e9",
+      "sample": 0,
+      "field": "challenge.evidence_based",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e9",
+      "sample": 0,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e9",
+      "sample": 0,
+      "field": "confidence",
+      "gold": "uncertain",
+      "pred": "high",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e9",
+      "sample": 0,
+      "field": "challenge.cited_claim_ids",
+      "gold": [
+        "claim_witness_Alex"
+      ],
+      "pred": [
+        "claim_self_Alex_20:30"
+      ],
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e11",
+      "sample": 0,
+      "field": "lead_follow_up.is_follow_up_to_lead_id",
+      "gold": "weapon_material",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e11",
+      "sample": 0,
+      "field": "lead_follow_up.follow_up_relevance",
+      "gold": "relevant",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e11",
+      "sample": 0,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e14",
+      "sample": 0,
+      "field": "lead_follow_up.is_follow_up_to_lead_id",
+      "gold": "weapon_edge",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e14",
+      "sample": 0,
+      "field": "lead_follow_up.follow_up_relevance",
+      "gold": "relevant",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e15",
+      "sample": 0,
+      "field": "lead_follow_up.newly_disclosed_lead_ids",
+      "gold": [],
+      "pred": [
+        "alibi_Blair",
+        "badge_trace",
+        "scene_wall"
+      ],
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e17",
+      "sample": 0,
+      "field": "repeated_question.is_repeat",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e17",
+      "sample": 0,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e17",
+      "sample": 0,
+      "field": "repeated_question.matches_exchange_id",
+      "gold": "e4",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e17",
+      "sample": 0,
+      "field": "confidence",
+      "gold": "uncertain",
+      "pred": "high",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e18",
+      "sample": 0,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e19",
+      "sample": 0,
+      "field": "withholding.partial_withholding",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e19",
+      "sample": 0,
+      "field": "lead_follow_up.newly_disclosed_lead_ids",
+      "gold": [
+        "scene_floor"
+      ],
+      "pred": [
+        "meeting_Alex",
+        "meeting_Blair",
+        "scene_floor",
+        "weapon_material"
+      ],
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e20",
+      "sample": 0,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e21",
+      "sample": 0,
+      "field": "lead_follow_up.is_follow_up_to_lead_id",
+      "gold": "scene_floor",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e21",
+      "sample": 0,
+      "field": "lead_follow_up.follow_up_relevance",
+      "gold": "relevant",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e22",
+      "sample": 0,
+      "field": "corroboration.target_time",
+      "gold": null,
+      "pred": "20:30",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e22",
+      "sample": 0,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e22",
+      "sample": 0,
+      "field": "confidence",
+      "gold": "uncertain",
+      "pred": "high",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e3",
+      "sample": 1,
+      "field": "lead_follow_up.is_follow_up_to_lead_id",
+      "gold": null,
+      "pred": "alibi_Blair",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e3",
+      "sample": 1,
+      "field": "lead_follow_up.follow_up_relevance",
+      "gold": null,
+      "pred": "relevant",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e3",
+      "sample": 1,
+      "field": "corroboration.is_request",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e4",
+      "sample": 1,
+      "field": "unsupported_additions.any_flagged",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e8",
+      "sample": 1,
+      "field": "withholding.partial_withholding",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e8",
+      "sample": 1,
+      "field": "lead_follow_up.newly_disclosed_lead_ids",
+      "gold": [
+        "meeting_Alex",
+        "meeting_Blair",
+        "weapon_material"
+      ],
+      "pred": [
+        "meeting_Alex",
+        "meeting_Blair",
+        "scene_floor",
+        "weapon_material"
+      ],
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e9",
+      "sample": 1,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e9",
+      "sample": 1,
+      "field": "confidence",
+      "gold": "uncertain",
+      "pred": "high",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e9",
+      "sample": 1,
+      "field": "challenge.cited_claim_ids",
+      "gold": [
+        "claim_witness_Alex"
+      ],
+      "pred": [
+        "claim_self_Alex_20:30"
+      ],
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e10",
+      "sample": 1,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e11",
+      "sample": 1,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e15",
+      "sample": 1,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e16",
+      "sample": 1,
+      "field": "lead_follow_up.is_follow_up_to_lead_id",
+      "gold": null,
+      "pred": "badge_trace",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e16",
+      "sample": 1,
+      "field": "lead_follow_up.follow_up_relevance",
+      "gold": null,
+      "pred": "relevant",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e16",
+      "sample": 1,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e17",
+      "sample": 1,
+      "field": "lead_follow_up.is_follow_up_to_lead_id",
+      "gold": null,
+      "pred": "scene_wall",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e17",
+      "sample": 1,
+      "field": "lead_follow_up.follow_up_relevance",
+      "gold": null,
+      "pred": "relevant",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e17",
+      "sample": 1,
+      "field": "repeated_question.is_repeat",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e17",
+      "sample": 1,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e17",
+      "sample": 1,
+      "field": "repeated_question.matches_exchange_id",
+      "gold": "e4",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e17",
+      "sample": 1,
+      "field": "confidence",
+      "gold": "uncertain",
+      "pred": "high",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e18",
+      "sample": 1,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e19",
+      "sample": 1,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e19",
+      "sample": 1,
+      "field": "withholding.partial_withholding",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e19",
+      "sample": 1,
+      "field": "lead_follow_up.newly_disclosed_lead_ids",
+      "gold": [
+        "scene_floor"
+      ],
+      "pred": [],
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e20",
+      "sample": 1,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e22",
+      "sample": 1,
+      "field": "corroboration.target_subject",
+      "gold": null,
+      "pred": "Blair",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e22",
+      "sample": 1,
+      "field": "corroboration.target_time",
+      "gold": null,
+      "pred": "20:30",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e22",
+      "sample": 1,
+      "field": "confidence",
+      "gold": "uncertain",
+      "pred": "high",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e3",
+      "sample": 2,
+      "field": "corroboration.is_request",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e4",
+      "sample": 2,
+      "field": "unsupported_additions.any_flagged",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e8",
+      "sample": 2,
+      "field": "withholding.partial_withholding",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e8",
+      "sample": 2,
+      "field": "lead_follow_up.newly_disclosed_lead_ids",
+      "gold": [
+        "meeting_Alex",
+        "meeting_Blair",
+        "weapon_material"
+      ],
+      "pred": [
+        "meeting_Alex",
+        "meeting_Blair",
+        "scene_floor",
+        "weapon_material"
+      ],
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e9",
+      "sample": 2,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e9",
+      "sample": 2,
+      "field": "confidence",
+      "gold": "uncertain",
+      "pred": "high",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e9",
+      "sample": 2,
+      "field": "challenge.cited_claim_ids",
+      "gold": [
+        "claim_witness_Alex"
+      ],
+      "pred": [
+        "claim_self_Alex_20:30"
+      ],
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e10",
+      "sample": 2,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e11",
+      "sample": 2,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e16",
+      "sample": 2,
+      "field": "lead_follow_up.is_follow_up_to_lead_id",
+      "gold": null,
+      "pred": "badge_trace",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e16",
+      "sample": 2,
+      "field": "lead_follow_up.follow_up_relevance",
+      "gold": null,
+      "pred": "relevant",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e17",
+      "sample": 2,
+      "field": "lead_follow_up.is_follow_up_to_lead_id",
+      "gold": null,
+      "pred": "scene_wall",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e17",
+      "sample": 2,
+      "field": "lead_follow_up.follow_up_relevance",
+      "gold": null,
+      "pred": "relevant",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e17",
+      "sample": 2,
+      "field": "repeated_question.is_repeat",
+      "gold": true,
+      "pred": false,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e17",
+      "sample": 2,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e17",
+      "sample": 2,
+      "field": "repeated_question.matches_exchange_id",
+      "gold": "e4",
+      "pred": null,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e17",
+      "sample": 2,
+      "field": "confidence",
+      "gold": "uncertain",
+      "pred": "high",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e18",
+      "sample": 2,
+      "field": "withholding.partial_withholding",
+      "gold": false,
+      "pred": true,
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e19",
+      "sample": 2,
+      "field": "lead_follow_up.newly_disclosed_lead_ids",
+      "gold": [
+        "scene_floor"
+      ],
+      "pred": [],
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e20",
+      "sample": 2,
+      "field": "repeated_question.repeat_kind",
+      "gold": "expired_evidence_recovery",
+      "pred": "unnecessary",
+      "match": false
+    },
+    {
+      "game_id": "pilot_07b_raw_1569954369",
+      "exchange_id": "e22",
+      "sample": 2,
+      "field": "confidence",
+      "gold": "uncertain",
+      "pred": "high",
+      "match": false
+    }
+  ],
+  "total_cost_usd": 0.14847675
+}

@@ -14,6 +14,12 @@ PRICES = {
     "gemini-2.5-flash-lite": {"input_per_million": 0.10, "output_per_million": 0.40},
     "gemini-3.1-flash-lite": {"input_per_million": 0.25, "output_per_million": 1.50},
     "gemini-3.5-flash-lite": {"input_per_million": 0.30, "output_per_million": 2.50},
+    # Same nominal model as gemini-3.1-flash-lite above, routed through OpenRouter
+    # (infra.llm.OpenRouterBackend) instead of calling Google directly -- kept as a
+    # distinct entry, not folded into the row above, because OpenRouter's own per-token
+    # price for this route is higher than Google's direct price (its margin on top).
+    # Source: https://openrouter.ai/google/gemini-3.1-flash-lite, checked 26 Oct 2026.
+    "google/gemini-3.1-flash-lite": {"input_per_million": 0.275, "output_per_million": 1.65},
 }
 
 
