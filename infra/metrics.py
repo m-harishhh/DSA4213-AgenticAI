@@ -54,8 +54,14 @@ def game_sources(run_dir, rows=None):
 
 
 def _phase_cost(events):
+    """Totals per phase. A phase with no calls costs 0; None is reserved for unknown pricing."""
     cost = summarise_cost(events)
-    by_phase = {phase: cost["by_phase"].get(phase, {}) for phase in PHASES}
+    priced = cost["cost_usd"] is not None
+    by_phase = {}
+    for phase in PHASES:
+        bucket = cost["by_phase"].get(phase)
+        by_phase[phase] = {"total_tokens": bucket["total_tokens"] if bucket else 0,
+                           "cost_usd": (bucket["cost_usd"] if bucket else 0.0) if priced else None}
     return cost, by_phase
 
 
@@ -129,10 +135,10 @@ def game_record(events, row=None, case=None):
         "llm_calls": len(calls),
         "total_tokens": cost["total_tokens"],
         "cost_usd": cost["cost_usd"],
-        "tokens_through_first_accusation": by_phase["through_first_accusation"].get("total_tokens", 0),
-        "cost_through_first_accusation": by_phase["through_first_accusation"].get("cost_usd"),
-        "cost_accusation_retries": by_phase["accusation_retries"].get("cost_usd"),
-        "cost_post_game_analysis": by_phase["post_game_analysis"].get("cost_usd"),
+        "tokens_through_first_accusation": by_phase["through_first_accusation"]["total_tokens"],
+        "cost_through_first_accusation": by_phase["through_first_accusation"]["cost_usd"],
+        "cost_accusation_retries": by_phase["accusation_retries"]["cost_usd"],
+        "cost_post_game_analysis": by_phase["post_game_analysis"]["cost_usd"],
         "transport_retries": sum(1 for c in calls for a in c["attempts"] if a["kind"] == "transport_retry"),
         "format_repairs": sum(1 for c in calls for a in c["attempts"] if a["kind"] == "format_repair"),
         "controller_repairs": cost["controller_repair_calls"]["calls"],
@@ -143,9 +149,6 @@ def game_record(events, row=None, case=None):
         "online_essential_coverage": essential,
         "validation_passed": validate_events(events)["passed"] if events else None,
     }
-    if cost["cost_usd"] is None:
-        for key in ("cost_through_first_accusation", "cost_accusation_retries", "cost_post_game_analysis"):
-            record[key] = None
     return record
 
 
@@ -273,7 +276,8 @@ METRICS = {
     "cost_usd_mean": (lambda rs: mean(r["cost_usd"] for r in rs), "Cost per game, USD, all roles and phases"),
     "cost_through_first_accusation_mean": (lambda rs: mean(r["cost_through_first_accusation"] for r in rs),
                                            "Cost per game up to and including the first accusation"),
-    "cost_accusation_retries_mean": (lambda rs: mean(r["cost_accusation_retries"] for r in rs), "Retry cost per game"),
+    "cost_accusation_retries_mean": (lambda rs: mean(r["cost_accusation_retries"] for r in rs),
+                                     "Retry cost per game, zero for games without retries"),
     "transport_retries_mean": (lambda rs: mean(r["transport_retries"] for r in rs), "Transport retries per game"),
     "format_repairs_mean": (lambda rs: mean(r["format_repairs"] for r in rs), "Wrapper format repairs per game"),
     "controller_repairs_mean": (lambda rs: mean(r["controller_repairs"] for r in rs), "Controller-side detective repairs per game"),

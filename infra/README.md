@@ -376,7 +376,9 @@ figures/*.png|svg accuracy_by_condition, solve_rate_by_attempt, cost_per_game, e
   `contradiction_pairs_reported_mean` (count only; precision and recall need the annotation).
 - **Cost (5.2).** `cost_usd_mean`, `cost_through_first_accusation_mean`,
   `cost_accusation_retries_mean`, tokens, reasoning tokens, transport retries, format repairs,
-  controller repairs, calls cut off at the output cap, wall-clock seconds.
+  controller repairs, calls cut off at the output cap, wall-clock seconds. A phase with no
+  calls costs 0 for that game (so the retry mean averages over every game); `None` means the
+  pricing was unknown, and the phase means add up to the total.
 - **Heuristic coverage.** `online_evidence_coverage_mean` and `online_essential_coverage_mean`
   come from the controller's online claim matching (decisions.md D11), not from labels; they are
   the "clues heard" numbers used during the pilots. Label-based coverage, repeated questions and

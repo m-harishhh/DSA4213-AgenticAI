@@ -101,6 +101,65 @@ class StatisticsTests(unittest.TestCase):
             self.assertIn(name, report)
 
 
+def minimal_events(game_id, condition, call_costs, priced=True):
+    """A tiny valid-shaped game: one call per (phase, cost) pair, then an accusation and game_end."""
+    events = [{"seq": 1, "ts": "t", "game_id": game_id, "kind": "game_start", "schema_version": "1.0",
+               "run_id": "r", "case_id": "c", "case_sha256": "x", "condition": condition, "k": 5,
+               "turn_budget": 20, "accusation_budget": 3, "seed": 1, "model_id": "m", "decoding": {},
+               "prompt_versions": {}, "pricing": None, "manifest_sha256": None, "code_version": None}]
+    for index, (phase, cost) in enumerate(call_costs, start=1):
+        events.append({"seq": len(events) + 1, "ts": "t", "game_id": game_id, "kind": "llm_call",
+                       "call_id": f"c{index:06d}", "role": "detective", "agent_id": "detective",
+                       "purpose": "detective_decision", "phase": phase, "model_id": "m", "decoding": {},
+                       "response_schema": None, "max_output_tokens": None, "messages": [], "text": "{}",
+                       "parsed": None, "usage": {"input_tokens": 10, "output_tokens": 5, "reasoning_tokens": 0,
+                                                 "total_tokens": 15},
+                       "cost_usd": cost if priced else None, "finish_reason": "STOP", "model_version": None,
+                       "latency_ms": 1, "attempts": [{"attempt_no": 1, "kind": "initial", "status": "ok",
+                                                      "usage": {"input_tokens": 10, "output_tokens": 5,
+                                                                "reasoning_tokens": 0, "total_tokens": 15},
+                                                      "latency_ms": 1, "error": None}],
+                       "repair_used": False, "status": "ok", "tags": {}})
+    attempts = sum(1 for phase, _ in call_costs if phase != "post_game_analysis")
+    for attempt in range(1, attempts + 1):
+        events.append({"seq": len(events) + 1, "ts": "t", "game_id": game_id, "kind": "accusation",
+                       "attempt": attempt, "triple": {"culprit": "A", "weapon": "B", "location": "C"},
+                       "valid": True, "correct": attempt == attempts, "feedback": "", "call_id": f"c{attempt:06d}",
+                       "exchange_index": 0, "interrogations_used": 0, "testimony_frozen": True})
+    events.append({"seq": len(events) + 1, "ts": "t", "game_id": game_id, "kind": "game_end",
+                   "outcome": "solved_first" if attempts == 1 else "solved_retry", "attempts_used": attempts,
+                   "first_accusation_correct": attempts == 1, "component_correct": None, "interrogations_used": 0,
+                   "exchanges_total": 0, "checkpoints_reached": 0, "conversations": {"detective": 0, "private": 0},
+                   "invitations": {"sent": 0, "accepted": 0, "rejected": 0}, "cost": {}, "duration_s": 1.0})
+    return events
+
+
+class PhaseCostTests(unittest.TestCase):
+    def test_games_without_retries_cost_zero_in_that_phase_not_none(self):
+        # Josh's review of PR #30: a game with no retries must count as 0 in the retry mean.
+        no_retry = game_record(minimal_events("g1", "raw", [("through_first_accusation", 0.001)]))
+        with_retry = game_record(minimal_events("g2", "raw", [("through_first_accusation", 0.001),
+                                                               ("accusation_retries", 0.000081)]))
+        self.assertEqual(no_retry["cost_accusation_retries"], 0.0)
+        self.assertEqual(no_retry["cost_post_game_analysis"], 0.0)
+        self.assertAlmostEqual(with_retry["cost_accusation_retries"], 0.000081)
+        for record in (no_retry, with_retry):
+            self.assertAlmostEqual(record["cost_through_first_accusation"] + record["cost_accusation_retries"]
+                                   + record["cost_post_game_analysis"], record["cost_usd"])
+        summary = aggregate([no_retry, with_retry], replicates=20)
+        metrics = summary["conditions"]["raw"]["metrics"]
+        self.assertAlmostEqual(metrics["cost_accusation_retries_mean"]["value"], 0.0000405)
+        self.assertAlmostEqual(metrics["cost_through_first_accusation_mean"]["value"]
+                               + metrics["cost_accusation_retries_mean"]["value"], metrics["cost_usd_mean"]["value"])
+
+    def test_unknown_pricing_stays_none(self):
+        record = game_record(minimal_events("g3", "raw", [("through_first_accusation", None)], priced=False))
+        self.assertIsNone(record["cost_usd"])
+        self.assertIsNone(record["cost_accusation_retries"])
+        self.assertIsNone(record["cost_through_first_accusation"])
+        self.assertEqual(record["tokens_through_first_accusation"], 15)
+
+
 class RecordTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -136,6 +195,10 @@ class RecordTests(unittest.TestCase):
                 self.assertEqual(record["solved_within_3"], end["outcome"] in ("solved_first", "solved_retry"))
             self.assertTrue(record["validation_passed"])
             self.assertGreater(record["cost_through_first_accusation"], 0)
+            self.assertIsNotNone(record["cost_accusation_retries"])
+            self.assertEqual(record["cost_accusation_retries"] == 0.0, record["attempts_used"] <= 1)
+            self.assertAlmostEqual(record["cost_through_first_accusation"] + record["cost_accusation_retries"]
+                                   + record["cost_post_game_analysis"], record["cost_usd"])
 
     def test_records_without_results_file_and_crashed_rows(self):
         plain = self.dir / "plain"
