@@ -109,6 +109,14 @@ and `annotation_aggregate.json` reflect the repaired data; `repeat_kind_qa_corre
 `_wrong` were also recomputed against the repaired labels (via the same reconstructed
 transcript), not carried over stale.
 
+**Independently confirmed against the real raw per-game logs**, after they turned up in
+a local backup copy (not re-added to this repo — see "Files" below): a full
+`qa/aggregate_annotation_results.py` run against the real logs produced a `by_condition`
+summary and `per_game` list identical to the reconstruction-based repair above, field
+for field; and `validate_against_transcript` against the real transcript (not the
+reconstructed one) found zero remaining problems across all 300 games. The
+reconstruction from `.annotation_call.json` was not an approximation — it was exact.
+
 ## Files
 
 - `<game_id>.behaviour.json` — the behavioural annotation for one game (one per game,
@@ -118,21 +126,27 @@ transcript), not carried over stale.
 - `<game_id>.annotation_call.json` — the full raw LLM call record for that game's
   annotation (prompt sent, raw response, token usage), kept for audit -- and, as of the
   repair pass above, as the only remaining record of each game's real transcript.
+- `results.jsonl` — the gameplay run's own output (status, outcome, attempts/
+  interrogations used, cost, per-game log paths), restored after being deleted in an
+  earlier cleanup pass. A local backup copy turned up and was verified field-for-field
+  against the gameplay-sourced values already on record in `annotation_aggregate.json`
+  before being restored here -- not taken on faith.
 - `annotation_results.jsonl` — one row per game: status, cost, exchange/disclosure/
   coordination counts. Regenerated after the repair pass so its counts match the
   repaired `.behaviour.json` files.
 - `annotation_aggregate.json` — the per-condition summary above, plus raw per-game
-  data. A frozen snapshot, not regenerable from scratch via
-  `qa/aggregate_annotation_results.py`: that script needs `results.jsonl` (the
-  gameplay-outcome log), which was deleted during an earlier cleanup pass and cannot be
-  reconstructed. It was instead regenerated in place by
-  `qa/fix_main_01_citations.py`, which carries over the gameplay-sourced fields
-  (`condition`/`outcome`/`attempts_used`/`interrogations_used`/`exchanges_total`/
-  `gameplay_cost_usd`, untouched by citation repair) from the pre-repair aggregate and
-  freshly recomputes every annotation-sourced field from the repaired data.
+  data. Now regenerable from scratch via `qa/aggregate_annotation_results.py
+  annotation/main_01 --source-dir <wherever the raw per-game .jsonl logs live>` (see
+  below) -- confirmed to reproduce this exact file.
 - `run.json` — the original gameplay run's configuration (model, decoding settings,
   per-condition game count, seed).
 
-Raw gameplay transcripts (the detective/suspect dialogue the annotator read) are not
-kept here as their own files — only the annotation output, plus the reconstructable
-copy embedded in each `.annotation_call.json`'s prompt.
+The raw per-game gameplay logs (`<game_id>.jsonl`, `<game_id>.exchanges.json`,
+`<game_id>.transcript.md` -- the actual detective/suspect dialogue, 213 MB across all
+300 games) are deliberately NOT kept in this repo, to avoid permanently bloating it.
+They still exist in a local backup outside this repo and were used from there to
+independently re-verify the citation/disclosure repair above (see "Citation and
+disclosure repair") before being left out of version control. `--source-dir` on both
+`qa/aggregate_annotation_results.py` and `python -m annotation run` can point at
+wherever that backup lives if you have it; `.annotation_call.json`'s embedded prompt
+remains the only copy of each game's transcript actually committed here.

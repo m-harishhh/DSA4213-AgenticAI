@@ -131,12 +131,16 @@ per-condition summary). See `main_01/README.md` for the full results table, and 
 review found real citation and disclosure-labelling bugs in it (both now fixed in
 `prompts.py`/`pipeline.py` for every future run).
 
-`annotation_aggregate.json` cannot be regenerated from scratch via
-`qa/aggregate_annotation_results.py --source-dir`: that script needs `results.jsonl`
-(the gameplay-outcome log, condition/solve-rate/attempts per game), which was removed in
-a later cleanup pass along with the raw game logs. It was instead regenerated in place
-by `qa/fix_main_01_citations.py`, which carries over the (unaffected) gameplay-sourced
-fields from the pre-repair aggregate and recomputes every annotation-sourced field fresh.
+`results.jsonl` (the gameplay-outcome log) was deleted in an earlier cleanup pass, then
+restored after a local backup turned up and was verified field-for-field against the
+gameplay-sourced values already on record. `annotation_aggregate.json` is therefore
+regenerable from scratch again via `qa/aggregate_annotation_results.py annotation/main_01
+--source-dir <raw-logs-dir>` -- confirmed to reproduce the committed file exactly. The
+raw per-game `.jsonl`/`.exchanges.json`/`.transcript.md` logs themselves (213 MB) are
+deliberately not committed here; `--source-dir` needs to point at wherever they live if
+you have a copy. See `main_01/README.md`'s "Citation and disclosure repair" for how
+those logs were used (read-only, from outside this repo) to independently confirm the
+repair pass below was exact.
 
 `ANNOTATION_MAX_OUTPUT_TOKENS` (in `pipeline.py`) is pilot-measured at 16000, large
 enough for every game in the 300-game run — no truncation failures.
