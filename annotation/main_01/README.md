@@ -77,7 +77,7 @@ conditions confirms the annotation itself is reliable on this field.
 A PR review of this run's annotation output found two real problems, both now fixed
 going forward in `annotation/prompts.py` and `annotation/pipeline.py` (see their
 docstrings for the full fix) and repaired here in the existing 300-game output by
-`qa/repair_main_01_citations.py`:
+`qa/fix_main_01_citations.py`:
 
 1. **Missed vs. undiscovered disclosures.** The annotator's original prompt told the
    model to treat "nobody who could deliver this lead ever spoke" as near-default
@@ -102,7 +102,7 @@ docstrings for the full fix) and repaired here in the existing 300-game output b
    negative defaults, noted in `annotator_notes`) any citation whose text did not exist
    in the transcript at all.
 
-`qa/main_01_repair_report.json` has the exact per-game and total counts from this pass
+`qa/main_01_fix_report.json` has the exact per-game and total counts from this pass
 (4,608 offsets fixed, 51 citations withdrawn, 34 `coordination_instances` withdrawn, 22
 dangling id references cleared, 183 disclosure entries reclassified). The table above
 and `annotation_aggregate.json` reflect the repaired data; `repeat_kind_qa_correct`/
@@ -126,7 +126,7 @@ transcript), not carried over stale.
   `qa/aggregate_annotation_results.py`: that script needs `results.jsonl` (the
   gameplay-outcome log), which was deleted during an earlier cleanup pass and cannot be
   reconstructed. It was instead regenerated in place by
-  `qa/repair_main_01_citations.py`, which carries over the gameplay-sourced fields
+  `qa/fix_main_01_citations.py`, which carries over the gameplay-sourced fields
   (`condition`/`outcome`/`attempts_used`/`interrogations_used`/`exchanges_total`/
   `gameplay_cost_usd`, untouched by citation repair) from the pre-repair aggregate and
   freshly recomputes every annotation-sourced field from the repaired data.

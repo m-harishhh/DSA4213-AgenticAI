@@ -36,8 +36,8 @@ relocates unverifiable/misclassified assertions):
   5. missed_required_disclosures entries with no real disclosure opportunity (per the
      reconstructed transcript) are moved to undiscovered_leads.
 
-Run from repo root: python qa/repair_main_01_citations.py [--dry-run]
-Writes qa/main_01_repair_report.json summarising every change made, and leaves the
+Run from repo root: python qa/fix_main_01_citations.py [--dry-run]
+Writes qa/main_01_fix_report.json summarising every change made, and leaves the
 behaviour.json files with undiscovered_leads added and the schema-required key order
 otherwise unchanged.
 """
@@ -370,7 +370,7 @@ def main():
     for key, value in totals.items():
         print(f"  {key}: {value}")
 
-    report_path = ROOT / "qa" / "main_01_repair_report.json"
+    report_path = ROOT / "qa" / "main_01_fix_report.json"
     report_path.write_text(json.dumps({"totals": totals, "per_game": per_game_reports}, indent=2) + "\n",
                            encoding="utf-8")
     print(f"Wrote {report_path}")

@@ -135,7 +135,7 @@ review found real citation and disclosure-labelling bugs in it (both now fixed i
 `qa/aggregate_annotation_results.py --source-dir`: that script needs `results.jsonl`
 (the gameplay-outcome log, condition/solve-rate/attempts per game), which was removed in
 a later cleanup pass along with the raw game logs. It was instead regenerated in place
-by `qa/repair_main_01_citations.py`, which carries over the (unaffected) gameplay-sourced
+by `qa/fix_main_01_citations.py`, which carries over the (unaffected) gameplay-sourced
 fields from the pre-repair aggregate and recomputes every annotation-sourced field fresh.
 
 `ANNOTATION_MAX_OUTPUT_TOKENS` (in `pipeline.py`) is pilot-measured at 16000, large
