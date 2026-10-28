@@ -12,7 +12,18 @@
 pydantic==2.13.5
 # infra (Aniroodh): only GeminiBackend imports google-genai; tests and mocks do not need it.
 google-genai==2.31.0
+# infra (Aniroodh): only OpenRouterBackend imports httpx directly (an alternative
+# backend for the same model via OpenRouter.ai, an OpenAI-compatible gateway). Already
+# a transitive dependency of google-genai above, but listed explicitly since
+# OpenRouterBackend depends on it directly, not just through google-genai's internals.
+httpx==0.28.1
 
 # infra CLI and smoke test: load GEMINI_API_KEY from a git-ignored .env
 python-dotenv==1.2.4
+
+# annotation (Elena): validates the annotator's output against
+# schemas/annotation_behaviour.schema.json (needs $ref/$defs support and dynamic-keyed
+# object validation, which infra.llm.check_shape deliberately does not provide --
+# see annotation/schema.py). Tested with jsonschema 4.26.0.
+jsonschema==4.26.0
 

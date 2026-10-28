@@ -1,0 +1,918 @@
+{
+  "game_id": "pilot_07b_raw_1569954369",
+  "annotator_run_id": "manual_v3_pilot07b",
+  "exchange_behaviour": {
+    "e1": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Alex"
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 29,
+        "end": 65,
+        "text": "At 21:00, I was in the study as well"
+      }
+    },
+    "e2": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [
+          "badge_trace",
+          "scene_wall",
+          "alibi_Blair"
+        ],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Blair"
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 29,
+        "text": "I was in the Library at 20:30"
+      }
+    },
+    "e3": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": true,
+        "target_subject": "Blair",
+        "target_time": "21:00"
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 43,
+        "end": 84,
+        "text": "which shows Blair in the Kitchen at 21:00"
+      }
+    },
+    "e4": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": "badge_trace",
+        "follow_up_relevance": "relevant"
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [
+        {
+          "citation": {
+            "start": 169,
+            "end": 223,
+            "text": "The murder took place in the room with the green walls"
+          },
+          "note": "scene_wall content, unprompted (the question only asked about the badge)."
+        }
+      ],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 69,
+        "text": "My cropped attack recording shows the attacker's badge: it was round."
+      }
+    },
+    "e5": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [
+          "sleeve_trace"
+        ],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Casey"
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 10,
+        "end": 30,
+        "text": "I was in the library"
+      }
+    },
+    "e6": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Blair"
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 132,
+        "end": 167,
+        "text": "while I was in the library at 20:30"
+      }
+    },
+    "e7": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": "sleeve_trace",
+        "follow_up_relevance": "relevant"
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": true
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Casey"
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 224,
+        "end": 285,
+        "text": "I really don't have anything else to say about my whereabouts"
+      }
+    },
+    "e8": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [
+          "weapon_material",
+          "meeting_Alex",
+          "meeting_Blair"
+        ],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": true
+      },
+      "deception": {
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 135,
+        "end": 188,
+        "text": "I saw Alex, despite their claim of being in the Study"
+      }
+    },
+    "e9": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": true,
+        "evidence_based": true,
+        "cited_claim_ids": [
+          "claim_witness_Alex"
+        ]
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Alex"
+      },
+      "confidence": "uncertain",
+      "citation": {
+        "start": 67,
+        "end": 107,
+        "text": "I am certain I was in the study at 21:00"
+      }
+    },
+    "e10": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": true,
+        "repeat_kind": "expired_evidence_recovery",
+        "matches_exchange_id": "e1"
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Alex"
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 29,
+        "end": 57,
+        "text": "At 21:00, I was in the study"
+      }
+    },
+    "e11": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": "weapon_material",
+        "follow_up_relevance": "relevant"
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 61,
+        "text": "I have heard people mention that the weapon was made of steel"
+      }
+    },
+    "e12": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": true
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Casey"
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 144,
+        "end": 173,
+        "text": "I was in the library at 20:30"
+      }
+    },
+    "e13": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [
+          "weapon_edge",
+          "meeting_Casey"
+        ],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 29,
+        "text": "I was in the Library at 20:30"
+      }
+    },
+    "e14": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": "weapon_edge",
+        "follow_up_relevance": "relevant"
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 55,
+        "text": "The injury identifies the weapon's edge class as sharp."
+      }
+    },
+    "e15": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": true,
+        "repeat_kind": "expired_evidence_recovery",
+        "matches_exchange_id": "e2"
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Blair"
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 29,
+        "text": "I was in the Library at 20:30"
+      }
+    },
+    "e16": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": true,
+        "repeat_kind": "expired_evidence_recovery",
+        "matches_exchange_id": "e4"
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 69,
+        "text": "My cropped attack recording shows the attacker's badge: it was round."
+      }
+    },
+    "e17": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": true,
+        "repeat_kind": "expired_evidence_recovery",
+        "matches_exchange_id": "e4"
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
+      },
+      "confidence": "uncertain",
+      "citation": {
+        "start": 0,
+        "end": 33,
+        "text": "The murder scene had green walls."
+      }
+    },
+    "e18": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Blair"
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 109,
+        "end": 138,
+        "text": "I was in the Library at 20:30"
+      }
+    },
+    "e19": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [
+          "scene_floor"
+        ],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": true,
+        "repeat_kind": "expired_evidence_recovery",
+        "matches_exchange_id": "e8"
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": true
+      },
+      "deception": {
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 102,
+        "end": 150,
+        "text": "At 21:00, I was in the Library, where I saw Alex"
+      }
+    },
+    "e20": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": true,
+        "repeat_kind": "expired_evidence_recovery",
+        "matches_exchange_id": "e10"
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Alex"
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 29,
+        "end": 57,
+        "text": "At 21:00, I was in the study"
+      }
+    },
+    "e21": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": "scene_floor",
+        "follow_up_relevance": "relevant"
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": false,
+        "authorised": null,
+        "claim_id_if_known": null
+      },
+      "confidence": "high",
+      "citation": {
+        "start": 0,
+        "end": 35,
+        "text": "The murder scene had a stone floor."
+      }
+    },
+    "e22": {
+      "lead_follow_up": {
+        "newly_disclosed_lead_ids": [],
+        "is_follow_up_to_lead_id": null,
+        "follow_up_relevance": null
+      },
+      "corroboration": {
+        "is_request": false,
+        "target_subject": null,
+        "target_time": null
+      },
+      "challenge": {
+        "is_challenge": false,
+        "evidence_based": null,
+        "cited_claim_ids": []
+      },
+      "repeated_question": {
+        "is_repeat": false,
+        "repeat_kind": null,
+        "matches_exchange_id": null
+      },
+      "unsupported_additions": [],
+      "withholding": {
+        "explicit_refusal": false,
+        "partial_withholding": false
+      },
+      "deception": {
+        "contains_false_statement": true,
+        "authorised": true,
+        "claim_id_if_known": "claim_cover_Blair"
+      },
+      "confidence": "uncertain",
+      "citation": {
+        "start": 0,
+        "end": 29,
+        "text": "I was in the Library at 20:30"
+      }
+    }
+  },
+  "missed_required_disclosures": [
+    {
+      "lead_id_or_claim_id": "meeting_Casey",
+      "suspect": "Ellis",
+      "note": "Ellis cues this lead himself at e13 ('I also saw Casey at 20:30; ask where') but is never interrogated again afterward, so claim_witness_Casey is never actually delivered. Identical miss (same lead, same cause pattern) as pilot_07b_ledger_444382084."
+    }
+  ],
+  "voluntary_interaction": {
+    "checkpoints_reached": 3,
+    "coordination_instances": [
+      {
+        "conversation_id": "p1",
+        "proposal_to_conceal_or_align": true,
+        "agreement": "unclear",
+        "subsequent_testimony_consistent_exchange_ids": [
+          "e9",
+          "e10",
+          "e20"
+        ],
+        "citation": {
+          "start": 106,
+          "end": 146,
+          "text": "Would you help me maintain this account?"
+        }
+      },
+      {
+        "conversation_id": "p2",
+        "proposal_to_conceal_or_align": true,
+        "agreement": "disagreed",
+        "subsequent_testimony_consistent_exchange_ids": [],
+        "citation": {
+          "start": 35,
+          "end": 95,
+          "text": "I\u2019d appreciate it if you could help me maintain that account"
+        }
+      },
+      {
+        "conversation_id": "p3",
+        "proposal_to_conceal_or_align": true,
+        "agreement": "unclear",
+        "subsequent_testimony_consistent_exchange_ids": [],
+        "citation": {
+          "start": 163,
+          "end": 218,
+          "text": "I\u2019d appreciate your support in maintaining that account"
+        }
+      }
+    ]
+  },
+  "annotator_notes": "The real contradiction_report for this game contains one false positive (e15/e22, Blair's identical 'I was in the Library at 20:30' quote flagged against itself purely because it was delivered via two different intent kinds) alongside one genuine, correctly surfaced contradiction (e19/e20, Drew placing Alex in the Library at 21:00 vs Alex's Study claim) -- see reported_pairs above. e9 is a double bookkeeping error under a challenge: the question's own intent.claim_id is logged as claim_self_Alex_20:30 even though the actual discrepancy concerns 21:00, and controller_matched then records claim_self_Alex_21:00 (the true fact Alex is denying) rather than claim_cover_Alex (the lie he actually restates). claim_witness_Alex (Drew's testimony that Alex was in the Library at 21:00) is correctly bookkept in this game at both e8 and e19 -- a useful contrast with pilot_07b_ledger_444382084 e11, where the identical underlying fact is a bookkeeping miss; the difference appears to be Drew's third-person phrasing ('I saw Alex') here versus second-person ('I saw you') in the ledger game. e11 and e13's weapon_material/meeting_Casey content show the same hearsay-relay pattern found in pilot_07b_none_1118654058 e18: a non-owner relaying a claim verbally produces no bookkeeping hit at all. e17 and e22 are both real semantic repeats of earlier content (e4's bundled scene_wall addition, and e2/e15/e18's claim_cover_Blair) that the same-intent-only mechanical repeat detector cannot catch, since each later ask uses a different intent kind than the original delivery -- flagged manually with uncertain confidence. Only one required disclosure is missed (meeting_Casey), for the same reason as in the ledger game: the owning suspect cues the lead but is never asked the follow-up."
+}
