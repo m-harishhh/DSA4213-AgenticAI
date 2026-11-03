@@ -56,3 +56,8 @@ Date: 24 Oct
 Decision: match_delivery decides which catalogued claims an answer contained by structured key/value rules: whole words, room and time in one sentence, the person named for claims about someone else, negations and quoted speech excluded, volunteered true claims counted.
 Why: it drives disclosure state during play (e.g. a retraction needs delivered counter-evidence), so it must not wait for annotation. Each rule came from a pilot mismatch (pilot_02 to pilot_07). It is bookkeeping only: testimony is never edited, and coverage/behaviour metrics come from the post-game annotation (proposal §5.4).
 
+
+## D12. Run cost ceiling raised to $20
+Date: 25 Oct
+Decision: the main run (main_01, seed 2026) uses a cost ceiling of $20 instead of $15 (`--max-cost-usd 20` on resume; configs/experiment_config.final.json updated to match).
+Why: the evaluation-case smoke block (main_01, first block of 3 games) cost $0.031 (none), $0.034 (raw) and $0.053 (ledger) per game, projecting about $11.8 for 300 games; ledger games cost more on the evaluation case than in the pilots, so $15 left little headroom. The ceiling is a safety cap only: it changes no game setting, and the orchestrator only stops between blocks, so conditions stay equal.
