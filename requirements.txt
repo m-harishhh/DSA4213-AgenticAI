@@ -20,6 +20,8 @@ httpx==0.28.1
 
 # infra CLI and smoke test: load GEMINI_API_KEY from a git-ignored .env
 python-dotenv==1.2.4
+# analysis only (python -m infra metrics figures); not needed to run games or tests
+matplotlib==3.11.2
 
 # annotation (Elena): validates the annotator's output against
 # schemas/annotation_behaviour.schema.json (needs $ref/$defs support and dynamic-keyed
