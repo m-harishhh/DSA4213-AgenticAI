@@ -321,6 +321,109 @@ class GeminiBackend:
         return self.parse_response(response)
 
 
+class OpenRouterBackend:
+    """Live backend on OpenRouter's OpenAI-compatible chat completions API (plain HTTP via
+    httpx, lazily imported; the wrapper stays importable without it).
+
+    Added 2026-10-26 as a stand-in for GeminiBackend when the user's direct Google API key
+    ran out of prepaid credit mid-run (main_01, 300-game annotation re-run). Deliberately
+    targets the IDENTICAL model via OpenRouter's catalog (model_id="google/gemini-3.1-flash-lite",
+    confirmed to exist at https://openrouter.ai/google/gemini-3.1-flash-lite, same nominal
+    model as used directly against Google for the rest of this project) rather than a
+    different model, to avoid silently mixing two different annotators across one dataset.
+    OpenRouter's own per-token pricing for this route is slightly higher than Google's direct
+    price ($0.275/$1.65 per million vs $0.25/$1.50 direct, per openrouter.ai, checked 2026-10-26)
+    -- update infra/pricing.py's PRICES table with a distinct entry if cost accounting across
+    the two paths needs to be kept separate.
+
+    Mapping:
+      messages[system|user|assistant] -> passed through as-is (OpenAI role names, no remapping
+                                          needed, unlike GeminiBackend's user/assistant -> user/model)
+      decoding.temperature/top_p/seed, max_output_tokens -> top-level request fields
+      decoding.thinking_level/thinking_budget -> NOT mapped (OpenRouter's "reasoning" parameter
+                                          uses a different shape than Gemini's native SDK; left
+                                          unset rather than guessed -- a real, documented gap, not
+                                          a silent omission)
+      response_schema             -> response_format={"type": "json_schema", "json_schema": {...}}
+      usage.input_tokens/output_tokens <- usage.prompt_tokens/completion_tokens
+      finish_reason                <- choices[0].finish_reason
+    Retryable failures become TransportError: HTTP 408/429/5xx and httpx transport/timeout
+    errors. Other API errors (400/401/403/404) propagate unchanged, same convention as
+    GeminiBackend. The API key comes from the environment (OPENROUTER_API_KEY), never from a
+    file in the repo.
+    """
+
+    RETRYABLE_STATUS = (408, 429, 500, 502, 503, 504)
+    BASE_URL = "https://openrouter.ai/api/v1/chat/completions"
+
+    def __init__(self, api_key=None, api_key_env="OPENROUTER_API_KEY", timeout_s=60, client=None):
+        self.api_key_env = api_key_env
+        self.timeout_s = timeout_s
+        self._api_key = api_key
+        self._client = client  # inject a fake in tests; None means build a real httpx.Client on first use
+
+    @property
+    def client(self):
+        if self._client is None:
+            import os
+            key = self._api_key or os.environ.get(self.api_key_env)
+            if not key:
+                raise RuntimeError(f"Set {self.api_key_env} in the environment to use OpenRouterBackend")
+            import httpx
+            self._client = httpx.Client(timeout=self.timeout_s,
+                                        headers={"Authorization": f"Bearer {key}"})
+        return self._client
+
+    @staticmethod
+    def build_request(model_id, messages, decoding, response_schema=None, max_output_tokens=None):
+        body = {"model": model_id,
+               "messages": [{"role": m["role"], "content": m["content"]} for m in messages]}
+        for key in ("temperature", "top_p", "seed"):
+            if decoding.get(key) is not None:
+                body[key] = decoding[key]
+        if max_output_tokens is not None:
+            body["max_tokens"] = int(max_output_tokens)
+        if response_schema is not None:
+            body["response_format"] = {"type": "json_schema",
+                                       "json_schema": {"name": "response", "strict": True, "schema": response_schema}}
+        return body
+
+    @classmethod
+    def is_transport_error(cls, exc):
+        status = getattr(exc, "response", None)
+        status_code = getattr(status, "status_code", None) if status is not None else None
+        if isinstance(status_code, int) and status_code in cls.RETRYABLE_STATUS:
+            return True
+        try:
+            import httpx
+        except ImportError:
+            return False
+        return isinstance(exc, (httpx.TransportError, httpx.TimeoutException))
+
+    @staticmethod
+    def parse_response(payload):
+        choice = (payload.get("choices") or [{}])[0]
+        message = choice.get("message") or {}
+        usage = payload.get("usage") or {}
+        return {"text": message.get("content") or "",
+               "finish_reason": choice.get("finish_reason"),
+               "usage": {"input_tokens": int(usage.get("prompt_tokens") or 0),
+                         "output_tokens": int(usage.get("completion_tokens") or 0),
+                         "reasoning_tokens": int((usage.get("completion_tokens_details") or {}).get("reasoning_tokens") or 0)},
+               "model_version": payload.get("model")}
+
+    def generate(self, *, model_id, messages, decoding, response_schema=None, max_output_tokens=None):
+        body = self.build_request(model_id, messages, decoding, response_schema, max_output_tokens)
+        try:
+            response = self.client.post(self.BASE_URL, json=body)
+            response.raise_for_status()
+        except Exception as exc:
+            if self.is_transport_error(exc):
+                raise TransportError(f"{type(exc).__name__}: {exc}") from exc
+            raise
+        return self.parse_response(response.json())
+
+
 class LLMClient:
     """The one entry point every role uses. Each call() writes exactly one `llm_call` event.
 
