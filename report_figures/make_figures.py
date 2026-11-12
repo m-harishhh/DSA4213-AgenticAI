@@ -1,7 +1,7 @@
 """
-Figures for the final report (Appendix C). Local only: this folder is excluded through .git/info/exclude.
+Figures for the final report (Appendix E).
 
-Run from the repository root, after merging main (it needs infra/metrics.py) and with the raw logs in runs/:
+Run from the repository root, with the raw logs in runs/:
 
     python -m pip install matplotlib==3.11.2
     python -m infra metrics runs/main_01 --case cases/evaluation.json --bootstrap 2000 \
@@ -10,15 +10,19 @@ Run from the repository root, after merging main (it needs infra/metrics.py) and
     python report_figures/make_figures.py --only 2 3      # selected figures
     python report_figures/make_figures.py --metrics path/to/metrics.json
 
-Figures 2 to 5 read the percentile-bootstrap summary written by `python -m infra metrics`.
-Figures 6 and 7 are computed directly from the event logs (runs/main_01 and runs/pilot_*).
+Inputs per figure:
+    1       none (drawn by hand)
+    2 to 5  the percentile-bootstrap summary written by `python -m infra metrics` (metrics.json)
+    6       event logs in runs/main_01
+    7       event logs in runs/pilot_04a, 04b, 04c, 05a, 05b, 06, 07 and 07b (pilots whose folder is
+            missing are skipped, with a warning) and cases/pilot.json
 Output: report_figures/out/figureN.png (300 dpi) and figureN.pdf.
 """
 import argparse
 import glob
 import json
 import sys
-from collections import Counter, defaultdict
+from collections import Counter
 from pathlib import Path
 
 import matplotlib
@@ -78,12 +82,6 @@ def error_bars(values_cis):
     return [lo, hi]
 
 
-def annotate(ax, bars, fmt="{:.0f}%", scale=100, dy=0.8):
-    for bar in bars:
-        ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + dy, fmt.format(bar.get_height() * scale
-                if scale != 100 else bar.get_height()), ha="center", va="bottom", fontsize=8)
-
-
 # ----------------------------------------------------------------------------------------------
 def figure1():
     """System diagram: one decision cycle plus the checkpoint branch."""
@@ -112,7 +110,6 @@ def figure1():
     arrow((72, 44), (80, 44))
     ax.text(23, 46.2, "question", fontsize=7.5, ha="center")
     ax.text(51, 46.2, "intent", fontsize=7.5, ha="center")
-    ax.text(76, 46.2, "intent", fontsize=7.5, ha="center", alpha=0)
 
     # middle row: bookkeeping and memory
     box(80, 20, 17, 11, "Claim matching\n(updates\ndisclosure state)")
@@ -251,9 +248,9 @@ def figure6():
             counts[cond]["unsolved after 3 accusations"] += 1
     cats = ["no correct first accusation", "used all 20 interrogations", "unsolved after 3 accusations", "failed run"]
     fig, ax = plt.subplots(figsize=(6.6, 3.5))
-    width = 0.24
+    width = 0.25
     for j, cond in enumerate(CONDITIONS):
-        xs = [i + (j - 1) * width for i in range(len(cats))]
+        xs = [i + (j - 1) * 0.29 for i in range(len(cats))]
         ys = [counts[cond][c] for c in cats]
         ax.bar(xs, ys, width, color=COLOURS[cond], label=LABELS[cond])
         for x, y in zip(xs, ys):
@@ -264,6 +261,8 @@ def figure6():
     ax.set_ylabel("Games (out of 100)")
     ax.set_ylim(0, 112)
     ax.legend(frameon=False, loc="upper right")
+    fig.text(0.5, -0.04, "\"No correct first accusation\" counts the 4 failed no-memory runs, which never reached an accusation.",
+             ha="center", fontsize=8)
     save(fig, 6)
     print({c: dict(v) for c, v in counts.items()})
 
@@ -289,10 +288,16 @@ def figure7():
     case = json.loads((ROOT / "cases" / "pilot.json").read_text())
     pilots = ["04a", "04b", "04c", "05a", "05b", "06", "07", "07b"]
     means, meta = [], []
+    shown = []
     for p in pilots:
         run_dir = f"runs/pilot_{p}"
+        logs = list(game_logs(run_dir))
+        if not logs:
+            print(f"warning: {run_dir} not found or empty, skipping it in figure 7")
+            continue
+        shown.append(p)
         games = pilot_facts(run_dir, case)
-        start = next(e for e in read_events(next(game_logs(run_dir))) if e["kind"] == "game_start")
+        start = next(e for e in read_events(logs[0]) if e["kind"] == "game_start")
         means.append(sum(games) / len(games))
         meta.append((start["model_id"], start["prompt_versions"]["detective"], start["decoding"].get("thinking_level")))
     fig, ax = plt.subplots(figsize=(6.8, 3.6))
@@ -301,8 +306,8 @@ def figure7():
         hatch = "//" if "3.5" in model else ("xx" if thinking == "low" else None)
         ax.bar(i, mean, color=palette[det], hatch=hatch, edgecolor="#333333", lw=0.6)
         ax.text(i, mean + 0.15, f"{mean:.1f}", ha="center", fontsize=8)
-    ax.set_xticks(range(len(pilots)))
-    ax.set_xticklabels([f"pilot_{p}" for p in pilots], rotation=30, ha="right", fontsize=8.5)
+    ax.set_xticks(range(len(shown)))
+    ax.set_xticklabels([f"pilot_{p}" for p in shown], rotation=30, ha="right", fontsize=8.5)
     ax.set_ylabel("Evidence facts delivered per game (of 10)")
     ax.set_ylim(0, 10)
     handles = [plt.Rectangle((0, 0), 1, 1, fc=c, ec="#333333", lw=0.6) for c in palette.values()]
@@ -312,7 +317,7 @@ def figure7():
                         "thinking level low"], frameon=False, fontsize=8, loc="upper left", ncol=2)
     ax.set_title("Pilot case, 9 games per pilot (3 per condition), controller's online claim matching", fontsize=9)
     save(fig, 7)
-    print(dict(zip(pilots, [round(x, 1) for x in means])))
+    print(dict(zip(shown, [round(x, 1) for x in means])))
 
 
 # ----------------------------------------------------------------------------------------------
