@@ -50,11 +50,13 @@ git-ignored.
 | `infra/orchestrate.py` | Seeded run plan, results file, resume, cost ceiling, parallel workers, per-condition summary |
 | `infra/replay.py` | Transcript rendering, annotation export per game, `ReplayBackend` for no-cost re-execution |
 | `infra/mockgame.py` | Seeded mock game with `run_game`'s signature and return shape; stand-in for Harish's controller |
-| `infra/__main__.py` | `python -m infra run / replay / summary` |
+| `infra/__main__.py` | `python -m infra run / replay / summary / metrics` |
+| `infra/metrics.py` | Per-game records from the logs, per-condition aggregates, percentile bootstrap CIs, differences, JSON/CSV/Markdown outputs |
+| `infra/figures.py` | Slide figures from a metrics summary (matplotlib, analysis only) |
+| `tests/test_metrics.py` | Exact values on hand-built records, records against mock-game logs, outputs, figures, CLI |
 | `tests/test_orchestration.py` | Plan determinism, mock-game validity, parallel execution, resume, crash and budget accounting, replay, CLI |
 
-Deferred, in task-plan order: cost estimate and metrics on these logs (Fri 23), bootstrap
-CIs and figures (Mon 26).
+All task-plan items through Mon 26 are in: the remaining work is running them on the real logs.
 
 ## LLM wrapper
 
@@ -348,6 +350,48 @@ from the seed, copies the chosen branch IDs into `controller_matched` (a live co
 must match delivered text instead), and its outcome odds are the same for every condition
 on purpose, so nothing in it can look like a result.
 Use it for plumbing, metrics code and labelling practice, never for results.
+
+## Metrics, confidence intervals and figures
+
+`python -m infra metrics <run_dir> [--case cases/evaluation.json] [--bootstrap 2000] [--seed 0] [--out DIR]`
+reads a run folder (`results.jsonl` when the orchestrator wrote one, otherwise every game log in
+the folder), builds one record per game and writes to `<run_dir>/analysis/`:
+
+```
+metrics.json      per-condition point estimates with 95% bootstrap CIs, pairwise differences, descriptions
+metrics.md        the same as tables for the slides and report
+per_game.csv      one row per game (every field below) for anyone's own analysis
+figures/*.png|svg accuracy_by_condition, solve_rate_by_attempt, cost_per_game, efficiency_by_condition, ledger_minus_raw
+```
+
+- **Outcomes (proposal 5.1).** `first_accusation_accuracy` (A1), `culprit/weapon/location_accuracy`
+  on the first attempt, `solve_rate_within_2` (A2), `solve_rate_within_3` (A3, eventual solve rate),
+  `wrong_valid_accusation_rate` (wrong valid over all valid accusations, pooled),
+  `attempts_used_mean_solved`. Operational rates count failed runs and crashes as unsuccessful
+  (proposal 5.4); `first_accusation_accuracy_completed` restricts to games that reached a
+  verdict and states its denominator. `failed_run_rate` and `crash_rate` are reported apart.
+- **Interaction and efficiency (5.2).** `interrogations_before_first_accusation_mean`,
+  `exchanges_total_mean`, `checkpoints_reached_mean`, `invitations_sent_mean`,
+  `invitation_acceptance_rate`, `detective_conversations_mean`, `private_conversations_mean`,
+  `contradiction_pairs_reported_mean` (count only; precision and recall need the annotation).
+- **Cost (5.2).** `cost_usd_mean`, `cost_through_first_accusation_mean`,
+  `cost_accusation_retries_mean`, tokens, reasoning tokens, transport retries, format repairs,
+  controller repairs, calls cut off at the output cap, wall-clock seconds. A phase with no
+  calls costs 0 for that game (so the retry mean averages over every game); `None` means the
+  pricing was unknown, and the phase means add up to the total.
+- **Heuristic coverage.** `online_evidence_coverage_mean` and `online_essential_coverage_mean`
+  come from the controller's online claim matching (decisions.md D11), not from labels; they are
+  the "clues heard" numbers used during the pilots. Label-based coverage, repeated questions and
+  contradiction precision/recall are computed from Elena's annotation with Josh's adapters, not here.
+- **Confidence intervals.** Percentile bootstrap, games resampled with replacement within each
+  condition (default 2000 replicates, seeded), which is the proposal's descriptive 95% interval
+  conditional on the one case. `differences` holds ledger minus raw, ledger minus none and raw
+  minus none for A1, A3, turns, cost and coverage, each with its own bootstrap CI from
+  independent resampling of the two conditions.
+- **Figures** use fixed colours per condition (none blue, raw orange, ledger aqua, validated for
+  colour-vision deficiency), neutral ink for every label, direct value labels and the CI as a bar
+  through the point. matplotlib is an analysis-only dependency; without it the command still
+  writes the JSON, CSV and Markdown.
 
 ## Alignment with decisions.md (19 Oct)
 

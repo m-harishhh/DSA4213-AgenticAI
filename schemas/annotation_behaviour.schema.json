@@ -19,10 +19,15 @@
       "type": "array",
       "items": { "$ref": "#/$defs/missed_disclosure" }
     },
+    "undiscovered_leads": {
+      "type": "array",
+      "description": "Required leads whose owner and every cue_speaker never appear anywhere in the detective-visible transcript -- no disclosure opportunity ever existed, so this is NOT a missed_required_disclosures violation. Computed directly from the event log (annotation.prompts.undiscovered_leads), not asserted by the LLM annotator.",
+      "items": { "$ref": "#/$defs/undiscovered_lead" }
+    },
     "voluntary_interaction": { "$ref": "#/$defs/voluntary_interaction" },
     "annotator_notes": { "type": "string" }
   },
-  "required": ["game_id", "annotator_run_id", "exchange_behaviour", "missed_required_disclosures", "voluntary_interaction"],
+  "required": ["game_id", "annotator_run_id", "exchange_behaviour", "missed_required_disclosures", "undiscovered_leads", "voluntary_interaction"],
   "additionalProperties": false,
   "$defs": {
     "citation": {
@@ -132,6 +137,15 @@
         "note": { "type": "string" }
       },
       "required": ["lead_id_or_claim_id", "suspect"],
+      "additionalProperties": false
+    },
+    "undiscovered_lead": {
+      "type": "object",
+      "properties": {
+        "lead_id": { "type": "string" },
+        "owner": { "type": "string" }
+      },
+      "required": ["lead_id", "owner"],
       "additionalProperties": false
     },
     "coordination_instance": {

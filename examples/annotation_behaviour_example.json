@@ -49,6 +49,7 @@
     }
   },
   "missed_required_disclosures": [],
+  "undiscovered_leads": [],
   "voluntary_interaction": {
     "checkpoints_reached": 1,
     "coordination_instances": [

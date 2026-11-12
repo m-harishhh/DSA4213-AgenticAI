@@ -6,6 +6,7 @@
         --run-dir runs/mock_demo --games-per-condition 2 --workers 2            # offline mock game
     python -m infra replay runs/mock_demo/<game>.jsonl [--write] [--no-private] [--check]
     python -m infra summary runs/mock_demo
+    python -m infra metrics runs/pilot_07b [--case cases/evaluation.json] [--bootstrap 2000] [--out DIR]
 """
 
 import argparse
@@ -14,13 +15,18 @@ import json
 import subprocess
 import sys
 from pathlib import Path
-from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv
+except ImportError:  # python-dotenv is optional: the key may already be in the environment
+    def load_dotenv(*args, **kwargs):
+        return False
 
 from .eventlog import read_events, validate_events
 from .llm import LLMClient, MockBackend, GeminiBackend
 from .orchestrate import Run, execute, summarise, CONDITIONS
 from .pricing import pricing_for, PRICES
 from .replay import render_transcript, write_game_artifacts
+from .metrics import aggregate, collect_records, load_run, markdown_report, write_outputs
 
 
 def code_version():
@@ -110,6 +116,36 @@ def cmd_summary(args):
     return 0
 
 
+def cmd_metrics(args):
+    run_dir = Path(args.run_dir)
+    case_path = args.case
+    if case_path is None:
+        manifest = load_run(run_dir)["manifest"]
+        if manifest and manifest.get("case_path") and Path(manifest["case_path"]).exists():
+            case_path = manifest["case_path"]
+    case = None
+    if case_path:
+        from casework import load_case
+        case = load_case(case_path)
+    else:
+        print("No case file given or found in run.json: online coverage metrics will be n/a", file=sys.stderr)
+    records = collect_records(run_dir, case)
+    if not records:
+        raise SystemExit(f"No game logs found in {run_dir}")
+    summary = aggregate(records, replicates=args.bootstrap, seed=args.seed)
+    summary["run"] = {"run_dir": str(run_dir), "games": len(records), "case_path": case_path}
+    out = Path(args.out) if args.out else run_dir / "analysis"
+    title = f"Metrics for {run_dir.name}"
+    paths = write_outputs(summary, records, out, title=title)
+    if not args.no_figures:
+        from .figures import make_figures
+        figures = make_figures(summary, out / "figures")
+        paths["figures"] = f"{len(figures)} files in {out / 'figures'}" if figures else "none (matplotlib not installed)"
+    print(markdown_report(summary, title=title))
+    print(json.dumps(paths, indent=2), file=sys.stderr)
+    return 0
+
+
 def main(argv=None):
     load_dotenv()
     parser = argparse.ArgumentParser(prog="python -m infra", description=__doc__,
@@ -141,6 +177,14 @@ def main(argv=None):
     summary = sub.add_parser("summary", help="Per-condition summary of a run's results")
     summary.add_argument("run_dir")
     summary.set_defaults(func=cmd_summary)
+    metrics = sub.add_parser("metrics", help="Per-condition metrics with bootstrap CIs, per-game CSV and figures")
+    metrics.add_argument("run_dir")
+    metrics.add_argument("--case", help="Case JSON for the online coverage heuristic; default: run.json case_path")
+    metrics.add_argument("--out", help="Output folder; default <run_dir>/analysis")
+    metrics.add_argument("--bootstrap", type=int, default=2000, help="Bootstrap replicates")
+    metrics.add_argument("--seed", type=int, default=0, help="Bootstrap seed")
+    metrics.add_argument("--no-figures", action="store_true")
+    metrics.set_defaults(func=cmd_metrics)
     args = parser.parse_args(argv)
     return args.func(args)
 

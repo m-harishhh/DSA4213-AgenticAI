@@ -1,0 +1,470 @@
+{
+  "game_id": "pilot_07b_ledger_444382084",
+  "note": "Hand-checked annotation of a REAL gemini-3.1-flash-lite game (condition=ledger).",
+  "exchanges": {
+    "e1": {
+      "claim_ids": [
+        "claim_self_Alex_20:30",
+        "claim_cover_Alex"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_self_Alex_20:30",
+          "source_span": {
+            "start": 0,
+            "end": 28,
+            "text": "At 20:30, I was in the Study"
+          },
+          "confidence": "manually_checked"
+        },
+        {
+          "claim_id": "claim_cover_Alex",
+          "source_span": {
+            "start": 53,
+            "end": 106,
+            "text": "As for 21:00, I was in the Study at that time as well"
+          },
+          "confidence": "manually_checked"
+        }
+      ]
+    },
+    "e2": {
+      "claim_ids": [
+        "claim_cover_Blair",
+        "claim_self_Blair_21:00"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_cover_Blair",
+          "source_span": {
+            "start": 0,
+            "end": 29,
+            "text": "I was in the Library at 20:30"
+          },
+          "confidence": "manually_checked"
+        },
+        {
+          "claim_id": "claim_self_Blair_21:00",
+          "source_span": {
+            "start": 35,
+            "end": 64,
+            "text": "I was in the Kitchen at 21:00"
+          },
+          "confidence": "manually_checked"
+        }
+      ]
+    },
+    "e3": {
+      "claim_ids": [
+        "claim_badge_trace"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_badge_trace",
+          "source_span": {
+            "start": 0,
+            "end": 69,
+            "text": "My cropped attack recording shows the attacker's badge: it was round."
+          },
+          "confidence": "manually_checked"
+        }
+      ]
+    },
+    "e4": {
+      "claim_ids": [
+        "claim_scene_wall"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_scene_wall",
+          "source_span": {
+            "start": 0,
+            "end": 33,
+            "text": "The murder scene had green walls."
+          },
+          "confidence": "manually_checked"
+        }
+      ]
+    },
+    "e5": {
+      "claim_ids": [
+        "claim_badge_trace"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_badge_trace",
+          "source_span": {
+            "start": 52,
+            "end": 103,
+            "text": "I only observed that the attacker's badge was round"
+          },
+          "confidence": "manually_checked"
+        }
+      ]
+    },
+    "e6": {
+      "claim_ids": [
+        "claim_cover_Blair",
+        "claim_self_Blair_21:00"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_cover_Blair",
+          "source_span": {
+            "start": 116,
+            "end": 145,
+            "text": "I was in the Library at 20:30"
+          },
+          "confidence": "manually_checked"
+        },
+        {
+          "claim_id": "claim_self_Blair_21:00",
+          "source_span": {
+            "start": 151,
+            "end": 180,
+            "text": "I was in the Kitchen at 21:00"
+          },
+          "confidence": "manually_checked"
+        }
+      ]
+    },
+    "e7": {
+      "claim_ids": [
+        "claim_alibi_Blair",
+        "claim_weapon_edge"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_alibi_Blair",
+          "source_span": {
+            "start": 149,
+            "end": 210,
+            "text": "the timestamped recording shows Blair in the Kitchen at 21:00"
+          },
+          "confidence": "manually_checked"
+        },
+        {
+          "claim_id": "claim_weapon_edge",
+          "source_span": {
+            "start": 265,
+            "end": 310,
+            "text": "the injury identifies the edge class as sharp"
+          },
+          "confidence": "manually_checked",
+          "note": "Unprompted addition during a corroborate-Blair question."
+        }
+      ],
+      "note": "Controller bookkeeping also matched claim_self_Ellis_20:30 here, but the text only REFUSES to discuss 20:30 ('I have my own reasons to keep my whereabouts at 20:30 private') -- never states a position. Likely a bookkeeping false positive."
+    },
+    "e8": {
+      "claim_ids": [
+        "claim_cover_Casey",
+        "claim_self_Casey_21:00"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_cover_Casey",
+          "source_span": {
+            "start": 0,
+            "end": 29,
+            "text": "I was in the Library at 20:30"
+          },
+          "confidence": "manually_checked"
+        },
+        {
+          "claim_id": "claim_self_Casey_21:00",
+          "source_span": {
+            "start": 40,
+            "end": 80,
+            "text": "I moved to the Conservatory around 21:00"
+          },
+          "confidence": "manually_checked"
+        }
+      ]
+    },
+    "e9": {
+      "claim_ids": [
+        "claim_sleeve_trace"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_sleeve_trace",
+          "source_span": {
+            "start": 0,
+            "end": 69,
+            "text": "My cropped attack recording shows the attacker's sleeve: it was blue."
+          },
+          "confidence": "manually_checked"
+        }
+      ]
+    },
+    "e10": {
+      "claim_ids": [
+        "claim_self_Alex_20:30",
+        "claim_cover_Alex"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_self_Alex_20:30",
+          "source_span": {
+            "start": 0,
+            "end": 27,
+            "text": "I was in the Study at 20:30"
+          },
+          "confidence": "manually_checked"
+        },
+        {
+          "claim_id": "claim_cover_Alex",
+          "source_span": {
+            "start": 29,
+            "end": 65,
+            "text": "At 21:00, I was in the Study as well"
+          },
+          "confidence": "manually_checked"
+        }
+      ]
+    },
+    "e11": {
+      "claim_ids": [
+        "claim_self_Drew_20:30",
+        "claim_self_Drew_21:00",
+        "claim_witness_Alex",
+        "claim_witness_Blair"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_self_Drew_20:30",
+          "source_span": {
+            "start": 0,
+            "end": 34,
+            "text": "I was in the Conservatory at 20:30"
+          },
+          "confidence": "manually_checked"
+        },
+        {
+          "claim_id": "claim_self_Drew_21:00",
+          "source_span": {
+            "start": 40,
+            "end": 83,
+            "text": "I can confirm I was in the Library at 21:00"
+          },
+          "confidence": "manually_checked"
+        },
+        {
+          "claim_id": "claim_witness_Alex",
+          "source_span": {
+            "start": 40,
+            "end": 141,
+            "text": "I can confirm I was in the Library at 21:00 where I saw you, despite your claim of being in the Study"
+          },
+          "confidence": "manually_checked",
+          "note": "MAJOR bookkeeping false negative: this is the single most important evidence against the culprit (Alex) in this game, but controller_matched.claim_ids never includes claim_witness_Alex because Drew's exact phrasing ('I saw you') differs from the canonical claim text. The lead_id 'meeting_Alex' IS correctly flagged in lead_ids despite the claim-text miss."
+        },
+        {
+          "claim_id": "claim_witness_Blair",
+          "source_span": {
+            "start": 192,
+            "end": 232,
+            "text": "I also saw Blair in the Gallery at 20:30"
+          },
+          "confidence": "manually_checked"
+        }
+      ]
+    },
+    "e12": {
+      "claim_ids": [
+        "claim_sleeve_trace",
+        "claim_cover_Casey",
+        "claim_weapon_edge"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_sleeve_trace",
+          "source_span": {
+            "start": 64,
+            "end": 127,
+            "text": "the attacker's sleeve from my cropped recording, which was blue"
+          },
+          "confidence": "manually_checked"
+        },
+        {
+          "claim_id": "claim_cover_Casey",
+          "source_span": {
+            "start": 143,
+            "end": 172,
+            "text": "being in the Library at 20:30"
+          },
+          "confidence": "manually_checked"
+        },
+        {
+          "claim_id": "claim_weapon_edge",
+          "source_span": {
+            "start": 269,
+            "end": 316,
+            "text": "the injury confirms the weapon had a sharp edge"
+          },
+          "confidence": "manually_checked",
+          "note": "Second-hand relay ('I was told') -- hearsay, not Casey's own observation."
+        }
+      ]
+    },
+    "e13": {
+      "claim_ids": [
+        "claim_scene_floor"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_scene_floor",
+          "source_span": {
+            "start": 0,
+            "end": 35,
+            "text": "The murder scene had a stone floor."
+          },
+          "confidence": "manually_checked"
+        }
+      ]
+    },
+    "e14": {
+      "claim_ids": [
+        "claim_weapon_material"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_weapon_material",
+          "source_span": {
+            "start": 0,
+            "end": 47,
+            "text": "The recovered murder-weapon material was steel."
+          },
+          "confidence": "manually_checked"
+        }
+      ]
+    },
+    "e15": {
+      "claim_ids": [
+        "claim_cover_Blair",
+        "claim_self_Blair_21:00",
+        "claim_badge_trace",
+        "claim_scene_wall"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_cover_Blair",
+          "source_span": {
+            "start": 0,
+            "end": 29,
+            "text": "I was in the Library at 20:30"
+          },
+          "confidence": "manually_checked"
+        },
+        {
+          "claim_id": "claim_self_Blair_21:00",
+          "source_span": {
+            "start": 35,
+            "end": 64,
+            "text": "I was in the Kitchen at 21:00"
+          },
+          "confidence": "manually_checked"
+        },
+        {
+          "claim_id": "claim_badge_trace",
+          "source_span": {
+            "start": 96,
+            "end": 131,
+            "text": "the green walls and the round badge"
+          },
+          "confidence": "manually_checked"
+        },
+        {
+          "claim_id": "claim_scene_wall",
+          "source_span": {
+            "start": 96,
+            "end": 131,
+            "text": "the green walls and the round badge"
+          },
+          "confidence": "manually_checked"
+        }
+      ]
+    },
+    "e16": {
+      "claim_ids": [
+        "claim_alibi_Blair"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_alibi_Blair",
+          "source_span": {
+            "start": 0,
+            "end": 62,
+            "text": "The timestamped recording shows Blair in the Kitchen at 21:00."
+          },
+          "confidence": "manually_checked"
+        }
+      ]
+    },
+    "e17": {
+      "claim_ids": [
+        "claim_self_Ellis_21:00"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_self_Ellis_21:00",
+          "source_span": {
+            "start": 0,
+            "end": 27,
+            "text": "I was in the Study at 21:00"
+          },
+          "confidence": "manually_checked"
+        }
+      ]
+    },
+    "e18": {
+      "claim_ids": [
+        "claim_alibi_Blair",
+        "claim_weapon_edge",
+        "claim_self_Ellis_21:00",
+        "claim_sleeve_trace"
+      ],
+      "annotations": [
+        {
+          "claim_id": "claim_alibi_Blair",
+          "source_span": {
+            "start": 34,
+            "end": 95,
+            "text": "the timestamped recording shows Blair in the Kitchen at 21:00"
+          },
+          "confidence": "manually_checked"
+        },
+        {
+          "claim_id": "claim_weapon_edge",
+          "source_span": {
+            "start": 134,
+            "end": 197,
+            "text": "the victim's injury identifies the weapon's edge class as sharp"
+          },
+          "confidence": "manually_checked"
+        },
+        {
+          "claim_id": "claim_self_Ellis_21:00",
+          "source_span": {
+            "start": 301,
+            "end": 328,
+            "text": "I was in the Study at 21:00"
+          },
+          "confidence": "manually_checked"
+        },
+        {
+          "claim_id": "claim_sleeve_trace",
+          "source_span": {
+            "start": 378,
+            "end": 424,
+            "text": "Casey mentioned the attacker's sleeve was blue"
+          },
+          "confidence": "manually_checked",
+          "note": "Relayed, not Ellis's own observation."
+        }
+      ]
+    }
+  },
+  "reported_pairs": []
+}
