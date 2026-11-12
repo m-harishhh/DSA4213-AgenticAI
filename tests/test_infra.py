@@ -12,8 +12,8 @@ from pathlib import Path
 
 from casework import load_case
 from casework.diagnostics import eligible_exchanges, evidence_diagnostics, contradiction_diagnostics
-from infra import (LLMClient, MockBackend, GeminiBackend, TransportError, LLMCallError, EventLog, read_events,
-                   suspect_agent_ids,
+from infra import (LLMClient, MockBackend, GeminiBackend, OpenRouterBackend, TransportError, LLMCallError,
+                   EventLog, read_events, suspect_agent_ids,
                    validate_events, trace_prefix_before_first_accusation, to_annotation_exchanges,
                    summarise_cost, REQUIRED_KEYS)
 from infra.llm import REPAIR_INSTRUCTION, check_shape, parse_structured
@@ -193,6 +193,46 @@ class WrapperTests(unittest.TestCase):
         backend = GeminiBackend(api_key_env="NO_SUCH_KEY_VAR_FOR_TESTS")
         with self.assertRaises(RuntimeError):
             backend.generate(model_id="m", messages=[{"role": "user", "content": "hi"}], decoding={})
+
+    def test_openrouter_backend_needs_a_key_before_any_network(self):
+        backend = OpenRouterBackend(api_key_env="NO_SUCH_KEY_VAR_FOR_TESTS")
+        with self.assertRaises(RuntimeError):
+            backend.generate(model_id="m", messages=[{"role": "user", "content": "hi"}], decoding={})
+
+    def test_openrouter_backend_build_request_shape(self):
+        messages = [{"role": "system", "content": "sys"}, {"role": "user", "content": "hi"}]
+        body = OpenRouterBackend.build_request("google/gemini-3.1-flash-lite", messages,
+                                               {"temperature": 0.7, "top_p": 0.95}, max_output_tokens=100)
+        self.assertEqual(body["model"], "google/gemini-3.1-flash-lite")
+        self.assertEqual(body["messages"], messages)  # OpenAI role names pass through unchanged
+        self.assertEqual(body["temperature"], 0.7)
+        self.assertEqual(body["top_p"], 0.95)
+        self.assertEqual(body["max_tokens"], 100)
+        self.assertNotIn("response_format", body)
+
+    def test_openrouter_backend_build_request_includes_json_schema(self):
+        schema = {"type": "object", "properties": {"x": {"type": "integer"}}}
+        body = OpenRouterBackend.build_request("m", [{"role": "user", "content": "hi"}], {},
+                                               response_schema=schema)
+        self.assertEqual(body["response_format"],
+                         {"type": "json_schema", "json_schema": {"name": "response", "strict": True, "schema": schema}})
+
+    def test_openrouter_backend_parse_response(self):
+        payload = {"choices": [{"message": {"content": '{"a": 1}'}, "finish_reason": "stop"}],
+                  "usage": {"prompt_tokens": 10, "completion_tokens": 5}, "model": "google/gemini-3.1-flash-lite"}
+        parsed = OpenRouterBackend.parse_response(payload)
+        self.assertEqual(parsed, {"text": '{"a": 1}', "finish_reason": "stop",
+                                 "usage": {"input_tokens": 10, "output_tokens": 5, "reasoning_tokens": 0},
+                                 "model_version": "google/gemini-3.1-flash-lite"})
+
+    def test_openrouter_backend_is_transport_error_for_retryable_status(self):
+        class FakeResponse:
+            status_code = 429
+
+        class FakeHTTPStatusError(Exception):
+            response = FakeResponse()
+
+        self.assertTrue(OpenRouterBackend.is_transport_error(FakeHTTPStatusError()))
 
 
 class EventLogTests(unittest.TestCase):
