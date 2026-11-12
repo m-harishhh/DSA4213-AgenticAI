@@ -213,3 +213,7 @@ __marimo__/
 
 # Per-game event logs: private case information and large; never commit
 runs/
+
+# Report figures: the scripts are tracked; the images, metrics copy and the Word file they produce are not
+report_figures/out/
+report_figures/*.docx
